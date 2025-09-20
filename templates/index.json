@@ -1,0 +1,27 @@
+
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "press-logos": {
+      "type": "press-logos",
+      "settings": {}
+    },
+    "bestsellers": {
+      "type": "bestsellers",
+      "settings": {}
+    },
+    "footer": {
+      "type": "footer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero",
+    "press-logos",
+    "bestsellers",
+    "footer"
+  ]
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Aevi",
+    "settings": [
+      {
+        "type": "text",
+        "id": "dummy_text",
+        "label": "Dummy",
+        "default": "Aevi Replica"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "text",
+        "id": "dummy_typography",
+        "label": "Dummy",
+        "default": "Default font"
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "text",
+        "id": "dummy_layout",
+        "label": "Dummy",
+        "default": "Default layout"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "text",
+        "id": "dummy_colors",
+        "label": "Dummy",
+        "default": "Default colors"
+      }
+    ]
+  }
+]

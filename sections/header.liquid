@@ -1,0 +1,30 @@
+<style>
+.a:hover{
+  font-weight:underline;
+  padding-top:100px;
+  background-color: white;
+}
+</style>
+<header class="fixed top-0 left-0 w-full z-50 mx-4 ">
+<div class="font-medium text-center text-sm border-b text-white ">
+  <span>ENJOY FREE SHIPPING $90. <a href="collections/all"><u>SHOP NOW</u></a></span>
+</div>
+  <div class=" text-white flex items-center justify-between">
+      <a href="/collections/all" >SHOP</a>
+      <a href="/pages/discover" >DISCOVER</a>
+          <nav class="ml-5 flex justify-between text-lg font-lg w-50">
+          {%for link in linklists.main-menu.links%}
+            <a href="{{link.url}}" >{{link.title}}</a>
+      {%endfor%}
+    </nav>
+    <div class="text-3xl font-bold tracking-widest">
+      <a href="{{ routes.root_url }}" class="font-cinzel">{{shop.name}}</a>
+    </div>
+    <nav class="mr-5 flex items-center text-lg font-medium w-50 justify-between">
+      <a href="/pages/subscribe">SUBSCRIBE</a>
+      <a href="/search" aria-label="Search">🔍</a>
+      <a href="/account" aria-label="Account">👤</a>
+      <a href="/cart" aria-label="Cart">👜</a>
+    </nav>
+  </div>
+</header>

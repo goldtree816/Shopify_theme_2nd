@@ -1,0 +1,18 @@
+{
+  "name": "aevi_replica",
+  "version": "1.0.0",
+  "description": "Shopify Skeleton Theme",
+  "main": "index.js",
+  "scripts": {
+    "dev:css": "npx @tailwindcss/cli -i ./assets/tailwind.css -o ./assets/theme.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./assets/tailwind.css -o ./assets/theme.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^4.1.13",
+    "@tailwindcss/cli": "^4.1.13"
+  }
+}
