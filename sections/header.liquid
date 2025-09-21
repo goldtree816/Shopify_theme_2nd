@@ -10,21 +10,34 @@
   <span>ENJOY FREE SHIPPING $90. <a href="collections/all"><u>SHOP NOW</u></a></span>
 </div>
   <div class=" text-white flex items-center justify-between">
-      <a href="/collections/all" >SHOP</a>
-      <a href="/pages/discover" >DISCOVER</a>
           <nav class="ml-5 flex justify-between text-lg font-lg w-50">
-          {%for link in linklists.main-menu.links%}
-            <a href="{{link.url}}" >{{link.title}}</a>
+          {%for link in linklists.left-navbar.links%}
+            <a href="{{link.url}}">{{link.title}}</a>
       {%endfor%}
     </nav>
     <div class="text-3xl font-bold tracking-widest">
       <a href="{{ routes.root_url }}" class="font-cinzel">{{shop.name}}</a>
     </div>
-    <nav class="mr-5 flex items-center text-lg font-medium w-50 justify-between">
-      <a href="/pages/subscribe">SUBSCRIBE</a>
-      <a href="/search" aria-label="Search">🔍</a>
-      <a href="/account" aria-label="Account">👤</a>
-      <a href="/cart" aria-label="Cart">👜</a>
-    </nav>
+ <nav class="mr-5 flex items-center gap-x-6 text-lg font-medium">
+  {% for link in linklists.right-navbar.links %}
+    {% if link.title == "Search" %}
+      <a href="{{ link.url }}" aria-label="Search">
+        🔍
+      </a>
+    {% elsif link.title == "Cart" %}
+      <a href="{{ link.url }}" aria-label="Cart">
+        <!-- Cart Icon -->
+        🛒
+      </a>
+    {% elsif link.title == "Account" %}
+      <a href="{{ link.url }}" aria-label="Account">
+        😋
+      </a>
+    {% else %}
+      <a href="{{ link.url }}">{{ link.title }}</a>
+    {% endif %}
+  {% endfor %}
+</nav>
+
   </div>
 </header>
