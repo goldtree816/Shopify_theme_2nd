@@ -1,0 +1,31 @@
+<style>
+.product-card{
+    flex:0 0 250px;
+    border: 1px solid #ddd;
+    scroll-snap-align: start;
+}
+
+
+.product-card img{
+    object-fit:cover;
+    height:450px;
+    width:100%;
+    margin-bottom:10px;
+}
+
+h3{
+    font-size:28px;
+}
+</style>
+<div class="product-card">
+<a href="{{product.url}}">
+    <div class="product-image">
+        <img src="{{product.featured_image | img_url: 'medium'}}" alt="{{product.title}}">
+    </div>
+<div class="product-info">
+    <h3>{{product.title}}</h3>
+    <p>{{product.price | money}}</p>
+</div>
+</a>
+</div>
+

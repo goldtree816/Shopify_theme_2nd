@@ -6,9 +6,42 @@
 .h1{
     font-size:20px;
 }
+
+.bestsellers-product{
+    overflow-x: auto;
+    display:flex;
+    padding-top: 20px;
+    gap:20px;
+     scroll-snap-align: start;
+     scroll-snap-type: x mandatory;
+
+}
+
+.bestsellers-product::-webkit-scrollbar {
+  display: none;
+}
+
 </style>
 
 <div class="heading">
 <h1 class="text-3xl font-sans-500">BESTSELLERS</h1>
 <p class="text-sm">Dermatologist-tested and clinically proven formulas with Nordic ingredients</p>
 </div>
+<div class='bestsellers-product'>
+{% assign collection = collections['bestsellers'] %}
+  {% for product in collection.products %}
+    {% render 'card', product: product %}
+  {% endfor %}
+</div>
+
+{% schema %}
+{
+  "name": "Bestsellers",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Bestsellers"
+    }
+  ]
+}
+{% endschema %}
