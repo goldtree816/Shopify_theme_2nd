@@ -8,14 +8,6 @@
     font-family:ui-sans-serif, system-ui, -apple-system;
 }
 
-
-.product-card img{
-    object-fit:cover;
-    height:450px;
-    width:100%;
-    margin-bottom:10px;
-}
-
 .product-info{
     display: flex;
   justify-content: space-between; /* pushes title left, price right */
@@ -40,11 +32,49 @@ h3{
     font-size:16px;
     font-weight:600;
 }
+
+.product-image{
+  position: relative;
+  overflow: hidden;
+}
+
+.product-image img{
+    object-fit:cover;
+    height:450px;
+    width:100%;
+    margin-bottom:10px;
+    display:block;
+}
+
+
+
+.product-image .add-button {
+  left:50%;
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+
+.product-card:hover .product-image .add-button {
+  opacity: 1;
+  pointer-events: auto;
+  margin-bottom:10px;
+}
+
 </style>
 <div class="product-card">
 <a href="{{product.url}}">
     <div class="product-image">
         <img src="{{product.featured_image | img_url: 'medium'}}" alt="{{product.title}}">
+        <div class="add-button">
+         {% render 'button',
+        text: 'ADD TO BAG',
+        %}
+        </div>
     </div>
 <div class="product-info">
     <h3>{{product.title}}</h3>
@@ -63,6 +93,6 @@ h3{
   <span>{{ product.metafields.reviews.count }}</span>
 </div>
 </a>
-<button class="add-to-bag">Add to Bag</button>
+
 </div>
 

@@ -1,19 +1,26 @@
+<style>
+.slide button{
+  position: absolute;
+  bottom: 40px;     
+  left: 100px;      
+  margin: 0;
+}
+</style>
 <head>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
 </head>
-  
+
 <div class="slider">
   <figure>
-  
     <div class="slide"> 
     <h2>AEVI</h2>
       <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
            {% render 'button',
         text: 'SHOP NOW',
         %}
-      <img src="{{'hero-image-1.jpg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
+      <img src="{{'hero-image-1.jpeg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
     </div>
     
     <div class="slide">
@@ -37,9 +44,7 @@
     <div class="slide">
     <h2>AEVI</h2>
       <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
-     {% render 'button',
-        text: 'SHOP NOW',
-         %}
+     
       <img src="{{'hero-image-1.jpg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
     </div>
   </figure>
