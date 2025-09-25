@@ -1,8 +1,11 @@
 <style>
 .product-card{
-    flex:0 0 250px;
+    flex:0 0 400px;
     border: 1px solid #ddd;
     scroll-snap-align: start;
+    padding-bottom:100px;
+    height:600px;
+    font-family:ui-sans-serif, system-ui, -apple-system;
 }
 
 
@@ -13,8 +16,29 @@
     margin-bottom:10px;
 }
 
+.product-info{
+    display: flex;
+  justify-content: space-between; /* pushes title left, price right */
+  align-items: center;   
+  padding-left:10px; 
+  padding-right:10px; 
+}
+
+.price{
+    display:flex;
+    align-items:right;
+    justify-content:right;
+    font-weight:600;
+    font-size:14px;
+}
+
+.product-rating{
+    padding-left:10px;
+}
+
 h3{
-    font-size:28px;
+    font-size:16px;
+    font-weight:600;
 }
 </style>
 <div class="product-card">
@@ -24,8 +48,21 @@ h3{
     </div>
 <div class="product-info">
     <h3>{{product.title}}</h3>
+    <div class="price">
     <p>{{product.price | money}}</p>
+    </div>
+</div>
+<div class="product-rating">
+  {% for i in (1..5) %}
+    {% if i <= product.metafields.reviews.rating %}
+      ★
+    {% else %}
+      ☆
+    {% endif %}
+  {% endfor %}
+  <span>{{ product.metafields.reviews.count }}</span>
 </div>
 </a>
+<button class="add-to-bag">Add to Bag</button>
 </div>
 
