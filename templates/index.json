@@ -13,6 +13,11 @@
       "type": "bestsellers",
       "settings": {}
     },
+    "home-info": {
+      "type": "home-info",
+      "settings": {}
+    },
+
     "footer": {
       "type": "footer",
       "settings": {}
@@ -22,6 +27,7 @@
     "hero",
     "press-logos",
     "bestsellers",
+    "home-info",
     "footer"
   ]
 }

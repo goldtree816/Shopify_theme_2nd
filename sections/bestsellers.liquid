@@ -1,37 +1,33 @@
 <style>
-.heading{
-    padding-top:30px;
-    padding-left:190px;
+.heading {
+  padding-top: 30px;
+  padding-left: 190px;
 }
-.h1{
-    font-size:20px;
+.heading h1 {
+  font-size: 20px;
 }
-
-.bestsellers-product{
-    margin: 0 auto;
-    align-items:center;
-    overflow-x: auto;
-    display:flex;
-    padding-top: 20px;
-    width:80%;
-    gap:20px;
-     scroll-snap-align: start;
-     scroll-snap-type: x mandatory;
-
+.bestsellers-product {
+  margin: 0 auto;
+  align-items: center;
+  overflow-x: auto;
+  display: flex;
+  padding-top: 20px;
+  width: 80%;
+  gap: 20px;
+  scroll-snap-type: x mandatory;
 }
-
 .bestsellers-product::-webkit-scrollbar {
   display: none;
 }
-
 </style>
 
 <div class="heading">
-<h1 class="text-3xl font-sans-500">BESTSELLERS</h1>
-<p class="text-sm">Dermatologist-tested and clinically proven formulas with Nordic ingredients</p>
+  <h1 class="text-3xl font-sans-500">{{ section.settings.section_title }}</h1>
+  <p class="text-sm">{{ section.settings.section_description }}</p>
 </div>
-<div class='bestsellers-product'>
-{% assign collection = collections['bestsellers'] %}
+
+<div class="bestsellers-product">
+  {% assign collection = collections['bestsellers'] %}
   {% for product in collection.products %}
     {% render 'card', product: product %}
   {% endfor %}
@@ -40,7 +36,19 @@
 {% schema %}
 {
   "name": "Bestsellers",
-  "settings": [],
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "COLLECTION"
+    },
+    {
+      "type": "text",
+      "id": "section_description",
+      "label": "Section Description",
+    }
+  ],
   "presets": [
     {
       "name": "Bestsellers"

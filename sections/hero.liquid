@@ -1,52 +1,73 @@
-<style>
-.slide button{
-  position: absolute;
-  bottom: 40px;     
-  left: 100px;      
-  margin: 0;
-}
-</style>
-<head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
-</head>
-
 <div class="slider">
+<script src="script.js"></script>
   <figure>
-    <div class="slide"> 
-    <h2>AEVI</h2>
-      <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
-           {% render 'button',
-        text: 'SHOP NOW',
+    {% for block in section.blocks %}
+      <div class="slide" {{ block.shopify_attributes }}>
+        <h2>{{ block.settings.subtitle }}</h2>
+        <h1>{{ block.settings.title }}</h1>
+
+        {% render 'button',
+          text: block.settings.button_text,
+          link: block.settings.button_link,
+          class:bg-[#a4c0db] hover:bg-white text-[#a4c0db]
         %}
-      <img src="{{'hero-image-1.jpeg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
-    </div>
-    
-    <div class="slide">
-      <h2>AEVI</h2>
-      <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
-           {% render 'button',
-        text: 'SHOP NOW',
-        %}
-      <img src="{{'hero-image-2.jpg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
-    </div>
-    
-    <div class="slide">
-     <h2>AEVI</h2>
-      <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
-           {% render 'button',
-        text: 'SHOP NOW',
-       %}
-      <img src="{{'hero-image-3.jpg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
-    </div>
-    
-    <div class="slide">
-    <h2>AEVI</h2>
-      <h1>NORDIC SKIN CARE FOR SENSITIVE SKIN</h1>
-     
-      <img src="{{'hero-image-1.jpg' | asset_url}}" alt="" class="w-64 h-64 object-cover"/>
-    </div>
+
+        {% if block.settings.image != blank %}
+          <img 
+            src="{{ block.settings.image | image_url: width: 800 }}" 
+            alt="{{ block.settings.title }}" 
+            class="w-64 h-64 object-cover"
+          />
+        {% endif %}
+      </div>
+    {% endfor %}
   </figure>
 </div>
 
+{% schema %}
+{
+  "name": "Hero Slideshow",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Hero Slideshow",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}
