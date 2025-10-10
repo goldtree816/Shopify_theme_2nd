@@ -1,26 +1,37 @@
 <style>
+
+
 .heading {
-  padding-top: 30px;
-  padding-left: 190px;
+  padding-top: 60px;
+  padding-left: 80px;
 }
 .heading h1 {
-  font-size: 20px;
+  font-size: 36px;
 }
+
+.heading p{
+  font-weight:400;
+  font-size:14px;
+}
+
 .bestsellers-product {
   margin: 0 auto;
-  align-items: center;
+  align-items: stretch;
   overflow-x: auto;
   display: flex;
   padding-top: 20px;
-  width: 80%;
+  width: 90%;
   gap: 20px;
   scroll-snap-type: x mandatory;
+  overflow-y:hidden;
 }
+
+
 .bestsellers-product::-webkit-scrollbar {
   display: none;
 }
-</style>
 
+</style>
 <div class="heading">
   <h1 class="text-3xl font-sans-500">{{ section.settings.section_title }}</h1>
   <p class="text-sm">{{ section.settings.section_description }}</p>
@@ -32,6 +43,7 @@
     {% render 'card', product: product %}
   {% endfor %}
 </div>
+
 
 {% schema %}
 {

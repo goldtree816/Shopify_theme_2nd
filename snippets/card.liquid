@@ -1,19 +1,19 @@
 <style>
+
 .product-card{
-    flex:0 0 400px;
-    border: 1px solid #ddd;
+    flex:0 0 320px;
     scroll-snap-align: start;
-    padding-bottom:100px;
-    height:600px;
+    padding-bottom:10px;
     font-family:ui-sans-serif, system-ui, -apple-system;
 }
 
 .product-info{
     display: flex;
-  justify-content: space-between; /* pushes title left, price right */
+  justify-content: space-between;
   align-items: center;   
   padding-left:10px; 
   padding-right:10px; 
+  gap:50px;
 }
 
 .price{
@@ -24,13 +24,39 @@
     font-size:14px;
 }
 
+.description{
+    align-items:right;
+    justify-content:right;
+    font-weight:350;
+    font-size:14px;
+    padding-left:10px;
+    display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 1;    
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: normal;      
+   max-height: 2.8em;        
+   line-height: 1.4em;
+} 
+
+
 .product-rating{
     padding-left:10px;
 }
 
 h3{
-    font-size:16px;
-    font-weight:600;
+    font-size:14px;
+    font-weight:500;
+    text-transform: uppercase;
+        display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-line-clamp: 2;    
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: normal;      
+   max-height: 2.8em;        
+   line-height: 1.4em;
 }
 
 .product-image{
@@ -40,7 +66,7 @@ h3{
 
 .product-image img{
     object-fit:cover;
-    height:450px;
+    height:400px;
     width:100%;
     margin-bottom:10px;
     display:block;
@@ -76,13 +102,16 @@ h3{
         %}
         </div>
     </div>
-<div class="product-info">
+  <div class="product-info">
     <h3>{{product.title}}</h3>
     <div class="price">
     <p>{{product.price | money}}</p>
     </div>
-</div>
-<div class="product-rating">
+  </div>
+    <div class="description">
+    <p>{{product.description}}</p>
+    </div>
+  <div class="product-rating">
   {% for i in (1..5) %}
     {% if i <= product.metafields.reviews.rating %}
       ★
@@ -93,6 +122,5 @@ h3{
   <span>{{ product.metafields.reviews.count }}</span>
 </div>
 </a>
-
 </div>
 

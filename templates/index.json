@@ -1,8 +1,53 @@
-
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "hero",
+      "blocks": {
+        "slide_grDRB4": {
+          "type": "slide",
+          "settings": {
+            "subtitle": "",
+            "title": "",
+            "button_text": "Shop Now",
+            "button_link": "",
+            "image": "shopify://shop_images/hero-image-2.jpg"
+          }
+        },
+        "slide_QWX6je": {
+          "type": "slide",
+          "settings": {
+            "subtitle": "",
+            "title": "",
+            "button_text": "Shop Now",
+            "button_link": "",
+            "image": "shopify://shop_images/womens-hand-moon-bracelet-_925x_a5fa0cd8-e3ff-4106-bf51-30afa51adf03.jpg"
+          }
+        },
+        "slide_Dkypzz": {
+          "type": "slide",
+          "settings": {
+            "subtitle": "",
+            "title": "",
+            "button_text": "Shop Now",
+            "button_link": "",
+            "image": "shopify://shop_images/hero-image-3.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "slide_grDRB4",
+        "slide_QWX6je",
+        "slide_Dkypzz"
+      ],
       "settings": {}
     },
     "press-logos": {
@@ -11,16 +56,48 @@
     },
     "bestsellers": {
       "type": "bestsellers",
-      "settings": {}
+      "settings": {
+        "section_title": "BESTSELLERS",
+        "section_description": "Dermatologists verified and most trusted products by doctors."
+      }
     },
     "home-info": {
       "type": "home-info",
-      "settings": {}
+      "settings": {
+        "layout": "image-left",
+        "feature_image": "shopify://shop_images/necklace-earrings-set_925x_b8424db9-a66b-498d-a9f3-7d6db40996f3.jpg",
+        "heading": "CLEAN, GENTLE + RESULTS-DRIVEN",
+        "description": "<p>Aevi is made with pure, therapeutic ingredients from Nordic nature. Our performance-driven formulas are clinically tested to ensure efficacy and visible results while still being gentle for sensitive skin.</p>",
+        "button_text": "READ MORE",
+        "button_link": ""
+      }
     },
-
+    "home_info_wyw4pb": {
+      "type": "home-info",
+      "name": "AEVI Feature Section",
+      "settings": {
+        "layout": "image-right",
+        "feature_image": "shopify://shop_images/inspired-woman_925x_9535d484-5d0b-4d9c-89ed-a7f70fca9fd0.jpg",
+        "heading": "CLEAN, GENTLE + RESULTS-DRIVEN",
+        "description": "<p>Aevi is made with pure, therapeutic ingredients from Nordic nature. Our performance-driven formulas are clinically tested to ensure efficacy and visible results while still being gentle for sensitive skin.</p>",
+        "button_text": "READ MORE",
+        "button_link": ""
+      }
+    },
     "footer": {
       "type": "footer",
-      "settings": {}
+      "settings": {
+        "menu": "",
+        "show_payment_icons": true
+      }
+    },
+    "bestsellers_q8GDQp": {
+      "type": "bestsellers",
+      "name": "Bestsellers",
+      "settings": {
+        "section_title": "GIFTS, SETS + BUNDLES",
+        "section_description": "Curated edits of bestselling clean beauty"
+      }
     }
   },
   "order": [
@@ -28,6 +105,8 @@
     "press-logos",
     "bestsellers",
     "home-info",
-    "footer"
+    "home_info_wyw4pb",
+    "footer",
+    "bestsellers_q8GDQp"
   ]
 }

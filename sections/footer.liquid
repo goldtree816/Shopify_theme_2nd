@@ -1,56 +1,199 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}, {{ powered_by_link }}
-  </div>
+<style>
+footer {
+  background-color: #d8dde2;
+  color: #222;
+  padding: 80px 100px;
+  font-family: ui-sans-serif, system-ui, -apple-system;
+}
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 80px;
+}
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+.footer-left {
+  flex: 1;
+}
+
+.footer-logo {
+  width: 50px;
+  margin-bottom: 40px;
+}
+
+.footer-subscribe h4 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.footer-subscribe p {
+  font-size: 14px;
+  margin-bottom: 12px;
+  max-width: 300px;
+}
+
+.subscribe-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #000;
+  max-width: 250px;
+  padding-bottom: 4px;
+}
+
+.subscribe-box input {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+}
+
+.subscribe-box button {
+  background: none;
+  border: none;
+  font-size: 12px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.footer-payments {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-payments img {
+  height: 24px;
+}
+
+.footer-note {
+  font-size: 12px;
+  margin-top: 40px;
+  color: #555;
+}
+
+.footer-right {
+  display: flex;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+.footer-right h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.footer-right ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-right li {
+  margin-bottom: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.footer-right li:hover {
+  color: #2596be;
+}
+
+</style>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-left">
+    {%if section.settings.logo !=blank%}
+      <img src="{{section.settings.logo | image_url: width:120}}" alt="Logo" class="footer-logo">
+    {%endif%}
+
+      <div class="footer-subscribe">
+        <h4>LET’S CONNECT</h4>
+        <p>{{section.settings.newsletter_text}}</p>
+        <div class="subscribe-box">
+          <input type="email" placeholder="Enter your email">
+          <button>SUBSCRIBE</button>
+        </div>
+      </div>
+
+      <div class="footer-payments">
+        <img src="amex.svg">
+        <img src="applepay.svg">
+        <img src="googlepay.svg">
+        <img src="visa.svg">
+        <img src="mastercard.svg">
+      </div>
+
+      <p class="footer-note">
+       {{section.settings.copyright_text}}
+      </p>
+    </div>
+
+    <div class="footer-right">
+      <div>
+        <h4>ABOUT</h4>
+        <ul>
+          <li>Story</li>
+          <li>Stockists</li>
+          <li>Contact</li>
+          <li>Journal</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>LEGAL</h4>
+        <ul>
+          <li>FAQ</li>
+          <li>Terms</li>
+          <li>Care</li>
+          <li>Privacy</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>SOCIAL MEDIA</h4>
+        <ul>
+          <li>Instagram</li>
+          <li>Facebook</li>
+          <li>TikTok</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </footer>
 
-{% stylesheet %}
-  footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-  }
-  footer a {
-    text-decoration: none;
-    color: var(--color-foreground);
-  }
-  footer .footer__links,
-  footer .footer__payment {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
-
-{% schema %}
+{%schema%}
 {
-  "name": "t:general.footer",
-  "settings": [
+  "name":"Footer",
+  "settings":[
     {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
+      "type":"image_picker",
+      "id":"logo",
+      "label":"Logo"
     },
     {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright Text",
+    },
+     {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter Text",
+    }  
+  ],
+  "blocks":[],
+  "presets":[
+    {
+      "name":"Footer",
     }
   ]
 }

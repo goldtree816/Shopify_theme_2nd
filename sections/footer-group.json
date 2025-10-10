@@ -14,8 +14,9 @@
     "footer": {
       "type": "footer",
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "logo": "shopify://shop_images/Company_Logo.png",
+        "copyright_text": "All rights reserved.",
+        "newsletter_text": "subscribe to our newsletter"
       }
     }
   },
