@@ -22,37 +22,58 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 80px 5%;
-  gap: 60px;
+  padding: 80px 0;
+  width: 100%;
 }
-.aevi-feature.reverse .aevi-container {
-  flex-direction: row-reverse;
-}
+
 .aevi-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 60px;
   width: 100%;
 }
+
+/* Reverse layout for image on right */
+.aevi-feature.reverse .aevi-container {
+  flex-direction: row-reverse;
+}
+
+/* Image container takes half width */
+.aevi-image {
+  flex: 1 1 50%;
+  width: 50%;
+  aspect-ratio: 1 / 1; /* ✅ makes it perfectly square */
+  overflow: hidden;
+}
+
+/* Image fills the square area */
 .aevi-image img {
   width: 100%;
-  max-width: 550px;
-  height: auto;
-  object-fit: cover;
+  height: 100%;
+  object-fit: cover; /* ✅ crops and fills neatly */
 }
+
+/* Content takes other half */
 .aevi-content {
-  max-width: 500px;
+  flex: 1 1 50%;
+  max-width: 50%;
+  padding-left:250px;
+  padding-right: 250px;
 }
+
 .aevi-content h2 {
-  font-size: 32px;
+  font-size: 40px;
   margin-bottom: 15px;
+  font-weight:400;
 }
+
 .aevi-description p {
-  color: #555;
-  font-size: 16px;
+  letter-spacing:-0.5px;
+  color: #000000;
+  font-size: 14px;
   line-height: 1.6;
 }
+
 .aevi-btn {
   display: inline-block;
   margin-top: 20px;
@@ -60,18 +81,28 @@
   color: #000;
   text-decoration: underline;
 }
+
+/* Mobile layout */
 @media (max-width: 768px) {
   .aevi-feature {
     flex-direction: column;
+    padding: 40px 0;
     text-align: center;
   }
   .aevi-container {
     flex-direction: column !important;
   }
   .aevi-image {
+    width: 100%;
+    aspect-ratio: auto;
     margin-bottom: 40px;
   }
+  .aevi-content {
+    max-width: 90%;
+    padding: 0;
+  }
 }
+
 </style>
 
 {% schema %}

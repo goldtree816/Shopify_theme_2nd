@@ -1,28 +1,166 @@
+<style>
+.slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.slides-container {
+  display: flex;
+  transition: transform 1s ease-in-out;
+  will-change: transform;
+}
+
+.slide {
+  flex: 0 0 100%;
+  position: relative;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.slide img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.25), rgba(0,0,0,0));
+  z-index: 1;
+}
+
+.slide-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+  padding-left: 8%;
+  max-width: 600px;
+  text-align: left;
+}
+
+.slide h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.slide h1 {
+  font-size: 4rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  margin-bottom: 2rem;
+}
+
+.button-wrapper { display: inline-block; position: relative; z-index: 3; }
+
+/* Dots */
+.slider-dots {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 4;
+}
+
+.slider-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background-color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background .3s ease;
+}
+.slider-dots span.active { background-color: white; }
+</style>
+
 <div class="slider">
-<script src="script.js"></script>
-  <figure>
+  <div class="slides-container" id="slides">
     {% for block in section.blocks %}
       <div class="slide" {{ block.shopify_attributes }}>
-        <h2>{{ block.settings.subtitle }}</h2>
-        <h1>{{ block.settings.title }}</h1>
-
-        {% render 'button',
-          text: block.settings.button_text,
-          link: block.settings.button_link,
-          class:bg-[#a4c0db] hover:bg-white text-[#a4c0db]
-        %}
-
         {% if block.settings.image != blank %}
-          <img 
-            src="{{ block.settings.image | image_url: width: 800 }}" 
-            alt="{{ block.settings.title }}" 
-            class="w-64 h-64 object-cover"
-          />
+          <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.title }}">
         {% endif %}
+        <div class="slide-content">
+          <h2>{{ block.settings.subtitle }}</h2>
+          <h1>{{ block.settings.title }}</h1>
+          <div class="button-wrapper">
+            {% render 'button',
+              text: block.settings.button_text,
+              link: block.settings.button_link,
+              class:'bg-[#a4c0db] hover:bg-white text-[#a4c0db]'
+            %}
+          </div>
+        </div>
       </div>
     {% endfor %}
-  </figure>
+  </div>
+
+  <div class="slider-dots">
+    {% for block in section.blocks %}
+      <span class="{% if forloop.first %}active{% endif %}"></span>
+    {% endfor %}
+  </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const track = document.getElementById("slides");
+  const slides = Array.from(track.children);
+  const dots = Array.from(document.querySelectorAll(".slider-dots span"));
+  const total = slides.length;
+  if (total <= 1) return;
+
+  // Clone first slide to end for smooth loop
+  const firstClone = slides[0].cloneNode(true);
+  track.appendChild(firstClone);
+
+  let index = 0;
+  const intervalTime = 5000;
+  const slideWidth = 100;
+
+  function moveToSlide(i) {
+    track.style.transform = `translateX(-${i * slideWidth}%)`;
+    dots.forEach((d, k) => d.classList.toggle("active", k === (i % total)));
+  }
+
+  function nextSlide() {
+    index++;
+    moveToSlide(index);
+  }
+
+  track.addEventListener("transitionend", () => {
+    if (index === total) {
+      // reached cloned slide, jump back seamlessly
+      track.style.transition = "none";
+      index = 0;
+      moveToSlide(index);
+      void track.offsetWidth; // reflow
+      track.style.transition = "transform 1s ease-in-out";
+    }
+  });
+
+  let timer = setInterval(nextSlide, intervalTime);
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      clearInterval(timer);
+      index = i;
+      moveToSlide(index);
+      timer = setInterval(nextSlide, intervalTime);
+    });
+  });
+});
+</script>
 
 {% schema %}
 {
@@ -33,41 +171,17 @@
       "type": "slide",
       "name": "Slide",
       "settings": [
-        {
-          "type": "text",
-          "id": "subtitle",
-          "label": "Subtitle"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title"
-        },
-        {
-          "type": "text",
-          "id": "button_text",
-          "label": "Button text",
-          "default": "Shop Now"
-        },
-        {
-          "type": "url",
-          "id": "button_link",
-          "label": "Button link"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Slide image"
-        }
+        { "type": "text", "id": "subtitle", "label": "Subtitle" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "button_text", "label": "Button text", "default": "Shop Now" },
+        { "type": "url", "id": "button_link", "label": "Button link" },
+        { "type": "image_picker", "id": "image", "label": "Slide image" }
       ]
     }
   ],
   "max_blocks": 10,
   "presets": [
-    {
-      "name": "Hero Slideshow",
-      "category": "Hero"
-    }
+    { "name": "Hero Slideshow", "category": "Hero" }
   ]
 }
 {% endschema %}

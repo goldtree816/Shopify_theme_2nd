@@ -1,43 +1,241 @@
 <style>
-.a:hover{
-  font-weight:underline;
-  padding-top:100px;
+/* Top banner */
+.top-banner {
+  position:relative;
+  color: white;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  z-index:1;
+}
+
+header:hover .top-banner {
+  background-color: #a3bfdb;
+  color: blue;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1000;
+}
+
+.navbar:hover,
+.navbar.scrolled {
   background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar.scrolled a {
+
+  color: black;
+
+}
+
+.navbar:hover a {
+  color: black;
+}
+
+/* Navbar links */
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0 20px;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* Dropdown wrapper */
+.nav-item {
+  position: relative;
+}
+
+/* Full-width dropdown */
+.dropdown-menu {
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  margin-top: 0px;
+  background: white;
+  color: black;
+  padding: 30px 120px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  z-index: 999;
+}
+
+.nav-item:hover .dropdown-menu {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Dropdown layout */
+.dropdown-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 80px;
+  width: 100%;
+}
+
+/* Text links */
+.dropdown-columns {
+  display: flex;
+  gap: 60px;
+}
+
+.dropdown-columns ul {
+  list-style: none;
+  padding: 0;
+}
+
+.dropdown-columns li {
+  margin-bottom: 10px;
+}
+
+.dropdown-columns a {
+  color: black;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.dropdown-columns a:hover {
+  text-decoration: underline;
+}
+
+/* Two vertical images */
+.dropdown-images {
+  display: flex;
+  gap: 20px;
+  width: 750px;
+}
+
+.dropdown-images img {
+  width: 50%;
+  height: 600px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-images img:hover {
+  transform: scale(1.03);
 }
 </style>
-<header class="fixed top-0 left-0 w-full z-50 mx-4 ">
-<div class="font-medium text-center text-sm border-b text-white ">
-  <span>ENJOY FREE SHIPPING $90. <a href="collections/all"><u>SHOP NOW</u></a></span>
-</div>
-  <div class=" text-white flex items-center justify-between position-absolute">
-          <nav class="ml-5 flex justify-between text-lg font-lg w-50">
-          {%for link in linklists.left-navbar.links%}
-            <a href="{{link.url}}">{{link.title}}</a>
-      {%endfor%}
-    </nav>
-    <div class="text-3xl font-bold tracking-widest">
-      <a href="{{ routes.root_url }}" class="font-cinzel">{{shop.name}}</a>
-    </div>
- <nav class="mr-5 flex items-center gap-x-6 text-lg font-medium">
-  {% for link in linklists.right-navbar.links %}
-    {% if link.title == "Search" %}
-      <a href="{{ link.url }}" aria-label="Search">
-        🔍
-      </a>
-    {% elsif link.title == "Cart" %}
-      <a href="{{ link.url }}" aria-label="Cart">
-        <!-- Cart Icon -->
-        🛒
-      </a>
-    {% elsif link.title == "Account" %}
-      <a href="{{ link.url }}" aria-label="Account">
-        😋
-      </a>
-    {% else %}
-      <a href="{{ link.url }}">{{ link.title }}</a>
-    {% endif %}
-  {% endfor %}
-</nav>
 
+<header class="fixed top-0 left-0 w-full z-50">
+  <div class="top-banner">
+    ENJOY FREE SHIPPING $90. <a href="/collections/all"><u>SHOP NOW</u></a>
+  </div>
+
+  <div class="navbar" id="navbar">
+    <!-- LEFT NAV -->
+    <nav class="flex items-center">
+      {% for link in linklists.left-navbar.links %}
+        <div class="nav-item">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+
+          {% if link.links != blank %}
+            <div class="dropdown-menu">
+              <div class="dropdown-content">
+                <div class="dropdown-columns">
+                  {% for child in link.links %}
+                    <ul>
+                      <li><strong>{{ child.title }}</strong></li>
+                      {% if child.links != blank %}
+                        {% for sub in child.links %}
+                          <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
+                        {% endfor %}
+                      {% endif %}
+                    </ul>
+                  {% endfor %}
+                </div>
+
+                <div class="dropdown-images">
+                  {% if link.title == "Shop" %}
+                    <img src="{{ section.settings.shop-image-1 | image_url }}" alt="Shop Image 1">
+                    <img src="{{ section.settings.shop-image-2 | image_url }}" alt="Shop Image 2">
+                  {% elsif link.title == "DISCOVER" %}
+                    <img src="{{ section.settings.discover-image-1 | image_url }}" alt="Discover Image 1">
+                    <img src="{{ section.settings.discover-image-2 | image_url }}" alt="Discover Image 2">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </nav>
+
+    <!-- CENTER LOGO -->
+    <div class="text-3xl font-bold tracking-widest">
+      <a href="{{ routes.root_url }}" class="font-cinzel">{{ shop.name }}</a>
+    </div>
+
+    <!-- RIGHT NAV -->
+    <nav class="flex items-center gap-x-6 text-lg font-medium">
+      {% for link in linklists.right-navbar.links %}
+        <div class="nav-item">
+          <a href="{{ link.url }}">{{ link.title }}</a>
+        </div>
+      {% endfor %}
+    </nav>
   </div>
 </header>
+
+<script>
+window.addEventListener('scroll', function() {
+  const navbar = document.getElementById('navbar');
+  if (window.scrollY > 10) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "shop-image-1",
+      "label": "Shop Banner Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "shop-image-2",
+      "label": "Shop Banner Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "discover-image-1",
+      "label": "Discover Banner Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "discover-image-2",
+      "label": "Discover Banner Image 2"
+    }
+  ]
+}
+{% endschema %}

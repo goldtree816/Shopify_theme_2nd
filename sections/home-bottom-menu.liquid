@@ -1,0 +1,35 @@
+<style>
+.bottom-menu {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding-top: 100px;
+}
+.bottom-menu img {
+    width:30%
+    justify-content:center;
+    object-fit:cover;
+    overflow:hidden;
+    width:800px;
+    height:800px;
+}
+</style>
+
+<section class="bottom-menu">
+  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
+  <p>Nordic
+  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
+  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
+</section>
+
+{% schema %}
+{
+  "name": "Home Bottom Menu",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Home Bottom Menu"
+    }
+  ]
+}
+{% endschema %}
