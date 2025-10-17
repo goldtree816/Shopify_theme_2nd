@@ -37,9 +37,7 @@ header:hover .top-banner {
 }
 
 .navbar.scrolled a {
-
   color: black;
-
 }
 
 .navbar:hover a {
@@ -122,7 +120,7 @@ header:hover .top-banner {
   text-decoration: underline;
 }
 
-/* Two vertical images */
+/* Dropdown images */
 .dropdown-images {
   display: flex;
   gap: 20px;
@@ -170,13 +168,16 @@ header:hover .top-banner {
                 </div>
 
                 <div class="dropdown-images">
-                  {% if link.title == "Shop" %}
-                    <img src="{{ section.settings.shop-image-1 | image_url }}" alt="Shop Image 1">
-                    <img src="{{ section.settings.shop-image-2 | image_url }}" alt="Shop Image 2">
-                  {% elsif link.title == "DISCOVER" %}
-                    <img src="{{ section.settings.discover-image-1 | image_url }}" alt="Discover Image 1">
-                    <img src="{{ section.settings.discover-image-2 | image_url }}" alt="Discover Image 2">
-                  {% endif %}
+                  {% for block in section.blocks %}
+                    {% if block.settings.menu_title == link.title %}
+                      {% if block.settings.image_1 != blank %}
+                        <img src="{{ block.settings.image_1 | image_url }}" alt="{{ link.title }} Image 1">
+                      {% endif %}
+                      {% if block.settings.image_2 != blank %}
+                        <img src="{{ block.settings.image_2 | image_url }}" alt="{{ link.title }} Image 2">
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
                 </div>
               </div>
             </div>
@@ -215,26 +216,34 @@ window.addEventListener('scroll', function() {
 {% schema %}
 {
   "name": "Header",
-  "settings": [
+  "settings": [],
+  "blocks": [
     {
-      "type": "image_picker",
-      "id": "shop-image-1",
-      "label": "Shop Banner Image 1"
-    },
+      "type": "menu_images",
+      "name": "Menu Item Images",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Navbar Item Title (must match exactly)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Dropdown Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Dropdown Image 2"
+        }
+      ]
+    }
+  ],
+  "presets": [
     {
-      "type": "image_picker",
-      "id": "shop-image-2",
-      "label": "Shop Banner Image 2"
-    },
-    {
-      "type": "image_picker",
-      "id": "discover-image-1",
-      "label": "Discover Banner Image 1"
-    },
-    {
-      "type": "image_picker",
-      "id": "discover-image-2",
-      "label": "Discover Banner Image 2"
+      "name": "Header"
     }
   ]
 }
