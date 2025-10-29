@@ -177,48 +177,6 @@ body {
   color: blue;
 }
 
-/* Press logos */
-.press-logos {
-  background: #0046ad;
-  padding: 20px 0;
-  overflow: hidden;
-  position: relative;
-}
-
-.press-logos-container {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.press-logos-track {
-  display: flex;
-  align-items: center;
-  gap: 300px;
-  animation: scroll 30s linear infinite;
-  width: max-content;
-}
-
-.press-logos:hover .press-logos-track {
-  animation-play-state: paused;
-}
-
-.press-logos img {
-  max-height: 48px;
-  width: auto;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-33.333%);
-  }
-}
 
 @keyframes slideShow {
   0% {

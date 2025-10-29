@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -34,11 +43,51 @@
           }
         }
       },
-      "block_order": ["slide_grDRB4", "slide_QWX6je", "slide_Dkypzz"],
+      "block_order": [
+        "slide_grDRB4",
+        "slide_QWX6je",
+        "slide_Dkypzz"
+      ],
       "settings": {}
     },
     "press-logos": {
       "type": "press-logos",
+      "blocks": {
+        "logo_p6CnUW": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/Company_Logo.png",
+            "alt_text": "Brand Logo"
+          }
+        },
+        "logo_rdrtge": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/pressLogo4.png",
+            "alt_text": "Brand Logo"
+          }
+        },
+        "logo_F9RtpE": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/white_logo_transparent_background-e1538866734206.png",
+            "alt_text": "Brand Logo"
+          }
+        },
+        "logo_Ya8FJt": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/white_logo_transparent_background_1.png",
+            "alt_text": "Brand Logo"
+          }
+        }
+      },
+      "block_order": [
+        "logo_p6CnUW",
+        "logo_rdrtge",
+        "logo_F9RtpE",
+        "logo_Ya8FJt"
+      ],
       "settings": {}
     },
     "bestsellers": {
