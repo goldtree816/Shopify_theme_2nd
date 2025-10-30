@@ -1,0 +1,88 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "collection_list_XrfwNq": {
+      "type": "collection-list",
+      "blocks": {
+        "featured_collection_Wy3anB": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "move-jacket-sporty-relaxed-fit"
+          }
+        },
+        "featured_collection_UnWdMA": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "northern-star-jacket-regular-straight-cut-fit"
+          }
+        },
+        "featured_collection_kzR9d3": {
+          "type": "featured_collection",
+          "settings": {
+            "collection": "work-trousers-classic-tight-fit"
+          }
+        }
+      },
+      "block_order": [
+        "featured_collection_Wy3anB",
+        "featured_collection_UnWdMA",
+        "featured_collection_kzR9d3"
+      ],
+      "custom_css": [],
+      "name": "t:sections.collection-list.presets.name",
+      "settings": {
+        "title": "BESTSELLERS",
+        "heading_size": "h1",
+        "image_ratio": "square",
+        "columns_desktop": 3,
+        "color_scheme": "",
+        "show_view_all": false,
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "settings": {
+        "products_per_page": 8,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "horizontal",
+        "enable_sorting": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "collection_list_XrfwNq",
+    "banner",
+    "product-grid"
+  ]
+}

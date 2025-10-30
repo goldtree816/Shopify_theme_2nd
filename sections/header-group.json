@@ -1,0 +1,97 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-bar-0": {
+          "type": "announcement",
+          "settings": {
+            "text": "Free Shipping on all orders",
+            "link": ""
+          }
+        },
+        "announcement_kyEPjN": {
+          "type": "announcement",
+          "settings": {
+            "text": "Made in Europe",
+            "link": ""
+          }
+        },
+        "announcement_8EczNn": {
+          "type": "announcement",
+          "settings": {
+            "text": "CODE: FULLSUIT30- 30% ON FULL SUIT",
+            "link": ""
+          }
+        },
+        "announcement_feQeym": {
+          "type": "announcement",
+          "settings": {
+            "text": "Fast Delivery",
+            "link": ""
+          }
+        },
+        "announcement_Lxdrdb": {
+          "type": "announcement",
+          "settings": {
+            "text": "Secure Payment with Klarna",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement-bar-0",
+        "announcement_kyEPjN",
+        "announcement_8EczNn",
+        "announcement_feQeym",
+        "announcement_Lxdrdb"
+      ],
+      "custom_css": [],
+      "settings": {
+        "auto_rotate": true,
+        "change_slides_speed": 10,
+        "color_scheme": "scheme-2",
+        "show_line_separator": false,
+        "show_social": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "mega",
+        "mega_menu_images_toggle": "none",
+        "mega_menu_images_title": true,
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": false,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 24,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

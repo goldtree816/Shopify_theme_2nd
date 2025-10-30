@@ -1,0 +1,162 @@
+{% comment %}
+  Renders a megamenu for the header.
+
+  Usage:
+  {% render 'header-mega-menu' %}
+{% endcomment %}
+
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        {%- if link.links != blank -%}
+          <header-menu>
+            <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
+              <summary
+                id="HeaderMenu-{{ link.handle }}"
+                class="header__menu-item list-menu__item link focus-inset"
+              >
+                <span
+                  {%- if link.child_active %}
+                    class="header__active-menu-item"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </span>
+                {{- 'icon-caret.svg' | inline_asset_content -}}
+              </summary>
+              <div
+                id="MegaMenu-Content-{{ forloop.index }}"
+                class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+                tabindex="-1"
+              >
+
+
+                {% if section.settings.menu_type_desktop == 'mega' and section.settings.mega_menu_images_toggle != 'none' %}
+  <ul class="mega-menu__list megamenu-with-image page-width">
+    {%- for childlink in link.links -%}
+      {% assign image_url = '' %}
+
+      {% if section.settings.mega_menu_images_toggle == 'featured' %}
+        {% if childlink.object.featured_image %}
+          {% assign image_url = childlink.object.featured_image | img_url: 'master' %}
+        {% endif %}
+      {% elsif section.settings.mega_menu_images_toggle == 'metafield' %}
+        {% assign image_url = childlink.object.metafields.custom.header_menu_image | img_url: 'master' %}
+      {% endif %}
+
+      <li>
+        <div class="mega-menu__column">
+          {% if image_url != blank %}
+            <a href="{{ childlink.url }}">
+              <img src="{{ image_url }}" alt="{{ childlink.title | escape }}" class="mega-menu__image">
+            </a>
+          {% endif %}
+
+          <a id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}" 
+             href="{{ childlink.url }}" 
+             class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %} {% if section.settings.mega_menu %} mega-menu__link--mega{% endif %} ">
+            {{ childlink.title | escape }}
+          </a>
+        </div>
+      </li>
+    {%- endfor -%}
+  </ul>
+{% else %}
+  
+
+
+
+
+
+                <ul
+                  class="mega-menu__list page-width{% if link.levels == 1 %} mega-menu__list--condensed{% endif %}"
+                  role="list"
+                >
+                  {%- for childlink in link.links -%}
+                    <li>
+                      <a
+                        id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                        href="{{ childlink.url }}"
+                        class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="list-unstyled" role="list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a
+                                id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                href="{{ grandchildlink.url }}"
+                                class="mega-menu__link link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"
+                                {% if grandchildlink.current %}
+                                  aria-current="page"
+                                {% endif %}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+{% endif %}
+
+              </div>
+            </details>
+          </header-menu>
+        {%- else -%}
+          <a
+            id="HeaderMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span
+              {%- if link.current %}
+                class="header__active-menu-item"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>
+
+<style>
+  .mega-menu__image {
+    max-width: 100%; /* Full width of the column */
+    height: auto;
+    border-radius: 10px; /* Adjust the radius value as needed (ex: 10px for rounded corners, 50% makes the image a circle) */
+    /* Additional styles if needed */
+  }
+
+  .mega-menu__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    text-align: center;
+    /* Additional styles if needed */
+  }
+
+  .mega-menu__list.megamenu-with-image {
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(calc((100% - (5 * 4rem)) / 6), calc((100% - (5 * 4rem)) / 6)));
+  }
+
+  .mega-menu__link.hide-title {
+    display: none;
+  }
+</style>

@@ -1,0 +1,145 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "REBELLIOUS NEWS!",
+            "heading_size": "h0"
+          }
+        },
+        "button": {
+          "type": "buttons",
+          "settings": {
+            "button_label_1": "PREORDER",
+            "button_link_1": "https://www.mwhwear.com/products/rebel-jacket-classic-oversized-fit-kopia",
+            "button_style_secondary_1": true,
+            "button_label_2": "",
+            "button_link_2": "",
+            "button_style_secondary_2": false
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "button"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/young-hip-woman-at-carnival_925x_1484446b-7643-4baf-8851-909a984c5fa7.jpg",
+        "image_overlay_opacity": 40,
+        "image_height": "large",
+        "image_behavior": "none",
+        "desktop_content_position": "bottom-center",
+        "desktop_content_alignment": "center",
+        "show_text_box": false,
+        "color_scheme": "scheme-3",
+        "stack_images_on_mobile": false,
+        "mobile_content_alignment": "center",
+        "show_text_below": false
+      }
+    },
+    "image_with_text_9KaAE4": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_rCTiLb": {
+          "type": "heading",
+          "settings": {
+            "heading": "BLACK WEEK TEASER",
+            "heading_size": "h1"
+          }
+        },
+        "text_3gi87a": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Sneak peek at upcoming deals- (because we love to hate) Black Week.</p><p>Enjoy 40% off with code <strong>TEASER40, </strong>valid unitl October 31.</p><p></p><p></p>",
+            "text_style": "body"
+          }
+        },
+        "button_Yge43t": {
+          "type": "button",
+          "settings": {
+            "button_label": "INVEST NOW",
+            "button_link": "https://www.mwhwear.com/collections/black-week-teaser",
+            "button_style_secondary": true
+          }
+        }
+      },
+      "block_order": [
+        "heading_rCTiLb",
+        "text_3gi87a",
+        "button_Yge43t"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/smiling-woman-on-snowy-afternoon_925x_33687b6c-384f-4681-9e0f-d410e10a0f8c.jpg",
+        "height": "large",
+        "desktop_image_width": "medium",
+        "layout": "image_first",
+        "image_behavior": "zoom-in",
+        "content_layout": "overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "left",
+        "mobile_content_alignment": "center",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    },
+    "custom_liquid_cHqAVA": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<style>\nvideo {\nwidth: 100%;\nheight: auto;\ndisplay: block;\nmargin: 0 auto;\n}\n</style>\n<video muted autoplay playinline loop>\n<source src = \"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n<source src=\"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n</video>",
+        "color_scheme": "",
+        "padding_top": 12,
+        "padding_bottom": 52
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "all",
+        "products_to_show": 4,
+        "title": "BESTSELLERS",
+        "heading_size": "h2",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": true,
+        "show_view_all": false,
+        "view_all_style": "solid",
+        "color_scheme": "scheme-1",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "quick_add": "standard",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 20,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "image_banner",
+    "image_with_text_9KaAE4",
+    "custom_liquid_cHqAVA",
+    "featured_collection"
+  ]
+}
