@@ -1,33 +1,85 @@
 <style>
 .bottom-menu {
-  display: flex;
-  justify-content: center;
-  gap: 5px;
-  padding-top: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 8px;
+  padding: 100px 0;
+  width: 100vw;
 }
+
+.bottom-menu .item {
+  position: relative;
+  overflow: hidden;
+}
+
 .bottom-menu img {
-    width:30%;
-    justify-content:center;
-    object-fit:cover;
-    overflow:hidden;
-    width:800px;
-    height:800px;
+  width: 100%;
+  height: 680px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.bottom-menu .item:hover img {
+  transform: scale(1.05);
+}
+
+.bottom-menu p {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .bottom-menu {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
+
 <section class="bottom-menu">
-  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
-  <p>Nordic
-  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
-  <img src="{{ 'hero-image-1.jpeg' | asset_url }}"/>
+  {% for block in section.blocks %}
+    <div class="item">
+      {% if block.settings.image != blank %}
+        <img src="{{ block.settings.image | image_url: width: 1500 }}" alt="{{ block.settings.text }}">
+      {% endif %}
+      {% if block.settings.text != blank %}
+        <p>{{ block.settings.text }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
 </section>
 
 {% schema %}
 {
   "name": "Home Bottom Menu",
   "settings": [],
+  "blocks": [
+    {
+      "type": "menu_item",
+      "name": "Menu Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Menu Image"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Menu Text",
+          "default": "Menu Label"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
   "presets": [
     {
-      "name": "Home Bottom Menu"
+      "name": "Home Bottom Menu",
+      "category": "Custom Sections"
     }
   ]
 }

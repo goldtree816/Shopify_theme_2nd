@@ -1,19 +1,19 @@
 <section class="press-logos">
   <div class="press-logos-container">
-    <div class="press-logos-track" id="pressLogosTrack">
-      {% for block in section.blocks %}
-        {% if block.settings.logo_image != blank %}
-          <span><img src="{{ block.settings.logo_image | image_url: width: 200 }}" alt="{{ block.settings.alt_text }}"></span>
-        {% endif %}
-      {% endfor %}
+    <div class="press-logos-wrapper">
+      <div class="press-logos-track" id="pressLogosTrack">
+        {% for block in section.blocks %}
+          {% if block.settings.logo_image != blank %}
+            <span><img src="{{ block.settings.logo_image | image_url: width: 200 }}" alt="{{ block.settings.alt_text }}"></span>
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-
 .press-logos {
-
   background: blue;
   padding: 20px 0;
   overflow: hidden;
@@ -26,12 +26,17 @@
   position: relative;
 }
 
+.press-logos-wrapper {
+  display: flex;
+  width: max-content;
+}
+
 .press-logos-track {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  gap: clamp(40px, 8vw, 100px);
   flex-wrap: nowrap;
-  min-width: 100%;
   will-change: transform;
 }
 
@@ -41,12 +46,6 @@
   object-fit: contain;
   flex-shrink: 0;
 }
-
-/* Optional: pause scrolling on hover if using CSS animation somewhere */
-.press-logos:hover .press-logos-track {
-  animation-play-state: paused;
-}
-
 </style>
 
 <script>
@@ -54,24 +53,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const track = document.getElementById('pressLogosTrack');
   if (!track) return;
 
-  // Clone logos so it loops smoothly
+  const wrapper = track.parentNode;
+
+  // Remove any old clones if hot reloads occur
+  wrapper.querySelectorAll('.press-logos-track.clone').forEach(c => c.remove());
+
+  // Create clone for infinite effect
   const clone = track.cloneNode(true);
-  track.parentNode.appendChild(clone);
+  clone.classList.add('clone');
+  wrapper.appendChild(clone);
 
   let position = 0;
-  const speed = 0.3;
+  let trackWidth = track.scrollWidth;
+  const speed = 0.5;
 
-  function scroll() {
+  // Function to recalc width dynamically
+  const recalcWidth = () => {
+    trackWidth = track.scrollWidth;
+    clone.style.transform = `translateX(${trackWidth}px)`;
+  };
+
+  // Resize observer to handle logo count or width changes
+  const observer = new ResizeObserver(recalcWidth);
+  observer.observe(track);
+
+  // Initialize once layout is stable
+  window.addEventListener('load', recalcWidth);
+
+  function animate() {
     position -= speed;
-    if (Math.abs(position) >= track.scrollWidth) position = 0;
+    if (position <= -trackWidth) position = 0;
+
+    // Continuous side-by-side movement
     track.style.transform = `translateX(${position}px)`;
-    clone.style.transform = `translateX(${position + track.scrollWidth}px)`;
-    requestAnimationFrame(scroll);
+    clone.style.transform = `translateX(${position + trackWidth}px)`;
+
+    requestAnimationFrame(animate);
   }
 
-  scroll();
+  animate();
 });
 </script>
+
+
 
 {% schema %}
 {

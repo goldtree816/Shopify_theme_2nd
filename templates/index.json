@@ -130,6 +130,34 @@
     },
     "home-bottom-menu": {
       "type": "home-bottom-menu",
+      "blocks": {
+        "menu_item_cK9eUi": {
+          "type": "menu_item",
+          "settings": {
+            "image": "shopify://shop_images/hero-image-1_0692cf75-1545-42cc-b99a-b17fc9da61b9.jpg",
+            "text": "NEW IN"
+          }
+        },
+        "menu_item_rDCK7F": {
+          "type": "menu_item",
+          "settings": {
+            "image": "shopify://shop_images/hero-image-2.jpg",
+            "text": "BESTSELLERS"
+          }
+        },
+        "menu_item_GN8LKb": {
+          "type": "menu_item",
+          "settings": {
+            "image": "shopify://shop_images/stylish-summer-necklace_925x_dbb92fec-eebd-44bc-8045-d609278e7bca.jpg",
+            "text": "FACE CARE"
+          }
+        }
+      },
+      "block_order": [
+        "menu_item_cK9eUi",
+        "menu_item_rDCK7F",
+        "menu_item_GN8LKb"
+      ],
       "settings": {}
     }
   },
