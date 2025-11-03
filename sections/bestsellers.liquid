@@ -1,5 +1,26 @@
 <style>
 
+.bestsellers-product::-webkit-scrollbar {
+  height: 8px; /* thickness */
+}
+
+.bestsellers-product::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.bestsellers-product::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 10px;
+  transition: background 0.5s ease;
+}
+
+
+
+.bestsellers-product { /*for firefox*/
+  scrollbar-color: #c4c4c4 #f1f1f1;
+  scrollbar-width: thin;
+}
 
 .heading {
   padding-top: 60px;

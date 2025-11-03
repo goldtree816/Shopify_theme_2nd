@@ -1,14 +1,14 @@
 <style>
 /* Top banner */
 .top-banner {
-  position:relative;
+  position: relative;
   color: white;
   text-align: center;
   font-size: 14px;
   font-weight: bold;
   padding: 5px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  z-index:1;
+  z-index: 1;
 }
 
 header:hover .top-banner {
@@ -20,14 +20,12 @@ header:hover .top-banner {
 
 /* Navbar */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
   padding: 15px 40px;
   background-color: transparent;
   transition: all 0.3s ease;
-  position: relative;
   z-index: 1000;
+  height: 70px;
 }
 
 .navbar:hover,
@@ -44,11 +42,50 @@ header:hover .top-banner {
   color: black;
 }
 
+/* Left and right navbar */
+.nav-left,
+.nav-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  left: 40px;
+}
+
+.nav-right {
+  right: 40px;
+  gap: 20px;
+}
+
+/* Center logo*/
+.nav-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.nav-center a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar:hover .nav-center a,
+.navbar.scrolled .nav-center a {
+  color: black;
+}
+
 /* Navbar links */
 .navbar a {
   color: white;
   text-decoration: none;
-  margin: 0 20px;
+  margin: 0 {{ section.settings.nav_item_spacing }}px; /* Dynamic spacing */
+  font-size: {{ section.settings.nav_font_size }}px; /* Dynamic font size */
   transition: color 0.3s ease;
   position: relative;
 }
@@ -140,14 +177,19 @@ header:hover .top-banner {
 </style>
 
 <header class="fixed top-0 left-0 w-full z-50">
-  <div class="top-banner">
-    ENJOY FREE SHIPPING $90. <a href="/collections/all"><u>SHOP NOW</u></a>
+  <div class="top-banner" style="background-color:{{section.settings.banner_bg_color}};">
+     {{ section.settings.banner_text }}
+      {% if section.settings.banner_link != blank %}
+    <a href="{{ section.settings.banner_link }}" style="color: {{ section.settings.banner_link_color }};">
+      <u>{{ section.settings.banner_link_label }}</u>
+    </a>
+  {% endif %} 
   </div>
 
   <div class="navbar" id="navbar">
     <!-- LEFT NAV -->
-    <nav class="flex items-center">
-      {% for link in linklists.left-navbar.links %}
+    <nav class="nav-left">
+      {% for link in linklists[section.settings.left-navbar].links %}
         <div class="nav-item">
           <a href="{{ link.url }}">{{ link.title }}</a>
 
@@ -187,13 +229,16 @@ header:hover .top-banner {
     </nav>
 
     <!-- CENTER LOGO -->
-    <div class="text-3xl font-bold tracking-widest">
+    <div class="nav-center text-3xl font-bold tracking-widest">
       <a href="{{ routes.root_url }}" class="font-cinzel">{{ shop.name }}</a>
     </div>
 
     <!-- RIGHT NAV -->
-    <nav class="flex items-center gap-x-6 text-lg font-medium">
-      {% for link in linklists.right-navbar.links %}
+    <nav class="nav-right text-lg font-medium">
+      {% for link in linklists[section.settings.right-navbar].links %}
+        {% if link.title == "CART" %}
+          <a href="{{ link.url }}">&nbsp;{% render 'icon-shopping-bag' %}</a>
+        {% endif %}
         <div class="nav-item">
           <a href="{{ link.url }}">{{ link.title }}</a>
         </div>
@@ -216,7 +261,64 @@ window.addEventListener('scroll', function() {
 {% schema %}
 {
   "name": "Header",
-  "settings": [],
+  "settings": [
+    {
+      "type":"text",
+      "id":"banner_text",
+      "label":"Top Banner Text",
+    },
+    {
+      "type":"text",
+      "id":"banner_link_label",
+      "label":"Top Banner Link Label",
+    },
+    {
+      "type":"url",
+      "id":"banner_link",
+      "label":"Top Banner Link",
+    },
+    {
+      "type":"color",
+      "id":"banner_bg_color",
+      "label":"Top Banner Background Color",
+    },
+    {
+      "type": "color",
+      "id": "banner_link_color",
+      "label": "Banner Link Color",
+      "default": "#FFFFFF"
+    },
+    
+
+    {
+      "type": "link_list",
+      "id": "left-navbar",
+      "label": "Left Navbar Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "right-navbar",
+      "label": "Right Navbar Menu"
+    },
+    {
+      "type": "range",
+      "id": "nav_item_spacing",
+      "label": "Navbar Item Spacing (px)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "label": "Navbar Font Size (px)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 14
+    }
+  ],
   "blocks": [
     {
       "type": "menu_images",
