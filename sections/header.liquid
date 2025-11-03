@@ -20,12 +20,22 @@ header:hover .top-banner {
 
 /* Navbar */
 .navbar {
-  position: relative;
-  padding: 15px 40px;
   background-color: transparent;
+  padding: {{section.settings.navbar_height}}px 40px;
   transition: all 0.3s ease;
+  position: relative;
   z-index: 1000;
-  height: 70px;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  align-items: center;
+
 }
 
 .navbar:hover,
@@ -42,37 +52,28 @@ header:hover .top-banner {
   color: black;
 }
 
-/* Left and right navbar */
+/* Left and right navbars */
 .nav-left,
 .nav-right {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  font-size: {{ section.settings.nav_font_size }}px;
   display: flex;
   align-items: center;
+  gap: {{ section.settings.nav_item_spacing }}px;
 }
 
-.nav-left {
-  left: 40px;
-}
-
-.nav-right {
-  right: 40px;
-  gap: 20px;
-}
-
-/* Center logo*/
+/* Center logo */
 .nav-center {
   position: absolute;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  white-space: nowrap;
   text-align: center;
 }
 
 .nav-center a {
   color: white;
   text-decoration: none;
+  font-size: {{section.settings.logo_font_size}}px;
 }
 
 .navbar:hover .nav-center a,
@@ -84,8 +85,6 @@ header:hover .top-banner {
 .navbar a {
   color: white;
   text-decoration: none;
-  margin: 0 {{ section.settings.nav_item_spacing }}px; /* Dynamic spacing */
-  font-size: {{ section.settings.nav_font_size }}px; /* Dynamic font size */
   transition: color 0.3s ease;
   position: relative;
 }
@@ -104,7 +103,6 @@ header:hover .top-banner {
   position: fixed;
   left: 0;
   width: 100vw;
-  margin-top: 0px;
   background: white;
   color: black;
   padding: 30px 120px;
@@ -177,73 +175,76 @@ header:hover .top-banner {
 </style>
 
 <header class="fixed top-0 left-0 w-full z-50">
-  <div class="top-banner" style="background-color:{{section.settings.banner_bg_color}};">
-     {{ section.settings.banner_text }}
-      {% if section.settings.banner_link != blank %}
-    <a href="{{ section.settings.banner_link }}" style="color: {{ section.settings.banner_link_color }};">
-      <u>{{ section.settings.banner_link_label }}</u>
-    </a>
-  {% endif %} 
+  <div class="top-banner" style="background-color: {{ section.settings.banner_bg_color }};">
+    {{ section.settings.banner_text }}
+    {% if section.settings.banner_link != blank %}
+      <a href="{{ section.settings.banner_link }}" style="color: {{ section.settings.banner_link_color }};">
+        <u>{{ section.settings.banner_link_label }}</u>
+      </a>
+    {% endif %}
   </div>
 
   <div class="navbar" id="navbar">
-    <!-- LEFT NAV -->
-    <nav class="nav-left">
-      {% for link in linklists[section.settings.left-navbar].links %}
-        <div class="nav-item">
-          <a href="{{ link.url }}">{{ link.title }}</a>
+    <div class="navbar-inner">
+      
+      <!-- LEFT NAV -->
+      <nav class="nav-left">
+        {% for link in linklists[section.settings.left-navbar].links %}
+          <div class="nav-item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
 
-          {% if link.links != blank %}
-            <div class="dropdown-menu">
-              <div class="dropdown-content">
-                <div class="dropdown-columns">
-                  {% for child in link.links %}
-                    <ul>
-                      <li><strong>{{ child.title }}</strong></li>
-                      {% if child.links != blank %}
-                        {% for sub in child.links %}
-                          <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
-                        {% endfor %}
-                      {% endif %}
-                    </ul>
-                  {% endfor %}
-                </div>
+            {% if link.links != blank %}
+              <div class="dropdown-menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-columns">
+                    {% for child in link.links %}
+                      <ul>
+                        <li><strong>{{ child.title }}</strong></li>
+                        {% if child.links != blank %}
+                          {% for sub in child.links %}
+                            <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
+                          {% endfor %}
+                        {% endif %}
+                      </ul>
+                    {% endfor %}
+                  </div>
 
-                <div class="dropdown-images">
-                  {% for block in section.blocks %}
-                    {% if block.settings.menu_title == link.title %}
-                      {% if block.settings.image_1 != blank %}
-                        <img src="{{ block.settings.image_1 | image_url }}" alt="{{ link.title }} Image 1">
+                  <div class="dropdown-images">
+                    {% for block in section.blocks %}
+                      {% if block.settings.menu_title == link.title %}
+                        {% if block.settings.image_1 != blank %}
+                          <img src="{{ block.settings.image_1 | image_url }}" alt="{{ link.title }} Image 1">
+                        {% endif %}
+                        {% if block.settings.image_2 != blank %}
+                          <img src="{{ block.settings.image_2 | image_url }}" alt="{{ link.title }} Image 2">
+                        {% endif %}
                       {% endif %}
-                      {% if block.settings.image_2 != blank %}
-                        <img src="{{ block.settings.image_2 | image_url }}" alt="{{ link.title }} Image 2">
-                      {% endif %}
-                    {% endif %}
-                  {% endfor %}
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
-            </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </nav>
+
+      <!-- CENTER LOGO -->
+      <div class="nav-center">
+        <a href="{{ routes.root_url }}" class="font-cinzel font-bold tracking-widest">{{ shop.name }}</a>
+      </div>
+
+      <!-- RIGHT NAV -->
+      <nav class="nav-right">
+        {% for link in linklists[section.settings.right-navbar].links %}
+          {% if link.title == "CART" %}
+            <a href="{{ link.url }}">&nbsp;{% render 'icon-shopping-bag' %}</a>
           {% endif %}
-        </div>
-      {% endfor %}
-    </nav>
-
-    <!-- CENTER LOGO -->
-    <div class="nav-center text-3xl font-bold tracking-widest">
-      <a href="{{ routes.root_url }}" class="font-cinzel">{{ shop.name }}</a>
+          <div class="nav-item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          </div>
+        {% endfor %}
+      </nav>
     </div>
-
-    <!-- RIGHT NAV -->
-    <nav class="nav-right text-lg font-medium">
-      {% for link in linklists[section.settings.right-navbar].links %}
-        {% if link.title == "CART" %}
-          <a href="{{ link.url }}">&nbsp;{% render 'icon-shopping-bag' %}</a>
-        {% endif %}
-        <div class="nav-item">
-          <a href="{{ link.url }}">{{ link.title }}</a>
-        </div>
-      {% endfor %}
-    </nav>
   </div>
 </header>
 
@@ -263,24 +264,27 @@ window.addEventListener('scroll', function() {
   "name": "Header",
   "settings": [
     {
-      "type":"text",
-      "id":"banner_text",
-      "label":"Top Banner Text",
+      "type": "text",
+      "id": "banner_text",
+      "label": "Top Banner Text",
+      "default": "ENJOY FREE SHIPPING $90."
     },
     {
-      "type":"text",
-      "id":"banner_link_label",
-      "label":"Top Banner Link Label",
+      "type": "text",
+      "id": "banner_link_label",
+      "label": "Top Banner Link Label",
+      "default": "SHOP NOW"
     },
     {
-      "type":"url",
-      "id":"banner_link",
-      "label":"Top Banner Link",
+      "type": "url",
+      "id": "banner_link",
+      "label": "Top Banner Link"
     },
     {
-      "type":"color",
-      "id":"banner_bg_color",
-      "label":"Top Banner Background Color",
+      "type": "color",
+      "id": "banner_bg_color",
+      "label": "Top Banner Background Color",
+      "default": "#2A3C2D"
     },
     {
       "type": "color",
@@ -288,8 +292,6 @@ window.addEventListener('scroll', function() {
       "label": "Banner Link Color",
       "default": "#FFFFFF"
     },
-    
-
     {
       "type": "link_list",
       "id": "left-navbar",
@@ -317,7 +319,25 @@ window.addEventListener('scroll', function() {
       "max": 24,
       "step": 1,
       "default": 14
-    }
+    },
+    {
+      "type": "range",
+      "id": "logo_font_size",
+      "label": "Logo Font Size (px)",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "navbar_height",
+      "label": "Navbar Height (px)",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "default": 15
+    },
   ],
   "blocks": [
     {
