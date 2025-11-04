@@ -103,8 +103,8 @@
       "settings": {
         "custom_liquid": "<style>\nvideo {\nwidth: 100%;\nheight: auto;\ndisplay: block;\nmargin: 0 auto;\n}\n</style>\n<video muted autoplay playinline loop>\n<source src = \"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n<source src=\"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n</video>",
         "color_scheme": "",
-        "padding_top": 12,
-        "padding_bottom": 52
+        "padding_top": 0,
+        "padding_bottom": 20
       }
     },
     "featured_collection": {
@@ -131,7 +131,7 @@
         "quick_add": "standard",
         "columns_mobile": "1",
         "swipe_on_mobile": false,
-        "padding_top": 20,
+        "padding_top": 0,
         "padding_bottom": 36
       }
     },
@@ -158,14 +158,14 @@
       "name": "t:sections.collection-list.presets.name",
       "settings": {
         "title": "",
-        "heading_size": "h1",
-        "image_ratio": "square",
+        "heading_size": "h0",
+        "image_ratio": "portrait",
         "columns_desktop": 2,
         "color_scheme": "",
-        "show_view_all": false,
+        "show_view_all": true,
         "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
+        "swipe_on_mobile": true,
+        "padding_top": 0,
         "padding_bottom": 36
       }
     }

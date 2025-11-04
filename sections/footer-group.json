@@ -11,23 +11,50 @@
   "name": "t:sections.footer.name",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
+    "footer_dropdown_twbVMH": {
+      "type": "footer-dropdown",
       "blocks": {
-        "link_list_ceURbg": {
-          "type": "link_list",
+        "menu_block_TyTmGD": {
+          "type": "menu_block",
           "settings": {
-            "heading": "",
-            "menu": "footer"
+            "heading": "Customer care",
+            "menu": "new-footer-menu"
           }
         }
       },
       "block_order": [
-        "link_list_ceURbg"
+        "menu_block_TyTmGD"
+      ],
+      "name": "Dropdown Footer",
+      "settings": {}
+    },
+    "custom_liquid_DRPMAx": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<style>\n    .banner,\n    .multicolumn-list__item .media,\n    .image-with-text .image-with-text__media {\n        cursor: pointer;\n    }\n</style>\n<script>\n    // Select all elements with the class 'banner__media'\n    const bannerMediaElements = document.querySelectorAll('.banner:not(.slideshow), .slideshow__slide');\n    // Add a click event listener to each 'banner__media' element\n    bannerMediaElements.forEach((element) => {\n        element.addEventListener('click', (event) => {\n            // Prevent accidental activation of inner links/buttons\n            if (event.target.tagName === 'A') return;\n            // Find the first anchor tag inside the .banner element\n            const anchor = element.querySelector('a');\n            // Check if an anchor exists and redirect to its href\n            if (anchor && anchor.href) {\n                window.location.href = anchor.href;\n            }\n        });\n    });\n    function setupRedirectOnClick(parentSelector, mediaSelector) {\n    // Select all elements with the parent class\n    const parentElements = document.querySelectorAll(parentSelector);\n    parentElements.forEach((item) => {\n        item.addEventListener('click', (event) => {\n            // Trigger the redirect only if the click happens on an element with the class 'media' inside the parent element\n            const mediaElement = item.querySelector(mediaSelector);\n            // Check if the click was inside the .media element\n            if (mediaElement && mediaElement.contains(event.target)) {\n                // Find the anchor inside the parent element\n                const anchor = item.querySelector('a');\n                // If the anchor exists and has an href, redirect to its href\n                if (anchor && anchor.href) {\n                    window.location.href = anchor.href;\n                }\n            }\n        });\n    });\n}\n// Apply the function for '.multicolumn-list__item' and '.media'\nsetupRedirectOnClick('.multicolumn-list__item', '.media');\n// Apply the function for '.image-with-text' and '.image-with-text__media'\nsetupRedirectOnClick('.image-with-text', '.image-with-text__media');\n</script>",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text_mnkWTm": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "subtext": "<h1>Move & WORK IN HARMONY</h1>"
+          }
+        }
+      },
+      "block_order": [
+        "text_mnkWTm"
       ],
       "settings": {
         "color_scheme": "scheme-1",
-        "newsletter_enable": false,
+        "newsletter_enable": true,
         "newsletter_heading": "E-mail",
         "enable_follow_on_shop": true,
         "show_social": true,
@@ -42,6 +69,8 @@
     }
   },
   "order": [
+    "footer_dropdown_twbVMH",
+    "custom_liquid_DRPMAx",
     "footer"
   ]
 }

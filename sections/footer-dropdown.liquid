@@ -1,0 +1,310 @@
+{% comment %}
+  Dropdown Footer Section with Working Accordion
+  Save as: sections/dropdown-footer.liquid
+{% endcomment %}
+
+<section class="footer-dropdown-section">
+  <div class="footer-container page-width">
+    <div class="footer-grid">
+      {% for block in section.blocks %}
+        <div class="footer-column" {{ block.shopify_attributes }}>
+          <details class="footer-accordion">
+            <summary class="footer-toggle">
+              <span class="footer-heading">{{ block.settings.heading }}</span>
+              <span class="toggle-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </summary>
+            <div class="footer-links-wrapper">
+              <ul class="footer-links">
+                {% if block.settings.menu != blank %}
+                  {% for link in linklists[block.settings.menu].links %}
+                    <li>
+                      <a href="{{ link.url }}">{{ link.title }}</a>
+                    </li>
+                  {% endfor %}
+                {% else %}
+                  <li><a href="#">Sample Link 1</a></li>
+                  <li><a href="#">Sample Link 2</a></li>
+                  <li><a href="#">Sample Link 3</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </details>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .footer-dropdown-section {
+    padding: 40px 0;
+    background: #f8f8f8;
+  }
+
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .footer-column {
+    background: transparent;
+  }
+
+  .footer-accordion {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .footer-toggle {
+    background: none;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000;
+    list-style: none;
+    user-select: none;
+  }
+
+  .footer-toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .footer-toggle:hover {
+    opacity: 0.7;
+  }
+
+  .toggle-icon {
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 10px;
+  }
+
+  .footer-accordion[open] .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .footer-links-wrapper {
+    padding-bottom: 20px;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-links li {
+    margin-bottom: 12px;
+  }
+
+  .footer-links a {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    display: inline-block;
+  }
+
+  .footer-links a:hover {
+    color: #000;
+  }
+
+  /* Desktop - Always show links, hide toggle icon */
+  @media (min-width: 750px) {
+    .footer-accordion {
+      border-bottom: none;
+    }
+
+    .footer-accordion[open] summary ~ * {
+      animation: none;
+    }
+
+    .footer-accordion summary {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .toggle-icon {
+      display: none;
+    }
+
+    .footer-accordion {
+      /* Force open on desktop */
+    }
+
+    .footer-links-wrapper {
+      display: block !important;
+      padding-bottom: 0;
+    }
+
+    /* Open all accordions on desktop automatically */
+    .footer-accordion:not([open]) .footer-links-wrapper {
+      display: block !important;
+    }
+  }
+
+  /* Tablet adjustments */
+  @media (max-width: 749px) and (min-width: 500px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 499px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    function initFooterAccordions() {
+      const accordions = document.querySelectorAll('.footer-dropdown-section .footer-accordion');
+      
+      // On desktop, force all accordions to stay open
+      function handleResize() {
+        if (window.innerWidth >= 750) {
+          accordions.forEach(function(accordion) {
+            accordion.setAttribute('open', '');
+          });
+        }
+      }
+
+      // Initialize
+      handleResize();
+      
+      // Listen for resize
+      window.addEventListener('resize', handleResize);
+
+      // Optional: Close other accordions when one opens (accordion behavior)
+      // Uncomment this section if you want only one open at a time on mobile
+      /*
+      accordions.forEach(function(accordion) {
+        accordion.addEventListener('toggle', function() {
+          if (this.open && window.innerWidth < 750) {
+            accordions.forEach(function(otherAccordion) {
+              if (otherAccordion !== accordion) {
+                otherAccordion.removeAttribute('open');
+              }
+            });
+          }
+        });
+      });
+      */
+    }
+
+    // Initialize on page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFooterAccordions);
+    } else {
+      initFooterAccordions();
+    }
+
+    // Reinitialize on Shopify theme editor updates
+    if (typeof Shopify !== 'undefined' && Shopify.designMode) {
+      document.addEventListener('shopify:section:load', initFooterAccordions);
+      document.addEventListener('shopify:section:reorder', initFooterAccordions);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Dropdown Footer",
+  "tag": "section",
+  "class": "section-dropdown-footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Footer Settings"
+    },
+    {
+      "type": "paragraph",
+      "content": "Add menu columns using blocks below. On mobile, columns collapse into dropdowns."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_block",
+      "name": "Menu Column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Column Heading",
+          "default": "Quick Links"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Select Menu",
+          "info": "Choose a menu from Navigation settings"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Dropdown Footer",
+      "blocks": [
+        {
+          "type": "menu_block",
+          "settings": {
+            "heading": "Customer Care"
+          }
+        },
+        {
+          "type": "menu_block",
+          "settings": {
+            "heading": "About Us"
+          }
+        },
+        {
+          "type": "menu_block",
+          "settings": {
+            "heading": "Connect"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
