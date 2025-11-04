@@ -116,7 +116,7 @@ footer {
     {%endif%}
 
       <div class="footer-subscribe">
-        <h4>LET’S CONNECT</h4>
+        <h4>{{section.settings.newsletter_heading}}</h4>
         <p>{{section.settings.newsletter_text}}</p>
         <div class="subscribe-box">
           <input type="email" placeholder="Enter your email">
@@ -183,6 +183,11 @@ footer {
       "type": "text",
       "id": "copyright_text",
       "label": "Copyright Text",
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter Heading Text",
     },
      {
       "type": "text",

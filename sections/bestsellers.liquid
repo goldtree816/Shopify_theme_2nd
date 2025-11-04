@@ -42,7 +42,6 @@
   display: flex;
   padding-top: 20px;
   width: 90%;
-  gap: 20px;
   scroll-snap-type: x mandatory;
   overflow-y:hidden;
 }
@@ -58,7 +57,7 @@
   <p class="text-sm">{{ section.settings.section_description }}</p>
 </div>
 
-<div class="bestsellers-product">
+<div class="bestsellers-product" style="gap: {{ section.settings.product_card_spacing }}px;">
   {% assign collection = collections['bestsellers'] %}
   {% for product in collection.products %}
     {% render 'card', product: product %}
@@ -75,6 +74,15 @@
       "id": "section_title",
       "label": "Section Title",
       "default": "COLLECTION"
+    },
+    {
+      "type": "range",
+      "id": "product_card_spacing",
+      "label": "Product Card Spacing (px)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 20
     },
     {
       "type": "text",
