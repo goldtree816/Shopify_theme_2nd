@@ -91,8 +91,12 @@
           <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.title }}">
         {% endif %}
         <div class="slide-content">
-          <h2>{{ block.settings.subtitle }}</h2>
-          <h1>{{ block.settings.title }}</h1>
+          {% if block.settings.subtitle != blank %}
+            <h2>{{ block.settings.subtitle }}</h2>
+          {% endif %}
+          {% if block.settings.title != blank %}
+            <h1>{{ block.settings.title }}</h1>
+          {% endif %}
           <div class="button-wrapper">
             {% render 'button',
               text: block.settings.button_text,

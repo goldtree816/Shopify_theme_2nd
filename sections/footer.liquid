@@ -1,5 +1,6 @@
 <style>
 footer {
+  width: 100%;
   background-color: #d8dde2;
   color: #222;
   padding: 80px 100px;
@@ -15,6 +16,8 @@ footer {
 
 .footer-left {
   flex: 1;
+  display: flex;
+  justify-content: space-between;
 }
 
 .footer-logo {
@@ -80,7 +83,7 @@ footer {
 .footer-right {
   display: flex;
   justify-content: space-between;
-  gap: 60px;
+  gap: {{section.settings.footer-column-gap}}px;
 }
 
 .footer-right h4 {
@@ -105,100 +108,153 @@ footer {
 .footer-right li:hover {
   color: #2596be;
 }
-
 </style>
 
 <footer class="footer">
+  {% if section.settings.logo != blank %}
+    <img src="{{ section.settings.logo | image_url: width:120 }}" alt="Logo" class="footer-logo">
+  {% endif %}
+
   <div class="footer-container">
+
     <div class="footer-left">
-    {%if section.settings.logo !=blank%}
-      <img src="{{section.settings.logo | image_url: width:120}}" alt="Logo" class="footer-logo">
-    {%endif%}
-
       <div class="footer-subscribe">
-        <h4>{{section.settings.newsletter_heading}}</h4>
-        <p>{{section.settings.newsletter_text}}</p>
+        <h4>{{ section.settings.newsletter_heading }}</h4>
+        <p>{{ section.settings.newsletter_text }}</p>
+
         <div class="subscribe-box">
-          <input type="email" placeholder="Enter your email">
-          <button>SUBSCRIBE</button>
+          <input type="email" placeholder="{{ section.settings.placeholder_text }}">
+          <button>{{ section.settings.placeholder_button }}</button>
         </div>
-      </div>
 
-      <div class="footer-payments">
-        <img src="amex.svg">
-        <img src="applepay.svg">
-        <img src="googlepay.svg">
-        <img src="visa.svg">
-        <img src="mastercard.svg">
-      </div>
+        <div class="footer-payments">
+          <img src="{{ 'hero_image_2.jpg' | asset_url }}" alt="Payment Method">
+          <img src="{{ 'applepay.svg' | asset_url }}" alt="Apple Pay">
+          <img src="{{ 'googlepay.svg' | asset_url }}" alt="Google Pay">
+          <img src="{{ 'visa.svg' | asset_url }}" alt="Visa">
+          <img src="{{ 'mastercard.svg' | asset_url }}" alt="Mastercard">
+        </div>
 
-      <p class="footer-note">
-       {{section.settings.copyright_text}}
-      </p>
+        <p class="footer-note">{{ section.settings.copyright_text }}</p>
+      </div>
     </div>
 
     <div class="footer-right">
-      <div>
-        <h4>ABOUT</h4>
-        <ul>
-          <li>Story</li>
-          <li>Stockists</li>
-          <li>Contact</li>
-          <li>Journal</li>
-        </ul>
-      </div>
 
-      <div>
-        <h4>LEGAL</h4>
-        <ul>
-          <li>FAQ</li>
-          <li>Terms</li>
-          <li>Care</li>
-          <li>Privacy</li>
-        </ul>
-      </div>
+  <!-- First menu -->
+  <div>
+    <h4>{{ linklists[section.settings.footer-first-column].title }}</h4>
+    <ul>
+      {% for link in linklists[section.settings.footer-first-column].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
 
-      <div>
-        <h4>SOCIAL MEDIA</h4>
-        <ul>
-          <li>Instagram</li>
-          <li>Facebook</li>
-          <li>TikTok</li>
-        </ul>
-      </div>
-    </div>
+        {% if link.links != blank %}
+          <ul>
+            {% for child in link.links %}
+              <li><strong>{{ child.title }}</strong></li>
+
+              {% if child.links != blank %}
+                <ul>
+                  {% for sub in child.links %}
+                    <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Second menu -->
+  <div>
+    <h4>{{ linklists[section.settings.footer-second-column].title }}</h4>
+    <ul>
+      {% for link in linklists[section.settings.footer-second-column].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Third menu -->
+  <div>
+    <h4>{{ linklists[section.settings.footer-third-column].title }}</h4>
+    <ul>
+      {% for link in linklists[section.settings.footer-third-column].links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+</div>
+
   </div>
 </footer>
 
-{%schema%}
+{% schema %}
 {
-  "name":"Footer",
-  "settings":[
+  "name": "Footer",
+  "settings": [
     {
-      "type":"image_picker",
-      "id":"logo",
-      "label":"Logo"
+      "type": "link_list",
+      "id": "footer-first-column",
+      "label": "Footer Section First Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "footer-second-column",
+      "label": "Footer Section Second Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "footer-third-column",
+      "label": "Footer Section Third Menu"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
     },
     {
       "type": "text",
       "id": "copyright_text",
-      "label": "Copyright Text",
+      "label": "Copyright Text"
     },
     {
       "type": "text",
       "id": "newsletter_heading",
-      "label": "Newsletter Heading Text",
+      "label": "Newsletter Heading Text"
     },
-     {
+    {
+      "type": "range",
+      "id": "footer-column-gap",
+      "label": "Footer Column Gap (px)",
+      "min": 0,
+      "max": 400,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder Text"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_button",
+      "label": "Placeholder Button Text"
+    },
+    {
       "type": "text",
       "id": "newsletter_text",
-      "label": "Newsletter Text",
-    }  
+      "label": "Newsletter Text"
+    }
   ],
-  "blocks":[],
-  "presets":[
+  "blocks": [],
+  "presets": [
     {
-      "name":"Footer",
+      "name": "Footer"
     }
   ]
 }

@@ -1,4 +1,7 @@
 <style>
+html, body {
+  overflow-x: hidden;
+}
 /* Top banner */
 .top-banner {
   position: relative;
@@ -9,6 +12,7 @@
   padding: 5px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 1;
+  width:100vw;
 }
 
 header:hover .top-banner {
@@ -20,6 +24,7 @@ header:hover .top-banner {
 
 /* Navbar */
 .navbar {
+  width:100vw;
   background-color: transparent;
   padding: {{section.settings.navbar_height}}px 40px;
   transition: all 0.3s ease;
@@ -175,7 +180,7 @@ header:hover .top-banner {
 }
 </style>
 
-<header class="fixed top-0 left-0 w-full z-50">
+<header class="fixed top-0 left-0 w-100vw z-50">
   <div class="top-banner" style="background-color: {{ section.settings.banner_bg_color }};">
     {{ section.settings.banner_text }}
     {% if section.settings.banner_link != blank %}

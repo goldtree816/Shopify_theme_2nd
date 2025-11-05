@@ -16,7 +16,10 @@
       "settings": {
         "logo": "shopify://shop_images/Company_Logo.png",
         "copyright_text": "All rights reserved.",
-        "newsletter_text": "subscribe to our newsletter"
+        "newsletter_heading": "LET'S Connect",
+        "placeholder_text": "Enter your email",
+        "placeholder_button": "SUBMIT",
+        "newsletter_text": "Subscribe to our newsletter"
       }
     }
   },

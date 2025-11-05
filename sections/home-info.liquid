@@ -94,12 +94,32 @@
   }
   .aevi-image {
     width: 100%;
-    aspect-ratio: auto;
-    margin-bottom: 40px;
+    aspect-ratio: 1/1;
   }
+  .aevi-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* ✅ crops and fills neatly */
+}
   .aevi-content {
     max-width: 90%;
     padding: 0;
+  }
+  .aevi-content h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+  font-weight:400;
+  text-align:left;
+  }
+  .aevi-description p
+  {
+    text-align:left;
+    font-size:14px;
+    font-weight:100;
+  }
+  .aevi-btn
+  {
+    display:flex;  
   }
 }
 
