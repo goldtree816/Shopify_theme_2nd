@@ -1,0 +1,198 @@
+{% liquid 
+    assign custom_font = block.settings.font
+    assign font_size = block.settings.font_size | abs | append: 'px'
+    assign color = block.settings.color
+    assign text_alignment = block.settings.text_alignment
+    assign font_size_mob = block.settings.font_size_mob | abs | append: 'px'
+    assign text_alignment_mob = block.settings.text_alignment_mob
+%}
+
+{% comment %} Load Font {% endcomment %}
+{% unless block.settings.heading_variant.css_class and custom_font.system? == true %}
+    <style>
+        {{ custom_font | font_face: font_display: 'swap' }} 
+    </style>
+{% endunless %}
+
+{% comment %} Cleaning up custom class to not interfere with heading variant {% endcomment %}
+{%  liquid 
+    assign custom_class = block.settings.custom_class
+    if block.settings.heading_variant.css_class
+    assign class_array = custom_class | split: ' '
+    assign filtered_classes = ''
+    for class in class_array
+        unless class contains '--pl--heading-style-'
+            assign filtered_classes = filtered_classes | append: class | append: ' '
+        endunless
+    endfor
+    assign custom_class = filtered_classes | strip
+    endif
+%}
+
+{% style %}
+  .--pl--heading-{{ block.id }} {
+      text-align: {{ text_alignment }};
+      {% if color.alpha > 0.0 %};
+        color: {{ color }} !important;
+      {% endif %}
+      {% unless block.settings.heading_variant.css_class %}
+        font-size: {{ font_size }};
+        font-family: '{{ custom_font.family | remove: '"' }}', {{ custom_font.fallback_families }}; 
+        font-weight: {{ custom_font.weight }}; 
+        font-style: {{ custom_font.style }}; 
+        line-height: normal;
+      {% endunless %}
+  }
+
+  @media screen and (max-width: 768px) {
+    .--pl--heading-{{ block.id }} {
+      text-align: {{ text_alignment_mob }};
+      {% unless block.settings.heading_variant.css_class %}
+        font-size: {{ font_size_mob }};
+      {% endunless %}
+    }
+  }
+{% endstyle %}
+
+<{{ block.settings.tag }}
+  class="--pl--base-heading {{ custom_class }} {{ block.settings.heading_variant.css_class }} --pl--heading-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {{ block.settings.heading | default: block.settings.placeholder_text }}
+</{{ block.settings.tag }}>
+
+{% schema %}
+{
+  "name": "Heading",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the heading to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your theme section heading goes here"
+    },
+    {
+        "type": "metaobject",
+        "id": "heading_variant",
+        "label": "Variant",
+        "metaobject_type": "app--154529792001--heading_styles_pl_editor",
+        "info": "Overrides 'Font' and 'Font Size'"
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "number",
+      "id": "font_size",
+      "label": "Font Size",
+      "placeholder": "Enter a value in pixels",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_alignment",
+      "label": "Align",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile",
+      "info": "These settings only apply to mobile devices."
+    },
+    {
+      "type": "header",
+      "content": "📱 Font"
+    },
+    {
+      "type": "number",
+      "id": "font_size_mob",
+      "label": "Font Size",
+      "placeholder": "Enter a value in pixels",
+      "default": 32
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_alignment_mob",
+      "label": "Align",
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "select",
+      "id": "tag",
+      "label": "Heading Tag",
+      "options": [
+        {
+          "label": "H1",
+          "value": "h1"
+        },
+        {
+          "label": "H2",
+          "value": "h2"
+        },
+        {
+          "label": "H3",
+          "value": "h3"
+        },
+        {
+          "label": "H4",
+          "value": "h4"
+        },
+        {
+          "label": "H5",
+          "value": "h5"
+        },
+        {
+          "label": "H6",
+          "value": "h6"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "heading block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading (PL)"
+    }
+  ]
+}
+{% endschema %}

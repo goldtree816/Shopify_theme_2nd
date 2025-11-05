@@ -1,0 +1,423 @@
+{% assign width = block.settings.width %}
+{% assign height = block.settings.height %}
+{% assign flex_direction = block.settings.flex_direction %}
+{% assign flex_wrap = block.settings.flex_wrap %}
+{% assign align_items = block.settings.align_items %}
+{% assign justify_content = block.settings.justify_content %}
+{% assign gap = block.settings.gap | abs | append: 'px' %}
+{% assign padding_top = block.settings.padding_top | abs | append: 'px' %}
+{% assign padding_bottom = block.settings.padding_bottom | abs | append: 'px' %}
+{% assign padding_left = block.settings.padding_left | abs | append: 'px' %}
+{% assign padding_right = block.settings.padding_right | abs | append: 'px' %}
+{% assign max_width = block.settings.max_width | abs | append: 'px' %}
+{% assign max_height = block.settings.max_height | abs | append: 'px' %}
+{% assign justify_self = block.settings.justify_self %}
+{% comment %} Mobile settings {% endcomment %}
+{% assign width_mob = block.settings.width_mob %}
+{% assign height_mob = block.settings.height_mob %}
+{% assign flex_direction_mob = block.settings.flex_direction_mob %}
+{% assign flex_wrap_mob = block.settings.flex_wrap_mob %}
+{% assign align_items_mob = block.settings.align_items_mob %}
+{% assign justify_content_mob = block.settings.justify_content_mob %}
+{% assign gap_mob = block.settings.gap_mob | abs | append: 'px' %}
+{% assign padding_top_mob = block.settings.padding_top_mob | abs | append: 'px' %}
+{% assign padding_bottom_mob = block.settings.padding_bottom_mob | abs | append: 'px' %}
+{% assign padding_left_mob = block.settings.padding_left_mob | abs | append: 'px' %}
+{% assign padding_right_mob = block.settings.padding_right_mob | abs | append: 'px' %}
+
+{% style %}
+  .--pl--group-{{ block.id }} {
+      display: flex;
+      flex-flow: {{ flex_direction }} {{ flex_wrap }};
+      width: {{ width }};
+      height: {{ height }};
+      gap: {{ gap }};
+      align-items: {{ align_items }};
+      justify-content: {{ justify_content }};
+      padding-top: {{ padding_top }};
+      padding-bottom: {{ padding_bottom }};
+      padding-left: {{ padding_left }};
+      padding-right: {{ padding_right }};
+      {% if block.settings.max_width > 0 and block.settings.max_width != blank %}
+        max-width: {{ max_width }};
+      {% endif %}
+      {% if block.settings.max_height > 0 and block.settings.max_height != blank %}
+        max-height: {{ max_height }};
+      {% endif %}
+      {% if justify_self != 'auto' and justify_self != blank %}
+        justify-self: {{ justify_self }};
+      {% endif %}
+  }
+
+  @media screen and (max-width: 768px) {
+      .--pl--group-{{ block.id }} {
+          flex-flow: {{ flex_direction_mob }} {{ flex_wrap_mob }};
+          width: {{ width_mob }};
+          height: {{ height_mob }};
+          gap: {{ gap_mob }};
+          align-items: {{ align_items_mob }};
+          justify-content: {{ justify_content_mob }};
+          padding-top: {{ padding_top_mob }};
+          padding-bottom: {{ padding_bottom_mob }};
+          padding-left: {{ padding_left_mob }};
+          padding-right: {{ padding_right_mob }};
+          max-width: auto;
+          max-height: auto;
+          justify-self: auto;
+      }
+  }
+{% endstyle %}
+
+<div
+  class="{{ block.settings.custom_class }} --pl--group --pl--group-{{ block.id }}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Group",
+  "tag": null,
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Advanced layout block. Experiment if comfortable, or leave as-is. See our [docs](https://www.pentlibrary.com/docs) for guidance!"
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Fill ↔" },
+        { "value": "fit-content", "label": "Fit" }
+      ]
+    },
+    {
+      "type": "number",
+      "id": "max_width",
+      "label": "Max Width",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Fill ↕" },
+        { "value": "fit-content", "label": "Fit" }
+      ]
+    },
+    {
+      "type": "number",
+      "id": "max_height",
+      "label": "Max Height",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "flex_direction",
+      "label": "Direction",
+      "options": [
+        { "value": "row", "label": "Row →" },
+        { "value": "column", "label": "Column ↓" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "flex_wrap",
+      "label": "Wrap",
+      "options": [
+        { "value": "wrap", "label": "Yes" },
+        { "value": "nowrap", "label": "No" }
+      ],
+      "default": "wrap"
+    },
+    {
+      "type": "number",
+      "id": "gap",
+      "label": "Gap",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "align_items",
+      "label": "Align Items",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "stretch", "label": "Stretch" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "justify_content",
+      "label": "Justify Content",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "space-between", "label": "Space Between" },
+        { "value": "space-around", "label": "Space Around" },
+        { "value": "space-evenly", "label": "Space Evenly" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "justify_self",
+      "label": "Justify Self",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "stretch", "label": "Stretch" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Padding",
+      "info": "All values in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile",
+      "info": "These settings only apply to mobile devices."
+    },
+    {
+      "type": "header",
+      "content": "📱 Size"
+    },
+    {
+      "type": "select",
+      "id": "width_mob",
+      "label": "Width",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Fill ↔" },
+        { "value": "fit-content", "label": "Fit" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "height_mob",
+      "label": "Height",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "100%", "label": "Fill ↕" },
+        { "value": "fit-content", "label": "Fit" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "header",
+      "content": "📱 Layout"
+    },
+    {
+      "type": "select",
+      "id": "flex_direction_mob",
+      "label": "Direction",
+      "options": [
+        { "value": "row", "label": "Row →" },
+        { "value": "column", "label": "Column ↓" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "flex_wrap_mob",
+      "label": "Wrap",
+      "options": [
+        { "value": "wrap", "label": "Yes" },
+        { "value": "nowrap", "label": "No" }
+      ],
+      "default": "wrap"
+    },
+    {
+      "type": "number",
+      "id": "gap_mob",
+      "label": "Gap",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "align_items_mob",
+      "label": "Align Items",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "stretch", "label": "Stretch" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "justify_content_mob",
+      "label": "Justify",
+      "options": [
+        { "value": "flex-start", "label": "Start" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "End" },
+        { "value": "space-between", "label": "Space Between" },
+        { "value": "space-around", "label": "Space Around" },
+        { "value": "space-evenly", "label": "Space Evenly" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "📱 Padding",
+      "info": "All values in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_top_mob",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom_mob",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_left_mob",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "number",
+      "id": "padding_right_mob",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "group block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Group (PL)"
+    },
+    {
+      "name": "Button Group (PL)",
+      "settings": {
+        "flex_direction": "row",
+        "flex_wrap": "wrap",
+        "align_items": "flex-start",
+        "justify_content": "flex-start",
+        "width": "100%",
+        "gap": 16,
+        "padding_top": 16,
+        "flex_direction_mob": "column",
+        "flex_wrap_mob": "nowrap",
+        "align_items_mob": "center",
+        "justify_content_mob": "center",
+        "width_mob": "100%",
+        "gap_mob": 12,
+        "padding_top_mob": 16
+      },
+      "blocks": [
+        {
+          "type": "pl--button",
+          "settings": {
+            "full_width": "false",
+            "full_width_mob": "false",
+            "padding_top": 12,
+            "padding_bottom": 12,
+            "padding_left": 16,
+            "padding_right": 16,
+            "border_radius": 8,
+            "border_style": "solid",
+            "border_width": 1,
+            "border_color": "#000000",
+            "background_color": "#000000",
+            "color": "#ffffff"
+          }
+        },
+        {
+          "type": "pl--button",
+          "settings": {
+            "full_width": "false",
+            "full_width_mob": "false",
+            "padding_top": 12,
+            "padding_bottom": 12,
+            "padding_left": 16,
+            "padding_right": 16,
+            "border_radius": 8,
+            "border_style": "solid",
+            "border_width": 1,
+            "border_color": "#f3f3f3",
+            "background_color": "#f3f3f3",
+            "color": "#000000"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

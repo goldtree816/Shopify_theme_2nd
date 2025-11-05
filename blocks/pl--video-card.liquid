@@ -1,0 +1,825 @@
+{% assign width = block.settings.width %}
+{% assign height = block.settings.height %}
+{% assign flex_direction = block.settings.flex_direction %}
+{% assign flex_wrap = block.settings.flex_wrap %}
+{% assign align_items = block.settings.align_items %}
+{% assign justify_content = block.settings.justify_content %}
+{% assign gap = block.settings.gap | abs | append: 'px' %}
+{% assign padding_top = block.settings.padding_top | abs | append: 'px' %}
+{% assign padding_bottom = block.settings.padding_bottom | abs | append: 'px' %}
+{% assign padding_left = block.settings.padding_left | abs | append: 'px' %}
+{% assign padding_right = block.settings.padding_right | abs | append: 'px' %}
+{% assign max_width = block.settings.max_width | abs | append: 'px' %}
+{% assign max_height = block.settings.max_height | abs | append: 'px' %}{% assign justify_self = block.settings.justify_self %}
+{% comment %} Mobile settings {% endcomment %}
+{% assign width_mob = block.settings.width_mob %}
+{% assign height_mob = block.settings.height_mob %}
+{% assign flex_direction_mob = block.settings.flex_direction_mob %}
+{% assign flex_wrap_mob = block.settings.flex_wrap_mob %}
+{% assign align_items_mob = block.settings.align_items_mob %}
+{% assign justify_content_mob = block.settings.justify_content_mob %}
+{% assign gap_mob = block.settings.gap_mob | abs | append: 'px' %}
+{% assign padding_top_mob = block.settings.padding_top_mob | abs | append: 'px' %}
+{% assign padding_bottom_mob = block.settings.padding_bottom_mob | abs | append: 'px' %}
+{% assign padding_left_mob = block.settings.padding_left_mob | abs | append: 'px' %}
+{% assign padding_right_mob = block.settings.padding_right_mob | abs | append: 'px' %}
+
+{% style %}
+  .--pl--card-{{ block.id }} {
+    display: flex;
+    flex-flow: {{ flex_direction }}
+    {{ flex_wrap }};
+    width: {{ width }};
+    height: {{ height }};
+    gap: {{ gap }};
+    align-items: {{ align_items }};
+    justify-content: {{ justify_content }};
+    padding-top: {{ padding_top }};
+    padding-bottom: {{ padding_bottom }};
+    padding-left: {{ padding_left }};
+    padding-right: {{ padding_right }};
+    {% if block.settings.max_width > 0 and block.settings.max_width != blank %}
+      max-width: {{ max_width }};
+    {% endif %}
+    {% if block.settings.max_height > 0 and block.settings.max_height != blank %}
+      max-height: {{ max_height }};
+    {% endif %}
+    {% if justify_self != 'auto' and justify_self != blank %}
+      justify-self: {{ justify_self }};
+    {% endif %}
+
+    {% if block.settings.video == blank %}
+      background-color: {{ block.settings.background_color }};
+    {% endif %}
+
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.border_radius | abs | append: 'px' }};
+    border-style: {{ block.settings.border_style }};
+    border-width: {{ block.settings.border_width | abs | append: 'px' }};
+    border-color: {{ block.settings.border_color }};
+
+    {% if block.settings.card_clickable %}
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      color: inherit;
+    {% endif %}
+  }
+
+  .--pl--card-{{ block.id }} > * {
+    z-index: 2; /* Higher than the overlay */
+  }
+
+  @media screen and (max-width: 768px) {
+    .--pl--card-{{ block.id }} {
+      flex-flow: {{ flex_direction_mob }}
+      {{ flex_wrap_mob }};
+      width: {{ width_mob }};
+      height: {{ height_mob }};
+      gap: {{ gap_mob }};
+      align-items: {{ align_items_mob }};
+      justify-content: {{ justify_content_mob }};
+      padding-top: {{ padding_top_mob }};
+      padding-bottom: {{ padding_bottom_mob }};
+      padding-left: {{ padding_left_mob }};
+      padding-right: {{ padding_right_mob }};
+      max-width: auto;
+      max-height: auto;
+      justify-self: auto;
+
+      {% if block.settings.image_mob != blank %}
+        background-image: url('{{ block.settings.image_mob | image_url }}');
+        background-size: cover;
+        background-position: center;
+      {% elsif block.settings.background_color_mob != blank and block.settings.background_color_mob.alpha > 0.0 %}
+        background-color: {{ block.settings.background_color_mob }};
+        /* Reset background image */
+        background-image: none;
+      {% endif %}
+      {% if block.settings.border_radius_mob != blank %}
+        border-radius: {{ block.settings.border_radius_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if block.settings.border_style_mob != blank %}
+        border-style: {{ block.settings.border_style_mob }};
+      {% endif %}
+      {% if block.settings.border_width_mob != blank %}
+        border-width: {{ block.settings.border_width_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if block.settings.border_color_mob != blank and block.settings.border_color_mob.alpha > 0.0 %}
+        border-color: {{ block.settings.border_color_mob }};
+      {% endif %}
+    }
+
+    {% if block.settings.image_mob != blank %}
+      .--pl--card-{{ block.id }}::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        opacity: {{ block.settings.overlay_opacity_mob | divided_by: 100.0 }};
+        z-index: 1;
+      }
+
+      .--pl--card-{{ block.id }} > * {
+        z-index: 2; /* Higher than the overlay */
+      }
+    {% elsif block.settings.background_color_mob != blank and block.settings.background_color_mob.alpha > 0.0 %}
+      .--pl--card-{{ block.id }}::before {
+        display: none;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+{% assign tag = block.settings.card_clickable | replace: 'true', 'a' | replace: 'false', 'div' %}
+
+<{{ tag }} class="{{ block.settings.custom_class }} --pl--card --pl--card-{{ block.id }}" {{ block.shopify_attributes }} {% if block.settings.card_clickable %}href="{{ block.settings.link }}"{% endif %} {% if block.settings.target_blank %}target="_blank" rel="noopener noreferrer"{% endif %}>
+  {% content_for 'blocks' %}
+  {% unless block.settings.video == blank and block.settings.background_color.alpha > 0.0 %}
+    {% render 'pl--background-video', 
+      video: block.settings.video,
+      video_mob: block.settings.video_mob,
+      autoplay: block.settings.autoplay,
+      autoplay_mob: block.settings.autoplay_mob,
+      loop: block.settings.loop,
+      loop_mob: block.settings.loop_mob,
+      mute: true,
+      controls: block.settings.controls,
+      controls_mob: block.settings.controls_mob,
+      overlay_opacity: block.settings.overlay,
+      overlay_opacity_mob: block.settings.overlay_mob,
+      alt: block.settings.alt,
+      section: section
+    %}
+  {% endunless %}
+</{{ tag }}>
+
+
+{% schema %}
+  {
+    "name": "Card (Video Background)",
+    "tag": null,
+    "blocks": [
+      {
+        "type": "@theme"
+      },
+      {
+        "type": "@app"
+      }
+    ],
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Advanced layout block. Experiment if comfortable, or leave as-is. See our [docs](https://www.pentlibrary.com/docs) for guidance!"
+      },
+      {
+        "type": "header",
+        "content": "Card Link"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_clickable",
+        "label": "Make entire card clickable",
+        "default": false
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      },
+      {
+        "type": "checkbox",
+        "id": "target_blank",
+        "label": "Open in new tab",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Size"
+      },
+      {
+        "type": "select",
+        "id": "width",
+        "label": "Width",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "100%",
+            "label": "Fill ↔"
+          },
+          {
+            "value": "fit-content",
+            "label": "Fit"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "max_width",
+        "label": "Max Width",
+        "placeholder": "Enter a value in pixels"
+      },
+      {
+        "type": "select",
+        "id": "height",
+        "label": "Height",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "100%",
+            "label": "Fill ↕"
+          },
+          {
+            "value": "fit-content",
+            "label": "Fit"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "max_height",
+        "label": "Max Height",
+        "placeholder": "Enter a value in pixels"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "flex_direction",
+        "label": "Direction",
+        "options": [
+          {
+            "value": "row",
+            "label": "Row →"
+          },
+          {
+            "value": "column",
+            "label": "Column ↓"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "flex_wrap",
+        "label": "Wrap",
+        "options": [
+          {
+            "value": "wrap",
+            "label": "Yes"
+          },
+          {
+            "value": "nowrap",
+            "label": "No"
+          }
+        ],
+        "default": "wrap"
+      },
+      {
+        "type": "number",
+        "id": "gap",
+        "label": "Gap",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "align_items",
+        "label": "Align Items",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-end",
+            "label": "End"
+          },
+          {
+            "value": "stretch",
+            "label": "Stretch"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "justify_content",
+        "label": "Justify Content",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-end",
+            "label": "End"
+          },
+          {
+            "value": "space-between",
+            "label": "Space Between"
+          },
+          {
+            "value": "space-around",
+            "label": "Space Around"
+          },
+          {
+            "value": "space-evenly",
+            "label": "Space Evenly"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "justify_self",
+        "label": "Justify Self",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "flex-start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-end",
+            "label": "End"
+          },
+          {
+            "value": "stretch",
+            "label": "Stretch"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Background Video"
+      },
+      {
+        "type": "video",
+        "id": "video",
+        "label": "Video"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Autoplay",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "loop",
+        "label": "Loop",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "controls",
+        "label": "Controls",
+        "default": "none",
+        "options": [
+          {
+            "label": "Play/Pause",
+            "value": "light"
+          },
+          {
+            "label": "None",
+            "value": "none"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "overlay",
+        "label": "Overlay Opacity",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 0,
+        "unit": "%"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color"
+      },
+      {
+        "type": "header",
+        "content": "Border"
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "label": "Radius",
+        "step": 1,
+        "default": 0,
+        "unit": "px",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "type": "select",
+        "id": "border_style",
+        "label": "Style",
+        "options": [
+          {
+            "value": "none",
+            "label": "✖"
+          },
+          {
+            "value": "solid",
+            "label": "─"
+          },
+          {
+            "value": "dashed",
+            "label": "┄"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "border_width",
+        "label": "Width",
+        "placeholder": "Enter a value in pixels",
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "border_color",
+        "label": "Color"
+      },
+      {
+        "type": "header",
+        "content": "Padding",
+        "info": "All values in pixels"
+      },
+      {
+        "type": "number",
+        "id": "padding_top",
+        "label": "Top",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_bottom",
+        "label": "Bottom",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_left",
+        "label": "Left",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_right",
+        "label": "Right",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "📱 Mobile",
+        "info": "These settings only apply to mobile devices."
+      },
+      {
+        "type": "header",
+        "content": "📱 Size"
+      },
+      {
+        "type": "select",
+        "id": "width_mob",
+        "label": "Width",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "100%",
+            "label": "Fill ↔"
+          },
+          {
+            "value": "fit-content",
+            "label": "Fit"
+          }
+        ],
+        "default": "auto"
+      },
+      {
+        "type": "select",
+        "id": "height_mob",
+        "label": "Height",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto"
+          },
+          {
+            "value": "100%",
+            "label": "Fill ↕"
+          },
+          {
+            "value": "fit-content",
+            "label": "Fit"
+          }
+        ],
+        "default": "auto"
+      },
+      {
+        "type": "header",
+        "content": "📱 Layout"
+      },
+      {
+        "type": "select",
+        "id": "flex_direction_mob",
+        "label": "Direction",
+        "options": [
+          {
+            "value": "row",
+            "label": "Row →"
+          },
+          {
+            "value": "column",
+            "label": "Column ↓"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "flex_wrap_mob",
+        "label": "Wrap",
+        "options": [
+          {
+            "value": "wrap",
+            "label": "Yes"
+          },
+          {
+            "value": "nowrap",
+            "label": "No"
+          }
+        ],
+        "default": "wrap"
+      },
+      {
+        "type": "number",
+        "id": "gap_mob",
+        "label": "Gap",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "align_items_mob",
+        "label": "Align Items",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-end",
+            "label": "End"
+          },
+          {
+            "value": "stretch",
+            "label": "Stretch"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "justify_content_mob",
+        "label": "Justify",
+        "options": [
+          {
+            "value": "flex-start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "flex-end",
+            "label": "End"
+          },
+          {
+            "value": "space-between",
+            "label": "Space Between"
+          },
+          {
+            "value": "space-around",
+            "label": "Space Around"
+          },
+          {
+            "value": "space-evenly",
+            "label": "Space Evenly"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "📱 Background Video"
+      },
+      {
+        "type": "video",
+        "id": "video_mob",
+        "label": "Video"
+      },
+      {
+        "type": "checkbox",
+        "id": "autoplay_mob",
+        "label": "Autoplay",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "loop_mob",
+        "label": "Loop",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "controls_mob",
+        "label": "Controls",
+        "default": "none",
+        "options": [
+          {
+            "label": "Play/Pause",
+            "value": "light"
+          },
+          {
+            "label": "None",
+            "value": "none"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "overlay_mob",
+        "label": "Overlay Opacity",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "default": 0,
+        "unit": "%"
+      },
+      {
+        "type": "color",
+        "id": "background_color_mob",
+        "label": "Background Color"
+      },
+      {
+        "type": "header",
+        "content": "📱 Border"
+      },
+      {
+        "type": "range",
+        "id": "border_radius_mob",
+        "label": "Radius",
+        "step": 1,
+        "default": 0,
+        "unit": "px",
+        "min": 0,
+        "max": 100
+      },
+      {
+        "type": "select",
+        "id": "border_style_mob",
+        "label": "Style",
+        "options": [
+          {
+            "value": "none",
+            "label": "✖"
+          },
+          {
+            "value": "solid",
+            "label": "─"
+          },
+          {
+            "value": "dashed",
+            "label": "┄"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "border_width_mob",
+        "label": "Width",
+        "placeholder": "Enter a value in pixels",
+        "default": 1
+      },
+      {
+        "type": "color",
+        "id": "border_color_mob",
+        "label": "Color"
+      },
+      {
+        "type": "header",
+        "content": "📱 Padding",
+        "info": "All values in pixels"
+      },
+      {
+        "type": "number",
+        "id": "padding_top_mob",
+        "label": "Top",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_bottom_mob",
+        "label": "Bottom",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_left_mob",
+        "label": "Left",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "number",
+        "id": "padding_right_mob",
+        "label": "Right",
+        "placeholder": "Enter a value in pixels",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "⚙️ Advanced"
+      },
+      {
+        "type": "text",
+        "id": "bg_placeholder",
+        "label": "Background Placeholder"
+      },
+      {
+        "type": "text",
+        "id": "custom_class",
+        "label": "Class",
+        "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+      },
+      {
+        "type": "paragraph",
+        "content": "video-card block (v.1.0.0)"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Video Card (PL)",
+        "settings": {
+          "card_clickable": false,
+          "border_radius": 16,
+          "border_radius_mob": 16,
+          "padding_bottom": 32,
+          "padding_bottom_mob": 16,
+          "padding_left": 32,
+          "padding_left_mob": 16,
+          "padding_right": 32,
+          "padding_right_mob": 16,
+          "padding_top": 32,
+          "padding_top_mob": 16
+        }
+      }
+    ]
+  }
+{% endschema %}

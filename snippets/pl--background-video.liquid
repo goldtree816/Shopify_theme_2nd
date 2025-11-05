@@ -1,0 +1,332 @@
+{% comment %} 
+        Renders a background video with an overlay.
+
+        Usage:
+        {% render 'pl--background-video', 
+          video: section.settings.video,
+          video_mob: section.settings.video_mob,
+          autoplay: true,
+          autoplay_mob: true,
+          loop: true,
+          loop_mob: true,
+          mute: true,
+          controls: 'none',
+          controls_mob: 'none',
+          overlay_opacity: 30,
+          overlay_opacity_mob: 30,
+          alt: 'Background video',
+          custom_class: 'custom-class',
+          section: section
+        %}
+
+        Accepts:
+        - video: {Object} Desktop video (Shopify-hosted)
+        - video_mob: {Object} Mobile video (Shopify-hosted)
+        - autoplay: {Boolean} Whether to autoplay the video (default: true)
+        - autoplay_mob: {Boolean} Whether to autoplay the mobile video (default: true)
+        - loop: {Boolean} Whether to loop the video (default: true)
+        - loop_mob: {Boolean} Whether to loop the mobile video (default: true)
+        - mute: {Boolean} Whether to mute the video (default: true)
+        - controls: {String} Controls type: 'none', 'light', 'full' (default: 'none')
+        - controls_mob: {String} Mobile controls type: 'none', 'light', 'full' (default: 'none')
+        - overlay_opacity: {Number} Desktop overlay opacity (0-100)
+        - overlay_opacity_mob: {Number} Mobile overlay opacity (0-100)
+        - alt: {String} Alt text for video
+        - custom_class: {String} Additional classes
+        - section: {Object} Section object
+{% endcomment %}
+
+{% liquid
+  # Set default values
+  assign autoplay = autoplay | default: false
+  assign loop = loop | default: true
+  assign mute = mute | default: true
+  assign controls = controls | default: 'none'
+  assign overlay_opacity = overlay_opacity | default: 0
+  assign overlay_opacity_mob = overlay_opacity_mob | default: overlay_opacity
+
+  # Set up control variables
+  assign light_controls = false
+  if controls == 'light'
+    assign light_controls = true
+  endif
+
+  assign light_controls_mob = false
+  if controls_mob == 'light'
+    assign light_controls_mob = true
+  endif
+
+  assign poster_url = thumbnail | image_url | default: video.preview_image | image_url
+%}
+
+{% style %}
+  .pl--bg-video-container-{{ section_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .pl--bg-video-overlay-{{ section_id }}{{ video.id }} {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: hsla(0, 0%, 0%, 1);
+    pointer-events: none;
+    display: block !important;
+    z-index: 1;
+    opacity: {{ overlay_opacity | divided_by: 100.0 }};
+  }
+
+  .pl--controls {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .pl--bg-video-container-{{ section_id }}:hover .pl--controls {
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    .pl--bg-video-overlay-{{ section_id }}{{ video.id }} {
+      {% if video_mob != blank or video_url_mob != blank %}
+        opacity: {{ overlay_opacity_mob | divided_by: 100.0 }};
+      {% endif %}
+    }
+
+    .pl--controls {
+      opacity: 1;
+    }
+  }
+
+  .pl--bg-video-{{ section.id }} {
+    display: block;
+
+    object-fit: cover;
+    object-position: center center;
+
+    width: 100%;
+    height: 100%;
+  }
+
+  /* YouTube/Vimeo iframe specific styles */
+  .pl--bg-video-container-{{ section_id }}iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+{% endstyle %}
+
+<div class="pl--bg-video-container-{{ section_id }} {{ custom_class }}">
+  <!-- Overlay -->
+  <div class="pl--bg-video-overlay-{{ section_id }}{{ video.id }}"></div>
+
+  {% liquid
+    assign video_tag_class = 'pl--bg-video-' | append: section.id
+    if video_mob != blank
+      assign video_tag_class = video_tag_class | append: ' --pl--hide-mobile-landscape'
+    endif
+    assign video_tag_id = 'pl--bg-video-desktop-' | append: section.id | append: video.id
+
+    assign poster_url = thumbnail | image_url | default: video.preview_image | image_url
+  %}
+
+  <!-- Desktop Video -->
+  {% if video %}
+    {{ video  | video_tag:  autoplay: autoplay,  loop: loop,  muted: mute,  controls: false,  class: video_tag_class,  id: video_tag_id,  poster: poster_url,  alt: alt
+    }}
+
+    {% if light_controls %}
+      <div class="--pl--light-controls-wrapper pl--controls {% if video_mob != blank %}--pl--hide-mobile-landscape{% endif %}" id="light-play-pause-wrapper-desktop">
+        <a id="playPauseButton-{{ section.id }}-{{ video.id }}" class="--pl--light-controls-button {{ controls_class }}">
+          <div
+            class="--pl--svg-wrapper-light-controls"
+            id="pause-icon-{{ section.id }}-{{ video.id }}"
+            style="{% if autoplay != true %}display: none;{% endif %}">
+            {{ 'pl--pause-icon-solid.svg' | inline_asset_content }}
+          </div>
+          <div
+            class="--pl--svg-wrapper-light-controls"
+            id="play-icon-{{ section.id }}-{{ video.id }}"
+            style="{% if autoplay == true %}display: none;{% endif %}">
+            {{ 'pl--play-icon-solid.svg' | inline_asset_content }}
+          </div>
+        </a>
+      </div>
+    {% endif %}
+  {% else %}
+  <img
+    src="{{ 'pl--video-placeholder-hero-background.png' | asset_url }}"
+    alt="Placeholder video"
+    loading="lazy"
+    width="100%"
+    height="100%"
+    class="--pl--image-snippet --pl--hide-mobile-landscape"
+  >
+  {% endif %}
+
+  {% liquid
+    assign video_tag_class_mob = 'pl--bg-video-' | append: section.id | append: ' --pl--show-mobile-landscape'
+    assign video_tag_id_mob = 'pl--bg-video-mobile-' | append: section.id | append: video_mob.id
+
+    assign poster_url_mob = thumbnail_mob | image_url | default: video_mob.preview_image | image_url
+  %}
+
+  <!-- Mobile Video -->
+  {% if video_mob %}
+    {{ video_mob 
+        | video_tag: 
+        autoplay: autoplay_mob, 
+        loop: loop_mob, 
+        muted: mute_mob, 
+        controls: false, 
+        class: video_tag_class_mob, 
+        id: video_tag_id_mob, 
+        poster: poster_url_mob, 
+        alt: alt
+    }}
+
+    {% if light_controls_mob %}
+      <div class="--pl--light-controls-wrapper pl--controls --pl--show-mobile-landscape" id="light-play-pause-wrapper-mobile">
+        <a id="playPauseButton-{{ section.id }}-{{ video_mob.id }}-mobile" class="--pl--light-controls-button {{ controls_class }}">
+          <div
+            class="--pl--svg-wrapper-light-controls"
+            id="pause-icon-{{ section.id }}-{{ video_mob.id }}-mobile"
+            style="{% if autoplay_mob != true %}display: none;{% endif %}">
+            {{ 'pl--pause-icon-solid.svg' | inline_asset_content }}
+          </div>
+          <div
+            class="--pl--svg-wrapper-light-controls"
+            id="play-icon-{{ section.id }}-{{ video_mob.id }}-mobile"
+            style="{% if autoplay_mob == true %}display: none;{% endif %}">
+            {{ 'pl--play-icon-solid.svg' | inline_asset_content }}
+          </div>
+        </a>
+      </div>
+    {% endif %}
+  {% elsif video == blank %}
+      <img
+        src="{{ 'pl--video-placeholder-hero-background.png' | asset_url }}"
+        alt="Placeholder video"
+        loading="lazy"
+        width="100%"
+        height="100%"
+        class="--pl--image-snippet --pl--show-mobile-landscape"
+      >
+  {% endif %}
+</div>
+
+{% if light_controls or light_controls_mob %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Desktop video setup
+      if ({{ light_controls }}) {
+        setupVideoControls(
+          '{{ video_tag_id }}',
+          'playPauseButton-{{ section.id }}-{{ video.id }}',
+          'pause-icon-{{ section.id }}-{{ video.id }}',
+          'play-icon-{{ section.id }}-{{ video.id }}',
+          {{ autoplay }}
+        );
+      }
+      
+      // Mobile video setup
+      if ({{ light_controls_mob }}) {
+        setupVideoControls(
+          '{{ video_tag_id_mob }}',
+          'playPauseButton-{{ section.id }}-{{ video_mob.id}}-mobile',
+          'pause-icon-{{ section.id }}-{{ video_mob.id }}-mobile',
+          'play-icon-{{ section.id }}-{{ video_mob.id }}-mobile',
+          {{ autoplay_mob }}
+        );
+      }
+      
+      // Shared function to set up video controls
+      function setupVideoControls(videoId, buttonId, pauseIconId, playIconId, initialPlayState) {
+        const player = document.getElementById(videoId);
+        const playPauseBtn = document.getElementById(buttonId);
+        const pauseIcon = document.getElementById(pauseIconId);
+        const playIcon = document.getElementById(playIconId);
+        
+        if (!player || !playPauseBtn || !pauseIcon || !playIcon) return;
+        
+        let isPlaying = initialPlayState;
+        
+        // Initialize correct icon
+        pauseIcon.style.display = isPlaying ? 'block' : 'none';
+        playIcon.style.display = isPlaying ? 'none' : 'block';
+        
+        // Handle button click
+        playPauseBtn.addEventListener('click', function() {
+          if (isPlaying) {
+            player.pause();
+            pauseIcon.style.display = 'none';
+            playIcon.style.display = 'block';
+          } else {
+            player.play().catch(() => {
+              // Handle autoplay restrictions
+              console.log('Video playback prevented by browser');
+            });
+            pauseIcon.style.display = 'block';
+            playIcon.style.display = 'none';
+          }
+          isPlaying = !isPlaying;
+        });
+        
+        // Also update icon state when video plays or pauses naturally
+        player.addEventListener('play', function() {
+          isPlaying = true;
+          pauseIcon.style.display = 'block';
+          playIcon.style.display = 'none';
+        });
+        
+        player.addEventListener('pause', function() {
+          isPlaying = false;
+          pauseIcon.style.display = 'none';
+          playIcon.style.display = 'block';
+        });
+      }
+      
+      // Handle responsive behavior - pause inactive video
+      function handleResponsiveVideos() {
+        const isMobile = window.innerWidth < 749;
+        const desktopVideo = document.getElementById('{{ video_tag_id }}');
+        const mobileVideo = document.getElementById('{{ video_tag_id_mob }}');
+        
+        if (desktopVideo && mobileVideo) {
+          if (isMobile) {
+            // On mobile view, pause desktop video
+            desktopVideo.pause();
+            if ({{autoplay_mob}}) {
+              mobileVideo.play();
+            }
+          } else {
+            // On desktop view, pause mobile video
+            mobileVideo.pause();
+            if ({{autoplay}}) {
+              desktopVideo.play();
+            }
+          }
+        }
+      }
+      
+      // Setup responsive handling
+      window.addEventListener('resize', function() {
+        handleResponsiveVideos();
+      });
+      
+      // Initial responsive check
+      handleResponsiveVideos();
+    });
+  </script>
+{% endif %}

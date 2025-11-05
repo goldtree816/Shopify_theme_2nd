@@ -61,9 +61,9 @@
       "settings": {
         "auto_rotate": true,
         "change_slides_speed": 10,
-        "color_scheme": "scheme-2",
+        "color_scheme": "scheme-1",
         "show_line_separator": false,
-        "show_social": true,
+        "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false
       }

@@ -1,0 +1,142 @@
+/* Pent Library Base Editor CSS File
+This file contains all classes related to the editor for it to work properly */
+
+/* HEADING CLASSES */
+
+.--pl--base-heading {
+  all: unset;
+  line-height: normal;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--color, #000000);
+}
+
+.--pl--heading-style-h1 {
+  font-size: 64px;
+}
+.--pl--heading-style-h2 {
+  font-size: 48px;
+}
+.--pl--heading-style-h3 {
+  font-size: 32px;
+}
+.--pl--heading-style-h4 {
+  font-size: 24px;
+}
+.--pl--heading-style-h5 {
+  font-size: 20px;
+}
+.--pl--heading-style-h6 {
+  font-size: 16px;
+}
+
+@media screen and (max-width: 768px) {
+  .--pl--heading-style-h1 {
+    font-size: 40px;
+  }
+  .--pl--heading-style-h2 {
+    font-size: 36px;
+  }
+  .--pl--heading-style-h3 {
+    font-size: 32px;
+  }
+}
+
+/* TEXT CLASSES */
+
+.--pl--base-text {
+  all: unset;
+  line-height: normal;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.--pl--base-text * {
+  margin: 0;
+}
+
+.--pl--text-size-large {
+  font-size: 24px;
+}
+.--pl--text-size-medium {
+  font-size: 20px;
+}
+.--pl--text-size-regular {
+  font-size: 16px;
+}
+.--pl--text-size-small {
+  font-size: 14px;
+}
+.--pl--text-size-tiny {
+  font-size: 12px;
+}
+
+/* BUTTON CLASSES */
+
+.--pl--button {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  border-width: 1px;
+  border-color: rgb(0, 0, 0);
+  border-style: solid;
+  border-radius: 8px;
+  padding: 12px 16px;
+  line-height: normal;
+  font-weight: 500;
+
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.--pl--button.is-primary {
+  background-color: #000000;
+  border-color: #000000;
+  color: white;
+}
+
+.--pl--button.is-secondary {
+  background-color: rgb(243, 243, 243);
+  color: rgb(0, 0, 0);
+  border-color: rgb(243, 243, 243);
+}
+
+.--pl--button.is-link {
+  background-color: transparent;
+  color: #0441f7;
+  border: none;
+  padding: 2px 4px !important;
+  line-height: normal;
+  font-size: 16px;
+
+  text-decoration: underline;
+}
+
+.--pl--button.is-tiny {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.--pl--button.is-small {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+.--pl--button.is-regular {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+.--pl--button.is-large {
+  padding: 14px 32px;
+  font-size: 18px;
+}
+
+.--pl--button.is-full-width {
+  width: 100%;
+  max-width: none;
+}

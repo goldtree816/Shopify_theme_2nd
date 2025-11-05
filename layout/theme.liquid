@@ -14,6 +14,8 @@
     {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
       <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
     {%- endunless -%}
+    {{ 'pl--styles.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'pl--base.css' | asset_url | stylesheet_tag: preload: true }}
 
     <title>
       {{ page_title }}
@@ -39,6 +41,7 @@
       <script src="{{ 'animations.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    <script src="{{ 'pl--base.js' | asset_url }}" defer="defer"></script>
     {{ content_for_header }}
 
     {%- liquid

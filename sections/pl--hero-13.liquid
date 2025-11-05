@@ -1,0 +1,414 @@
+{% comment %}
+  Section: Hero 13
+  Version: 1.0.0
+  
+  ===================================================
+  IMPORTANT - PLEASE READ BEFORE MODIFYING THIS FILE
+  ===================================================
+  
+  This is a Pent Library section template. 
+  - Please report bugs to support@pentlibrary.com. Include the section ID and version in the email.
+  - Modifying the file may break the section, edit at own risk
+  - For best practices, visit our docs: https://www.pentlibrary.com/docs
+
+{% endcomment %}
+
+{%  stylesheet %} 
+.--pl--hero-13-padding-left-group {
+  padding-left: 5vw !important;
+}
+
+@media screen and (max-width: 768px) {
+  .--pl--hero-13-padding-left-group {
+    padding-left: 5% !important;
+    padding-right: 5% !important;
+  }
+}
+{% endstylesheet %}
+
+{% style %}
+  .pl--hero-13-bg-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .pl--hero-13-inline-padding-{{ section.id }} {
+    {% if section.settings.padding_left != 0 and section.settings.padding_left != blank %}
+      padding-left: {{ section.settings.padding_left | abs | append: 'px' }};
+    {% endif %}
+    {% if section.settings.padding_right != 0 and section.settings.padding_right != blank %}
+      padding-right: {{ section.settings.padding_right | abs | append: 'px' }};
+    {% endif %}
+  }
+
+  .pl--hero-13-container-{{ section.id }} {
+    {% if section.settings.max_width > 220 and section.settings.max_width != blank %}
+      max-width: {{ section.settings.max_width | abs | append: 'px' }};
+    {% endif %}
+    height: 100%;
+  }
+
+  .pl--hero-13-custom-padding-{{ section.id }} {
+    {% if section.settings.padding_top != 0 and section.settings.padding_top != blank %}
+      padding-top: {{ section.settings.padding_top | abs | append: 'px' }};
+    {% endif %}
+    {% if section.settings.padding_bottom != 0 and section.settings.padding_bottom != blank %}
+      padding-bottom: {{ section.settings.padding_bottom | abs | append: 'px' }};
+    {% endif %}
+  }
+
+  .pl--hero-13-grid-{{ section.id }} {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+    {% if section.settings.height == "fill" %}
+      min-height: 100vh;
+      align-content: stretch;
+      flex-wrap: wrap;
+    {% endif %}
+  }
+
+  @media screen and (max-width: 768px) {
+
+    .pl--hero-13-bg-{{ section.id }} {
+      {% if section.settings.height_mob == "fill" %}
+        min-height: 100vh;
+        display: flex;
+        align-content: {{ section.settings.align_content_mob }};
+        flex-wrap: wrap;
+      {% endif %}
+    }
+
+    .pl--hero-13-inline-padding-{{ section.id }} {
+      {% if section.settings.padding_left_mob != 0 and section.settings.padding_left_mob != blank %}
+        padding-left: {{ section.settings.padding_left_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if section.settings.padding_right_mob != 0 and section.settings.padding_right_mob != blank %}
+        padding-right: {{ section.settings.padding_right_mob | abs | append: 'px' }};
+      {% endif %}
+    }
+
+    .pl--hero-13-custom-padding-{{ section.id }} {
+      {% if section.settings.padding_top_mob != 0 and section.settings.padding_top_mob != blank %}
+        padding-top: {{ section.settings.padding_top_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if section.settings.padding_bottom_mob != 0 and section.settings.padding_bottom_mob != blank %}
+        padding-bottom: {{ section.settings.padding_bottom_mob | abs | append: 'px' }};
+      {% endif %}
+    }
+
+    .pl--hero-13-grid-{{ section.id }} {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="--pl--section-wrapper pl--hero-13-bg-{{ section.id }}">
+  <div class="pl--hero-13-container-{{ section.id }}">
+    <div class="pl--hero-13-grid-{{ section.id }} pl--hero-13-custom-padding-{{ section.id }} pl--hero-13-inline-padding-{{ section.id }}">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero 13",
+  "tag": "section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the section to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Section Height",
+      "default": "fill",
+      "options": [
+        { "value": "hug", "label": "Hug" },
+        { "value": "fill", "label": "Fill ↕" }
+      ]
+    },
+    {
+      "type": "number",
+      "id": "max_width",
+      "label": "Max Width",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "📱  Mobile"
+    },
+    {
+      "type": "select",
+      "id": "height_mob",
+      "label": "Section Height",
+      "default": "fill",
+      "options": [
+        { "value": "hug", "label": "Hug" },
+        { "value": "fill", "label": "Fill ↕" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "📱 Padding"
+    },
+    {
+      "type": "number",
+      "id": "padding_top_mob",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom_mob",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left_mob",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right_mob",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "hero-13 section (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero 13 (PL)",
+      "settings": {
+        
+      },
+      "blocks": [
+        {
+          "type": "pl--video-card",
+          "settings": {
+            "height": "100%",
+            "height_mob": "100%",
+            "width": "100%",
+            "width_mob": "100%",
+            "gap": 16,
+            "gap_mob": 12,
+            "padding_right": 32,
+            "padding_left": 32,
+            "padding_top": 32,
+            "padding_bottom": 32,
+            "padding_top_mob": 24,
+            "padding_right_mob": 24,
+            "padding_left_mob": 24,
+            "padding_bottom_mob": 24,
+            "flex_wrap": "nowrap",
+            "flex_wrap_mob": "nowrap",
+            "flex_direction": "column",
+            "flex_direction_mob": "column",
+            "align_items": "flex-start",
+            "align_items_mob": "flex-start",
+            "justify_content": "flex-end",
+            "justify_content_mob": "flex-end",
+            "justify_self": "auto",
+            "card_clickable": true,
+            "bg_placeholder": "pl--image-placeholder-portrait-background.png"
+          },
+          "blocks": [
+            {
+              "type": "pl--heading",
+              "settings": {
+                "tag": "h2",
+                "text_alignment": "left",
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "type": "pl--text",
+              "settings": {
+                "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "type": "pl--group",
+              "settings": {
+                "flex_direction": "row",
+                "flex_direction_mob": "row",
+                "align_items": "flex-start",
+                "align_items_mob": "flex-start",
+                "justify_content": "flex-start",
+                "justify_content_mob": "flex-start",
+                "gap": 16,
+                "gap_mob": 16,
+                "padding_top": 16,
+                "padding_top_mob": 16,
+                "width": "100%",
+                "width_mob": "100%"
+              },
+              "blocks": [
+                {
+                  "type": "pl--button",
+                  "settings": {
+                    "full_width": "false",
+                    "full_width_mob": "false",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#FFFFFF",
+                    "background_color": "#FFFFFF",
+                    "color": "#000000",
+                    "visual_only": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pl--video-card",
+          "settings": {
+            "height": "100%",
+            "height_mob": "100%",
+            "width": "100%",
+            "width_mob": "100%",
+            "gap": 16,
+            "gap_mob": 12,
+            "padding_right": 32,
+            "padding_left": 32,
+            "padding_top": 32,
+            "padding_bottom": 32,
+            "padding_top_mob": 24,
+            "padding_right_mob": 24,
+            "padding_left_mob": 24,
+            "padding_bottom_mob": 24,
+            "flex_wrap": "nowrap",
+            "flex_wrap_mob": "nowrap",
+            "flex_direction": "column",
+            "flex_direction_mob": "column",
+            "align_items": "flex-start",
+            "align_items_mob": "flex-start",
+            "justify_content": "flex-end",
+            "justify_content_mob": "flex-end",
+            "justify_self": "auto",
+            "card_clickable": true,
+            "bg_placeholder": "pl--image-placeholder-portrait-background.png"
+          },
+          "blocks": [
+            {
+              "type": "pl--heading",
+              "settings": {
+                "tag": "h2",
+                "text_alignment": "left",
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "type": "pl--text",
+              "settings": {
+                "text": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>",
+                "color": "#FFFFFF"
+              }
+            },
+            {
+              "type": "pl--group",
+              "settings": {
+                "flex_direction": "row",
+                "flex_direction_mob": "row",
+                "align_items": "flex-start",
+                "align_items_mob": "flex-start",
+                "justify_content": "flex-start",
+                "justify_content_mob": "flex-start",
+                "gap": 16,
+                "gap_mob": 16,
+                "padding_top": 16,
+                "padding_top_mob": 16,
+                "width": "100%",
+                "width_mob": "100%"
+              },
+              "blocks": [
+                {
+                  "type": "pl--button",
+                  "settings": {
+                    "full_width": "false",
+                    "full_width_mob": "false",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#FFFFFF",
+                    "background_color": "#FFFFFF",
+                    "color": "#000000",
+                    "visual_only": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

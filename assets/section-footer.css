@@ -506,3 +506,176 @@
     }
   }
 }
+
+.footer__container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.footer__top {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: start;
+  gap: 2rem;
+}
+
+.footer__newsletter h2 {
+  margin-bottom: 0.5rem;
+}
+
+.footer__center {
+  text-align: center;
+}
+
+.footer__payments {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.list-payment {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer__bottom {
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 1rem;
+}
+/* === FIX: Restore collapsible footer arrows + dropdowns on mobile === */
+
+/* Make sure footer headings with collapsible content show their arrow */
+.footer-block__heading {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Restore the arrow (Shopify uses .icon-caret inside) */
+.footer-block__heading .icon-caret {
+  display: inline-block !important;
+  vertical-align: middle;
+  margin-left: 0.4rem;
+  transition: transform 0.25s ease;
+}
+
+/* Rotate arrow when expanded */
+.footer-block__heading[aria-expanded="true"] .icon-caret {
+  transform: rotate(180deg);
+}
+
+/* MOBILE — stack columns and show collapsible behavior */
+@media screen and (max-width: 749px) {
+  .footer__top {
+    grid-template-columns: 1fr; /* Stack vertically */
+  }
+
+  .footer__blocks-wrapper.grid--3-col {
+    grid-template-columns: 1fr;
+  }
+
+  /* Center heading and make it clickable */
+  .footer-block__heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    padding: 1rem 0;
+    text-align: center;
+  }
+
+  /* Hide menu links by default */
+  .footer-block__details-content {
+    display: none;
+    padding-bottom: 1rem;
+  }
+
+ /* === FIX: Collapsible footer dropdowns === */
+.footer-block__details {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer-block__details summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1rem 0;
+  list-style: none;
+}
+
+.footer-block__details summary::-webkit-details-marker {
+  display: none;
+}
+
+.footer-block__details .icon-caret {
+  transition: transform 0.25s ease;
+}
+
+.footer-block__details[open] .icon-caret {
+  transform: rotate(180deg);
+}
+
+/* Hide dropdowns on mobile by default */
+@media screen and (max-width: 749px) {
+  .footer-block__details-content {
+    padding-bottom: 1rem;
+  }
+}
+
+/* Keep everything open on desktop */
+@media screen and (min-width: 750px) {
+  .footer-block__details {
+    border: none;
+  }
+  .footer-block__details[open] .icon-caret {
+    transform: none;
+  }
+  .footer-block__details summary {
+    cursor: default;
+  }
+  .footer-block__details-content {
+    display: block !important;
+  }
+}
+/* === Reduce spacing between footer dropdown arrow and text === */
+/* === Ultra-tight spacing between footer dropdown text and arrow === */
+.footer-block__details summary {
+  display: flex;
+  align-items: center;  /* keep them perfectly aligned */
+  gap: 0;         /* almost no space between text and arrow */
+}
+
+.footer-block__details .icon-caret {
+  margin-left: 0;       /* remove any leftover margin */
+  width: 0.85rem;       /* slightly smaller arrow for balance */
+  height: 0.85rem;
+  vertical-align: -0.1rem;
+}
+
+
+.footer-block__details summary {
+  align-items: baseline; /* aligns arrow neatly with text baseline */
+}
+
+/* === Newsletter Offer Text === */
+.newsletter-offer {
+  font-size: 1.4rem;
+  color: rgba(var(--color-foreground), 0.75);
+  margin-bottom: 1rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@media screen and (min-width: 750px) {
+  .newsletter-offer {
+    text-align: left;
+  }
+}
+
+
+
+

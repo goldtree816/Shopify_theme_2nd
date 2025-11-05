@@ -1,0 +1,288 @@
+{% liquid
+  assign background_color = block.settings.background_color
+
+  assign custom_font = block.settings.font
+  assign font_size = block.settings.font_size | abs | append: 'px'
+  assign color = block.settings.color
+
+  assign border_radius = block.settings.border_radius | abs | append: 'px'
+  assign border_style = block.settings.border_style
+  assign border_width = block.settings.border_width | abs | append: 'px'
+  assign border_color = block.settings.border_color
+
+  assign padding_top = block.settings.padding_top | abs | append: 'px'
+  assign padding_bottom = block.settings.padding_bottom | abs | append: 'px'
+  assign padding_left = block.settings.padding_left | abs | append: 'px'
+  assign padding_right = block.settings.padding_right | abs | append: 'px'
+%}
+
+{% unless block.settings.button_variant.css_class
+  or block.settings.button_size.css_class
+  and custom_font.system? == true
+%}
+  <style>
+    {{ custom_font | font_face: font_display: 'swap' }}
+  </style>
+{% endunless %}
+
+{% style %}
+  .--pl--button-{{ block.id }} {
+    {% unless block.settings.button_variant.css_class or block.settings.button_size.css_class %}
+      background-color: {{ background_color }};
+
+      {% if color.alpha > 0.0 %};
+        color: {{ color }} !important;
+      {% endif %}
+      font-size: {{ font_size }};
+      font-family: '{{ custom_font.family | remove: '"' }}', {{ custom_font.fallback_families }};
+      font-weight: {{ custom_font.weight }};
+      font-style: {{ custom_font.style }};
+      line-height: normal;
+
+      border-radius: {{ border_radius }};
+      border-style: {{ border_style }};
+      border-width: {{ border_width }};
+      border-color: {{ border_color }};
+
+      padding-top: {{ padding_top }};
+      padding-bottom: {{ padding_bottom }};
+      padding-left: {{ padding_left }};
+      padding-right: {{ padding_right }};
+    {% endunless %}
+    {% if block.settings.full_width == "true" %}
+      width: 100%;
+      max-width: none;
+    {% endif %}
+  }
+
+  @media screen and (max-width: 768px) {
+    .--pl--button-{{ block.id }} {
+      {% if block.settings.full_width_mob == "true" %}
+        width: 100%;
+        max-width: none;
+      {% else %}
+        width: auto;
+        max-width: auto;
+      {% endif %}
+    }
+  }
+{% endstyle %}
+
+{% assign tag = block.settings.visual_only | replace: 'true', 'div' | replace: 'false', 'a' %}
+
+<{{ tag }}
+  href="{{ block.settings.link }}"
+  class="--pl--button {{ block.settings.button_variant.css_class }} --pl--button-{{ block.id }} {{ block.settings.button_size.css_class }} --pl--inline-block {% if block.settings.full_width == "true" %}--pl--button-full-width{% endif %}"
+  {%- if block.settings.target_blank -%}
+    target="_blank" rel="noopener noreferrer"
+  {%- endif -%}
+  {{ block.shopify_attributes }}
+>
+  {{ block.settings.label }}
+</{{ tag }}>
+
+{% schema %}
+{
+  "name": "Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the button to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Button label"
+    },
+    {
+      "type": "header",
+      "content": "Link"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "target_blank",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "visual_only",
+      "label": "Visual Only Button",
+      "default": false,
+      "info": "Required inside clickable cards. Card link settings override these link settings."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "metaobject",
+      "id": "button_variant",
+      "label": "Variant",
+      "metaobject_type": "app--154529792001--button_styles_pl_editor"
+    },
+    {
+      "type": "select",
+      "id": "full_width",
+      "label": "Width",
+      "options": [
+        { "value": "false", "label": "Hug" },
+        { "value": "true", "label": "Fill ↔" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "Note: Variant & Size overrides all settings below."
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color"
+    },
+    {
+      "type": "header",
+      "content": "Font"
+    },
+    {
+      "type": "font_picker",
+      "id": "font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "number",
+      "id": "font_size",
+      "label": "Font Size",
+      "placeholder": "Enter a value in pixels",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "Color"
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Radius",
+      "step": 1,
+      "default": 0,
+      "unit": "px",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Style",
+      "options": [
+        { "value": "none", "label": "✖" },
+        { "value": "solid", "label": "─" },
+        { "value": "dashed", "label": "┄" }
+      ]
+    },
+    {
+      "type": "number",
+      "id": "border_width",
+      "label": "Width",
+      "placeholder": "Enter a value in pixels",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color"
+    },
+    {
+      "type": "header",
+      "content": "Padding",
+      "info": "All values in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+        "type": "header",
+        "content": "📱 Mobile"
+    },
+    {
+      "type": "select",
+      "id": "full_width_mob",
+      "label": "Width (Mobile)",
+      "options": [
+        { "value": "false", "label": "Hug" },
+        { "value": "true", "label": "Fill ↔" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "button block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Button (PL)",
+      "settings": {
+        "full_width": "false",
+        "full_width_mob": "false",
+        "padding_top": 12,
+        "padding_bottom": 12,
+        "padding_left": 16,
+        "padding_right": 16,
+        "border_radius": 8,
+        "border_style": "solid",
+        "border_width": 1,
+        "border_color": "#000000",
+        "background_color": "#000000",
+        "color": "#ffffff"
+      }
+    }
+  ]
+}
+{% endschema %}
