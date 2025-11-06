@@ -67,11 +67,12 @@ footer {
   margin-top: 40px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: {{ section.settings.payment_gap }}px;
 }
 
 .footer-payments img {
-  height: 24px;
+  height: {{ section.settings.payment_icon_size }}px;
+  width: auto;
 }
 
 .footer-note {
@@ -128,11 +129,13 @@ footer {
         </div>
 
         <div class="footer-payments">
-          <img src="{{ 'hero_image_2.jpg' | asset_url }}" alt="Payment Method">
-          <img src="{{ 'applepay.svg' | asset_url }}" alt="Apple Pay">
-          <img src="{{ 'googlepay.svg' | asset_url }}" alt="Google Pay">
-          <img src="{{ 'visa.svg' | asset_url }}" alt="Visa">
-          <img src="{{ 'mastercard.svg' | asset_url }}" alt="Mastercard">
+          {% for block in section.blocks %}
+            {% if block.type == 'payment_icon' %}
+              {% if block.settings.icon_image != blank %}
+                <img src="{{ block.settings.icon_image | image_url }}" alt="Payment Icon">
+              {% endif %}
+            {% endif %}
+          {% endfor %}
         </div>
 
         <p class="footer-note">{{ section.settings.copyright_text }}</p>
@@ -141,53 +144,37 @@ footer {
 
     <div class="footer-right">
 
-  <!-- First menu -->
-  <div>
-    <h4>{{ linklists[section.settings.footer-first-column].title }}</h4>
-    <ul>
-      {% for link in linklists[section.settings.footer-first-column].links %}
-        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+      <!-- First menu -->
+      <div>
+        <h4>{{ linklists[section.settings.footer-first-column].title }}</h4>
+        <ul>
+          {% for link in linklists[section.settings.footer-first-column].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
 
-        {% if link.links != blank %}
-          <ul>
-            {% for child in link.links %}
-              <li><strong>{{ child.title }}</strong></li>
+      <!-- Second menu -->
+      <div>
+        <h4>{{ linklists[section.settings.footer-second-column].title }}</h4>
+        <ul>
+          {% for link in linklists[section.settings.footer-second-column].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
 
-              {% if child.links != blank %}
-                <ul>
-                  {% for sub in child.links %}
-                    <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </div>
+      <!-- Third menu -->
+      <div>
+        <h4>{{ linklists[section.settings.footer-third-column].title }}</h4>
+        <ul>
+          {% for link in linklists[section.settings.footer-third-column].links %}
+            <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
 
-  <!-- Second menu -->
-  <div>
-    <h4>{{ linklists[section.settings.footer-second-column].title }}</h4>
-    <ul>
-      {% for link in linklists[section.settings.footer-second-column].links %}
-        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <!-- Third menu -->
-  <div>
-    <h4>{{ linklists[section.settings.footer-third-column].title }}</h4>
-    <ul>
-      {% for link in linklists[section.settings.footer-third-column].links %}
-        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-
-</div>
+    </div>
 
   </div>
 </footer>
@@ -249,9 +236,39 @@ footer {
       "type": "text",
       "id": "newsletter_text",
       "label": "Newsletter Text"
+    },
+    {
+      "type": "range",
+      "id": "payment_icon_size",
+      "label": "Payment Icon Size (px)",
+      "min": 10,
+      "max": 100,
+      "step": 2,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "payment_gap",
+      "label": "Payment Icon Gap (px)",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "default": 8
     }
   ],
-  "blocks": [],
+  "blocks": [
+    {
+      "type": "payment_icon",
+      "name": "Payment Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Payment Icon Image"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
       "name": "Footer"

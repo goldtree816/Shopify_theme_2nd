@@ -1,6 +1,9 @@
 <style>
-html, body {
+html {
   overflow-x: hidden;
+}
+body{
+    font-family: 'Manrope', sans-serif;
 }
 /* Top banner */
 .top-banner {
@@ -307,6 +310,15 @@ window.addEventListener('scroll', function() {
       "type": "link_list",
       "id": "right-navbar",
       "label": "Right Navbar Menu"
+    },
+    {
+      "type": "range",
+      "id": "nav_item_spacing",
+      "label": "Navbar Item Spacing (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 20
     },
     {
       "type": "range",
