@@ -44,12 +44,20 @@
             "heading": "Connect",
             "menu": "new-footer-three"
           }
+        },
+        "text_Kg96kV": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "subtext": "<h1>.<br/>bbbbbbbbbbbbbbbbbbbbbbbbbbb<br/><br/></h1>"
+          }
         }
       },
       "block_order": [
         "link_list_CXL69f",
         "link_list_PMzKGB",
-        "link_list_93Nznr"
+        "link_list_93Nznr",
+        "text_Kg96kV"
       ],
       "settings": {
         "color_scheme": "scheme-1",
