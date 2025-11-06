@@ -415,3 +415,13 @@
     row-gap: var(--grid-desktop-vertical-spacing);
   }
 }
+
+.image-with-text__video {
+  display: flex;
+  align-items: center;
+}
+
+.image-with-text__video video {
+  width: 100 %;
+  
+}
