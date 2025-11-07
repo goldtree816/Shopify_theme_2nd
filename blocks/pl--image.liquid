@@ -1,0 +1,457 @@
+{% style %}
+  .--pl--image-container-{{ block.id }} {
+      position: relative;
+      overflow: hidden;
+
+      aspect-ratio: {{ block.settings.aspect_ratio | replace: 'fill', 'auto' }};
+      {% if block.settings.aspect_ratio == 'fill' %}
+        height: 100%;
+        width: 100%;
+      {% endif %}
+
+      border-radius: {{ block.settings.border_radius | abs | append: 'px' }};
+      border-style: {{ block.settings.border_style }};
+      border-width: {{ block.settings.border_width | abs | append: 'px' }};
+      border-color: {{ block.settings.border_color }};
+  }
+
+  .--pl--image-overlay-{{ block.id }} {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: hsla(0, 0%, 0%, 1);
+      pointer-events: none;
+      display: block !important;
+
+      opacity: {{ block.settings.overlay | divided_by: 100.0 }};
+  }
+
+  .--pl--image-{{ block.id }} {
+      display: block;
+
+      object-fit: {{ block.settings.fit }};
+      object-position: {{ block.settings.obj_pos_h }} {{ block.settings.obj_pos_v }};
+
+      width: 100%;
+      height: 100%;
+  }
+
+  @media screen and (max-width: 768px) {
+
+      .--pl--image-container-{{ block.id }} {
+          aspect-ratio: {{ block.settings.aspect_ratio_mob | replace: 'fill', 'auto' }};
+          {% if block.settings.aspect_ratio_mob == 'fill' %}
+              height: 100%;
+              width: 100%;
+          {% endif %}
+      }
+      .--pl--image-overlay-{{ block.id }} {
+        {% if block.settings.image_mob != blank %}
+          opacity: {{ block.settings.overlay_mob | default: block.settings.overlay | divided_by: 100.0 }};
+        {% endif %}
+      }
+
+      .--pl--image-{{ block.id }} {
+          object-fit: {{ block.settings.fit_mob }};
+          object-position: {{ block.settings.obj_pos_h_mob }} {{ block.settings.obj_pos_v_mob }};
+      }
+  }
+{% endstyle %}
+
+<div
+  class="--pl--image-container-{{ block.id }} {{ block.settings.custom_class }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="--pl--image-overlay-{{ block.id }}"></div>
+  <!-- Desktop Image -->
+  {% if block.settings.image != blank %}
+    {% capture image_class %}--pl--image-{{ block.id }}{% endcapture %}
+    {% if block.settings.image_mob != blank %}
+      {% assign image_class = image_class | append: ' --pl--hide-mobile-landscape' %}
+    {% endif %}
+    {% if block.settings.alt == blank %}
+      {% assign final_alt = block.settings.image.alt %}
+    {% else %}
+      {% assign final_alt = block.settings.alt %}
+    {% endif %}
+    {{
+      block.settings.image
+      | image_url: width: 3840
+      | image_tag:
+        width: '100%',
+        widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840',
+        class: image_class,
+        loading: block.settings.image_loading,
+        alt: final_alt
+    }}
+  {% else %}
+    <img
+      src="{{ block.settings.placeholder | default: 'pl--image-placeholder-landscape.png' | asset_url }}"
+      alt="Placeholder image"
+      loading="lazy"
+      width="100%"
+      height="100%"
+      class="--pl--image-{{ block.id }} --pl--hide-mobile-landscape"
+    >
+  {% endif %}
+
+  <!-- Mobile Image -->
+  {% if block.settings.image_mob != blank %}
+    {% if block.settings.alt == blank %}
+      {% assign final_alt_mob = block.settings.image_mob.alt %}
+    {% else %}
+      {% assign final_alt_mob = block.settings.alt %}
+    {% endif %}
+
+    {% capture img_class_mob %}--pl--image-{{ block.id }} --pl--show-mobile-landscape{% endcapture %}
+    {{
+      block.settings.image_mob
+      | image_url: width: 1500
+      | image_tag:
+        width: '100%',
+        widths: '375, 550, 750, 1100, 1500',
+        class: img_class_mob,
+        loading: block.settings.image_loading,
+        alt: final_alt_mob
+    }}
+  {% elsif block.settings.image == blank %}
+    <img
+      src="{{ block.settings.placeholder | default: 'pl--image-placeholder-landscape.png' | asset_url }}"
+      alt="Placeholder image"
+      loading="lazy"
+      width="100%"
+      height="100%"
+      class="--pl--image-{{ block.id }} --pl--show-mobile-landscape"
+    >
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the image to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Display"
+    },
+    {
+      "type": "select",
+      "id": "fit",
+      "label": "Image Fit",
+      "default": "cover",
+      "options": [
+        {
+          "label": "Cover",
+          "value": "cover"
+        },
+        {
+          "label": "Contain",
+          "value": "contain"
+        },
+        {
+          "label": "Fill",
+          "value": "fill"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Aspect Ratio",
+      "default": "auto",
+      "options": [
+        {
+          "label": "Original (As uploaded)",
+          "value": "auto"
+        },
+        {
+          "label": "1:1 (Square)",
+          "value": "1/1"
+        },
+        {
+          "label": "4:3 (Classic)",
+          "value": "4/3"
+        },
+        {
+          "label": "3:4 (Portrait)",
+          "value": "3/4"
+        },
+        {
+          "label": "16:9 (Widescreen)",
+          "value": "16/9"
+        },
+        {
+          "label": "9:16 (Reels)",
+          "value": "9/16"
+        },
+        {
+          "label": "Fill Container",
+          "value": "fill"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "obj_pos_h",
+      "default": "50%",
+      "label": "Position ↔",
+      "options": [
+        {
+          "label": "Left",
+          "value": "0%"
+        },
+        {
+          "label": "Center",
+          "value": "50%"
+        },
+        {
+          "label": "Right",
+          "value": "100%"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "obj_pos_v",
+      "default": "50%",
+      "label": "Position ↕",
+      "options": [
+        {
+          "label": "Top",
+          "value": "0%"
+        },
+        {
+          "label": "Center",
+          "value": "50%"
+        },
+        {
+          "label": "Bottom",
+          "value": "100%"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Border"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Radius",
+      "step": 1,
+      "default": 0,
+      "unit": "px",
+      "min": 0,
+      "max": 100
+    },
+    {
+      "type": "select",
+      "id": "border_style",
+      "label": "Style",
+      "options": [
+        { "value": "none", "label": "✖" },
+        { "value": "solid", "label": "─" },
+        { "value": "dashed", "label": "┄" }
+      ]
+    },
+    {
+      "type": "number",
+      "id": "border_width",
+      "label": "Width",
+      "placeholder": "Enter a value in pixels",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile",
+      "info": "These settings only apply to mobile devices."
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mob",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_mob",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 0,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "📱 Display"
+    },
+    {
+      "type": "select",
+      "id": "fit_mob",
+      "label": "Image Fit",
+      "default": "cover",
+      "options": [
+        { "value": "cover", "label": "Cover" },
+        { "value": "contain", "label": "Contain" },
+        { "value": "fill", "label": "Fill" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio_mob",
+      "label": "Aspect Ratio",
+      "default": "auto",
+      "options": [
+        {
+          "label": "Original (As uploaded)",
+          "value": "auto"
+        },
+        {
+          "label": "1:1 (Square)",
+          "value": "1/1"
+        },
+        {
+          "label": "4:3 (Classic)",
+          "value": "4/3"
+        },
+        {
+          "label": "3:4 (Portrait)",
+          "value": "3/4"
+        },
+        {
+          "label": "16:9 (Widescreen)",
+          "value": "16/9"
+        },
+        {
+          "label": "9:16 (Reels)",
+          "value": "9/16"
+        },
+        {
+          "label": "Fill Container",
+          "value": "fill"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "obj_pos_h_mob",
+      "default": "50%",
+      "label": "Position ↔",
+      "options": [
+        {
+          "label": "Left",
+          "value": "0%"
+        },
+        {
+          "label": "Center",
+          "value": "50%"
+        },
+        {
+          "label": "Right",
+          "value": "100%"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "obj_pos_v_mob",
+      "default": "50%",
+      "label": "Position ↕",
+      "options": [
+        {
+          "label": "Top",
+          "value": "0%"
+        },
+        {
+          "label": "Center",
+          "value": "50%"
+        },
+        {
+          "label": "Bottom",
+          "value": "100%"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "select",
+      "id": "image_loading",
+      "label": "Image Loading",
+      "default": "lazy",
+      "options": [
+        { "value": "lazy", "label": "Lazy" },
+        { "value": "eager", "label": "Eager" },
+        { "value": "auto", "label": "Auto" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "alt",
+      "label": "Alt Text",
+      "placeholder": "Stainless steel water bottle with matte black finish"
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Placeholder"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "image block (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image (PL)"
+    },
+    {
+      "name": "Image Square",
+      "settings": {
+        "aspect_ratio": "1/1",
+        "fit": "cover",
+        "border_radius": 16
+      }
+    }
+  ]
+}
+{% endschema %}

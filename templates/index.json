@@ -171,6 +171,324 @@
         "padding_bottom": 36
       }
     },
+    "pl_feature_3_RrkcHg": {
+      "type": "pl--feature-3",
+      "blocks": {
+        "pl_group_AtQ4Ag": {
+          "type": "pl--group",
+          "settings": {
+            "width": "auto",
+            "max_width": 0,
+            "height": "auto",
+            "max_height": 0,
+            "flex_direction": "column",
+            "flex_wrap": "wrap",
+            "gap": 24,
+            "align_items": "flex-start",
+            "justify_content": "flex-start",
+            "justify_self": "auto",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0,
+            "width_mob": "auto",
+            "height_mob": "auto",
+            "flex_direction_mob": "column",
+            "flex_wrap_mob": "wrap",
+            "gap_mob": 16,
+            "align_items_mob": "flex-start",
+            "justify_content_mob": "flex-start",
+            "padding_top_mob": 0,
+            "padding_bottom_mob": 0,
+            "padding_left_mob": 0,
+            "padding_right_mob": 0,
+            "custom_class": ""
+          },
+          "blocks": {
+            "pl_text_tEBKxJ": {
+              "type": "pl--text",
+              "settings": {
+                "text": "",
+                "text_variant": "",
+                "font": "inter_n6",
+                "font_size": 16,
+                "color": "",
+                "text_alignment": "left",
+                "font_size_mob": 16,
+                "text_alignment_mob": "left",
+                "placeholder_text": "",
+                "custom_class": "-pl-mb-n2"
+              },
+              "blocks": {}
+            },
+            "pl_heading_GCrFrQ": {
+              "type": "pl--heading",
+              "settings": {
+                "heading": "<strong>FREEDOM IN A SUIT</strong>",
+                "heading_variant": "",
+                "font": "serif",
+                "font_size": 36,
+                "color": "",
+                "text_alignment": "left",
+                "font_size_mob": 32,
+                "text_alignment_mob": "center",
+                "tag": "h2",
+                "placeholder_text": "",
+                "custom_class": ""
+              },
+              "blocks": {}
+            },
+            "pl_text_pmN6CE": {
+              "type": "pl--text",
+              "settings": {
+                "text": "<p>We are a female-founded Swedish brand that design suits that feels like soft, stretchy activewear - so you can Move and Work in Harmon</p><p></p><p>Our founder Maria had enough of stressfull mornings when shey. didin´t know what to wear. That´s why she designed the most comfortable suit ever made. That feels like activewear.</p>",
+                "text_variant": "",
+                "font": "inter_n4",
+                "font_size": 16,
+                "color": "",
+                "text_alignment": "left",
+                "font_size_mob": 16,
+                "text_alignment_mob": "left",
+                "placeholder_text": "",
+                "custom_class": ""
+              },
+              "blocks": {}
+            },
+            "pl_group_HdDMeg": {
+              "type": "pl--group",
+              "settings": {
+                "width": "100%",
+                "max_width": 0,
+                "height": "auto",
+                "max_height": 0,
+                "flex_direction": "row",
+                "flex_wrap": "wrap",
+                "gap": 16,
+                "align_items": "flex-start",
+                "justify_content": "flex-start",
+                "justify_self": "auto",
+                "padding_top": 16,
+                "padding_bottom": 0,
+                "padding_left": 0,
+                "padding_right": 0,
+                "width_mob": "100%",
+                "height_mob": "auto",
+                "flex_direction_mob": "row",
+                "flex_wrap_mob": "wrap",
+                "gap_mob": 16,
+                "align_items_mob": "flex-start",
+                "justify_content_mob": "flex-start",
+                "padding_top_mob": 16,
+                "padding_bottom_mob": 0,
+                "padding_left_mob": 0,
+                "padding_right_mob": 0,
+                "custom_class": ""
+              },
+              "blocks": {
+                "pl_button_iTAK46": {
+                  "type": "pl--button",
+                  "settings": {
+                    "label": "Press Me",
+                    "link": "https://www.mwhwear.com/pages/about-1",
+                    "target_blank": false,
+                    "visual_only": false,
+                    "button_variant": "",
+                    "full_width": "false",
+                    "background_color": "#ffffff",
+                    "font": "sans_serif_n4",
+                    "font_size": 16,
+                    "color": "#242833",
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#f3f3f3",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "full_width_mob": "false",
+                    "custom_class": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "pl_button_iTAK46"
+              ]
+            }
+          },
+          "block_order": [
+            "pl_text_tEBKxJ",
+            "pl_heading_GCrFrQ",
+            "pl_text_pmN6CE",
+            "pl_group_HdDMeg"
+          ]
+        },
+        "pl_group_KPH7ad": {
+          "type": "pl--group",
+          "settings": {
+            "width": "auto",
+            "max_width": 0,
+            "height": "100%",
+            "max_height": 0,
+            "flex_direction": "row",
+            "flex_wrap": "nowrap",
+            "gap": 16,
+            "align_items": "flex-start",
+            "justify_content": "flex-start",
+            "justify_self": "auto",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left": 0,
+            "padding_right": 0,
+            "width_mob": "auto",
+            "height_mob": "100%",
+            "flex_direction_mob": "column",
+            "flex_wrap_mob": "nowrap",
+            "gap_mob": 16,
+            "align_items_mob": "flex-start",
+            "justify_content_mob": "flex-start",
+            "padding_top_mob": 0,
+            "padding_bottom_mob": 0,
+            "padding_left_mob": 0,
+            "padding_right_mob": 0,
+            "custom_class": "-pl-ar-1-1"
+          },
+          "blocks": {
+            "pl_image_zrCeKA": {
+              "type": "pl--image",
+              "settings": {
+                "image": "shopify://shop_images/smiling-woman-poses_925x_6d117727-62ce-420e-81d8-3cc473eea3ff.jpg",
+                "overlay": 0,
+                "fit": "cover",
+                "aspect_ratio": "9/16",
+                "obj_pos_h": "50%",
+                "obj_pos_v": "50%",
+                "border_radius": 0,
+                "border_style": "none",
+                "border_width": 5,
+                "border_color": "#ffffff",
+                "image_mob": "shopify://shop_images/smiling-woman-poses_925x_6d117727-62ce-420e-81d8-3cc473eea3ff.jpg",
+                "overlay_mob": 0,
+                "fit_mob": "cover",
+                "aspect_ratio_mob": "fill",
+                "obj_pos_h_mob": "50%",
+                "obj_pos_v_mob": "50%",
+                "image_loading": "auto",
+                "alt": "",
+                "placeholder": "",
+                "custom_class": ""
+              },
+              "blocks": {}
+            },
+            "pl_group_yFUdE9": {
+              "type": "pl--group",
+              "settings": {
+                "width": "100%",
+                "max_width": 0,
+                "height": "100%",
+                "max_height": 0,
+                "flex_direction": "column",
+                "flex_wrap": "nowrap",
+                "gap": 16,
+                "align_items": "flex-start",
+                "justify_content": "flex-start",
+                "justify_self": "auto",
+                "padding_top": 0,
+                "padding_bottom": 0,
+                "padding_left": 0,
+                "padding_right": 0,
+                "width_mob": "100%",
+                "height_mob": "100%",
+                "flex_direction_mob": "column",
+                "flex_wrap_mob": "nowrap",
+                "gap_mob": 16,
+                "align_items_mob": "flex-start",
+                "justify_content_mob": "flex-start",
+                "padding_top_mob": 0,
+                "padding_bottom_mob": 0,
+                "padding_left_mob": 0,
+                "padding_right_mob": 0,
+                "custom_class": ""
+              },
+              "blocks": {
+                "pl_image_cLJaKi": {
+                  "type": "pl--image",
+                  "settings": {
+                    "image": "shopify://shop_images/woman-outside-brownstone_925x_85c8fc80-e358-404a-a1d8-78cdc1156a77.jpg",
+                    "overlay": 0,
+                    "fit": "cover",
+                    "aspect_ratio": "fill",
+                    "obj_pos_h": "50%",
+                    "obj_pos_v": "50%",
+                    "border_radius": 0,
+                    "border_style": "none",
+                    "border_width": 1,
+                    "border_color": "",
+                    "image_mob": "shopify://shop_images/woman-outside-brownstone_925x_85c8fc80-e358-404a-a1d8-78cdc1156a77.jpg",
+                    "overlay_mob": 0,
+                    "fit_mob": "cover",
+                    "aspect_ratio_mob": "fill",
+                    "obj_pos_h_mob": "50%",
+                    "obj_pos_v_mob": "50%",
+                    "image_loading": "auto",
+                    "alt": "",
+                    "placeholder": "",
+                    "custom_class": ""
+                  },
+                  "blocks": {}
+                },
+                "pl_image_Wk9VgC": {
+                  "type": "pl--image",
+                  "settings": {
+                    "image": "shopify://shop_images/autumn-photographer-taking-picture_925x_309c90da-67b3-4d98-85d5-f7fe8ed4037c.jpg",
+                    "overlay": 0,
+                    "fit": "cover",
+                    "aspect_ratio": "fill",
+                    "obj_pos_h": "50%",
+                    "obj_pos_v": "50%",
+                    "border_radius": 0,
+                    "border_style": "none",
+                    "border_width": 1,
+                    "border_color": "",
+                    "image_mob": "shopify://shop_images/autumn-photographer-taking-picture_925x_309c90da-67b3-4d98-85d5-f7fe8ed4037c.jpg",
+                    "overlay_mob": 0,
+                    "fit_mob": "cover",
+                    "aspect_ratio_mob": "fill",
+                    "obj_pos_h_mob": "50%",
+                    "obj_pos_v_mob": "50%",
+                    "image_loading": "lazy",
+                    "alt": "",
+                    "placeholder": "",
+                    "custom_class": ""
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "pl_image_cLJaKi",
+                "pl_image_Wk9VgC"
+              ]
+            }
+          },
+          "block_order": [
+            "pl_image_zrCeKA",
+            "pl_group_yFUdE9"
+          ]
+        }
+      },
+      "block_order": [
+        "pl_group_AtQ4Ag",
+        "pl_group_KPH7ad"
+      ],
+      "name": "Feature 3 (PL)",
+      "settings": {
+        "gap": 64,
+        "bg_color": "",
+        "gap_mob": 32,
+        "custom_class": ""
+      }
+    },
     "image_with_text_tMGpDk": {
       "type": "image-with-text",
       "blocks": {
@@ -227,6 +545,7 @@
     "custom_liquid_cHqAVA",
     "featured_collection",
     "collection_list_aYfABH",
+    "pl_feature_3_RrkcHg",
     "image_with_text_tMGpDk"
   ]
 }

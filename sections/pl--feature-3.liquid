@@ -1,0 +1,365 @@
+{% comment %}
+  Section: Feature 3
+  Version: 1.0.0
+  
+  ===================================================
+  IMPORTANT - PLEASE READ BEFORE MODIFYING THIS FILE
+  ===================================================
+  
+  This is a Pent Library section template. 
+  - Please report bugs to support@pentlibrary.com. Include the section ID and version in the email.
+  - Modifying the file may break the section, edit at own risk
+  - For best practices, visit our docs: https://www.pentlibrary.com/docs
+
+{% endcomment %}
+
+{% style %}
+  .pl--feature-3-bg-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  .pl--feature-3-inline-padding-{{ section.id }} {
+    {% if section.settings.padding_left != 0 and section.settings.padding_left != blank %}
+      padding-left: {{ section.settings.padding_left | abs | append: 'px' }};
+    {% endif %}
+    {% if section.settings.padding_right != 0 and section.settings.padding_right != blank %}
+      padding-right: {{ section.settings.padding_right | abs | append: 'px' }};
+    {% endif %}
+  }
+
+  .pl--feature-3-container-{{ section.id }} {
+    {% if section.settings.max_width > 220 and section.settings.max_width != blank %}
+      max-width: {{ section.settings.max_width | abs | append: 'px' }};
+    {% endif %}
+  }
+
+  .pl--feature-3-custom-padding-{{ section.id }} {
+    {% if section.settings.padding_top != 0 and section.settings.padding_top != blank %}
+      padding-top: {{ section.settings.padding_top | abs | append: 'px' }};
+    {% endif %}
+    {% if section.settings.padding_bottom != 0 and section.settings.padding_bottom != blank %}
+      padding-bottom: {{ section.settings.padding_bottom | abs | append: 'px' }};
+    {% endif %}
+  }
+
+  .pl--feature-3-grid-{{ section.id }} {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-column-gap: {{ section.settings.gap | abs | append: 'px' }};
+    grid-row-gap: {{ section.settings.gap | abs | append: 'px' }};
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 768px) {
+    .pl--feature-3-inline-padding-{{ section.id }} {
+      {% if section.settings.padding_left_mob != 0 and section.settings.padding_left_mob != blank %}
+        padding-left: {{ section.settings.padding_left_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if section.settings.padding_right_mob != 0 and section.settings.padding_right_mob != blank %}
+        padding-right: {{ section.settings.padding_right_mob | abs | append: 'px' }};
+      {% endif %}
+    }
+
+    .pl--feature-3-custom-padding-{{ section.id }} {
+      {% if section.settings.padding_top_mob != 0 and section.settings.padding_top_mob != blank %}
+        padding-top: {{ section.settings.padding_top_mob | abs | append: 'px' }};
+      {% endif %}
+      {% if section.settings.padding_bottom_mob != 0 and section.settings.padding_bottom_mob != blank %}
+        padding-bottom: {{ section.settings.padding_bottom_mob | abs | append: 'px' }};
+      {% endif %}
+    }
+
+    .pl--feature-3-grid-{{ section.id }} {
+      grid-column-gap: {{ section.settings.gap_mob | abs | append: 'px' }};
+      grid-row-gap: {{ section.settings.gap_mob | abs | append: 'px' }};
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="--pl--section-wrapper pl--feature-3-bg-{{ section.id }}">
+  <div class="--pl--page-width-global">
+    <div class="--pl--padding-global pl--feature-3-inline-padding-{{ section.id }}">
+      <div class="pl--feature-3-container-{{ section.id }}">
+        <div class="--pl--padding-section-medium pl--feature-3-custom-padding-{{ section.id }}">
+          <div class="pl--feature-3-grid-{{ section.id }}">
+            {% content_for 'blocks' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Feature 3 (PL)",
+  "tag": "section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Customize the section to your liking. Need help? Check our [documentation](https://www.pentlibrary.com/docs)."
+    },
+    {
+      "type": "header",
+      "content": "Desktop"
+    },
+    {
+      "type": "number",
+      "id": "gap",
+      "label": "Column Gap ↔",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "max_width",
+      "label": "Max Width",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "number",
+      "id": "padding_top",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "📱 Mobile"
+    },
+    {
+      "type": "number",
+      "id": "gap_mob",
+      "label": "Row Gap ↕",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "📱 Padding"
+    },
+    {
+      "type": "number",
+      "id": "padding_top_mob",
+      "label": "Top",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_bottom_mob",
+      "label": "Bottom",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_left_mob",
+      "label": "Left",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "number",
+      "id": "padding_right_mob",
+      "label": "Right",
+      "placeholder": "Enter a value in pixels"
+    },
+    {
+      "type": "header",
+      "content": "⚙️ Advanced"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Class",
+      "info": "For developers: Add space-separated CSS classes. See our [docs](https://www.pentlibrary.com/docs) for available classes."
+    },
+    {
+      "type": "paragraph",
+      "content": "feature-3 section (v.1.0.0)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature 3 (PL)",
+      "settings": {
+        "gap": 64,
+        "gap_mob": 32
+      },
+      "blocks": [
+        {
+          "type": "pl--group",
+          "settings": {
+            "gap": 24,
+            "gap_mob": 16,
+            "flex_direction": "column",
+            "flex_direction_mob": "column",
+            "align_items": "flex-start",
+            "align_items_mob": "flex-start",
+            "justify_content": "flex-start",
+            "justify_content_mob": "flex-start"
+          },
+          "blocks": [
+            {
+              "type": "pl--text",
+              "settings": {
+                "text": "<p>Tagline</p>",
+                "font_size": 16,
+                "font_size_mob": 16,
+                "font": "inter_n6",
+                "custom_class": "-pl-mb-n2"
+              }
+            },
+            {
+              "type": "pl--heading",
+              "settings": {
+                "tag": "h2",
+                "text_alignment": "left"
+              }
+            },
+            {
+              "type": "pl--text"
+            },
+            {
+              "type": "pl--group",
+              "settings": {
+                "flex_direction": "row",
+                "flex_direction_mob": "row",
+                "align_items": "flex-start",
+                "align_items_mob": "flex-start",
+                "justify_content": "flex-start",
+                "justify_content_mob": "flex-start",
+                "gap": 16,
+                "gap_mob": 16,
+                "padding_top": 16,
+                "padding_top_mob": 16,
+                "width": "100%",
+                "width_mob": "100%"
+              },
+              "blocks": [
+                {
+                  "type": "pl--button",
+                  "settings": {
+                    "full_width": "false",
+                    "full_width_mob": "false",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#000000",
+                    "background_color": "#000000",
+                    "color": "#ffffff"
+                  }
+                },
+                {
+                  "type": "pl--button",
+                  "settings": {
+                    "full_width": "false",
+                    "full_width_mob": "false",
+                    "padding_top": 12,
+                    "padding_bottom": 12,
+                    "padding_left": 16,
+                    "padding_right": 16,
+                    "border_radius": 8,
+                    "border_style": "solid",
+                    "border_width": 1,
+                    "border_color": "#f3f3f3",
+                    "background_color": "#f3f3f3",
+                    "color": "#000000"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "pl--group",
+          "settings": {
+            "gap": 16,
+            "gap_mob": 16,
+            "flex_direction": "row",
+            "flex_direction_mob": "column",
+            "flex_wrap": "nowrap",
+            "flex_wrap_mob": "nowrap",
+            "height": "100%",
+            "height_mob": "100%",
+            "custom_class": "-pl-ar-1-1"
+          },
+          "blocks": [
+            {
+              "type": "pl--image",
+              "settings": {
+                "aspect_ratio": "fill",
+                "aspect_ratio_mob": "fill",
+                "border_radius": 16
+              }
+            },
+            {
+              "type": "pl--group",
+              "settings": {
+                "gap": 16,
+                "gap_mob": 16,
+                "flex_direction": "column",
+                "flex_direction_mob": "column",
+                "flex_wrap": "nowrap",
+                "flex_wrap_mob": "nowrap",
+                "height": "100%",
+                "height_mob": "100%",
+                "width": "100%",
+                "width_mob": "100%"
+              },
+              "blocks": [
+                {
+                  "type": "pl--image",
+                  "settings": {
+                    "aspect_ratio": "fill",
+                    "aspect_ratio_mob": "fill",
+                    "border_radius": 16
+                  }
+                },
+                {
+                  "type": "pl--image",
+                  "settings": {
+                    "aspect_ratio": "fill",
+                    "aspect_ratio_mob": "fill",
+                    "border_radius": 16
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
