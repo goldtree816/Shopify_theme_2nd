@@ -1,16 +1,66 @@
-<h1>{{ '404.title' | t }}</h1>
+<style>
+.error-404 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  min-height: 80vh;
+  background-color: #f7f9fc;
+  background-size: cover;
+  background-position: center;
+}
 
-<p>
-  {{ '404.not_found' | t }}
-</p>
+.error-404 h1 {
+  font-family: 'Manrope', sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #111;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
 
-<a href="{{ routes.all_products_collection_url }}">
-  {{ '404.back_to_shopping' | t }}
-</a>
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body:not(.template-index) .navbar a {
+  color:black;
+}
+</style>
+
+<section class="error-404" 
+  style="background-image: url({{section.settings.error_image | image_url: width: 2000 }});">
+  <div class="error-container">
+    <h1>{{ section.settings.error_text }}</h1>
+    <a href="{{ routes.root_url }}" class="back-btn">{% render 'button' %}</a>
+  </div>
+</section>
 
 {% schema %}
 {
-  "name": "t:general.404",
-  "settings": []
+  "name": "404 Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "404 Error Text",
+      "default": "404 PAGE NOT FOUND"
+    },
+    {
+      "type": "image_picker",
+      "id": "error_image",
+      "label": "404 Error Background Image"
+    }
+  ]
 }
 {% endschema %}
