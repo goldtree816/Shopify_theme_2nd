@@ -1,45 +1,242 @@
-{% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
+<style>
+body{
+  font-family: 'Manrope', sans-serif;
+  padding-top:100px;
+}
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
-{% endcomment %}
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
+body:not(.template-index) .navbar a{
+  color:black;
+}
 
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
+.add-to-bag{
+display:flex;
+align-items:center;
+}
+
+.product-section {
+  font-family: ui-sans-serif, system-ui, -apple-system;
+  padding: 60px 100px;
+}
+
+.breadcrumb {
+  font-size: 10px;
+  letter-spacing: -0.1px;
+  color: #777;
+  margin-bottom: 40px;
+}
+
+.breadcrumb a {
+  color: #777;
+  text-decoration: none;
+}
+
+.breadcrumb .current {
+  font-weight: 600;
+  color: #000;
+}
+
+.product-container {
+  display: flex;
+  gap: 60px;
+}
+
+.product-gallery {
+  flex:1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 90%;
+  scroll-snap-type: x mandatory;
+  overflow-y:hidden;
+}
+
+.product-gallery img{
+  height:600px;
+  width:50px;
+  object-fit:cover;
+  overflow:hidden;
+}
+
+.product-gallery img {
+  width: 100%;
+  border-radius: 2px;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.product-reviews {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.product-tags span {
+  background: #edf2fa;
+  color: #4a5a77;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-right: 6px;
+}
+
+.product-description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+
+.btn-add {
+  background-color: #c5d1e2;
+  border: none;
+  padding: 12px 40px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 30px;
+  margin-bottom: 10px;
+}
+
+.btn-shop {
+  background: #5b3cf5;
+  color: white;
+  border: none;
+  padding: 12px 40px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buy-with {
+  margin-top: 40px;
+}
+
+.buy-with h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.recommended {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recommended img {
+  width: 60px;
+  border-radius: 4px;
+}
+
+.details-section {
+  margin-top: 40px;
+}
+
+.details-section summary {
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+}
+
+</style>
+<section class="product-section">
+  <nav class="breadcrumb">
+    <a href="{{ routes.root_url }}">HOME</a>
+    <span>/</span>
+    <span class="current">{{ product.title | upcase }}</span>
+  </nav>
+
+  <div class="product-container">
+    <!-- LEFT SIDE: Image gallery -->
+    <div class="product-gallery">
+      {% for image in product.images %}
+        <div class="gallery-item">
+          <img src="{{ image | img_url: '800x800' }}" alt="{{ image.alt | escape }}">
+        </div>
       {% endfor %}
-    </select>
+    </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+    <!-- RIGHT SIDE: Info -->
+    <div class="product-info">
+      <h1 class="product-title">{{ product.title }}</h1>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+      <!-- Price -->
+      <div class="product-price">{{ product.price | money }}</div>
+
+      <!-- Core Purposes -->
+      <div class="product-tags">
+        <span>NOURISHES</span>
+        <span>BOOSTS REPAIR</span>
+        <span>STRENGTHENS THE SKIN BARRIER</span>
+      </div>
+
+      <!-- Description -->
+      <div class="product-description">
+        <p>SKIN TYPES: Dry Skin, Normal Skin, Cracked Skin</p>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <!-- Add to Bag -->
+      <div class="add-to-bag">
+        <form method="post" action="/cart/add">
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          {%render 'button.liquid'%}
+          <button class="btn-shop">Buy with <b>shop</b></button>
+        </form>
+      </div>
+      
+
+      <!-- Buy it with -->
+      <div class="buy-with">
+        <h4>BUY IT WITH:</h4>
+        <div class="recommended">
+          <img src="{{ 'hero-image-2.jpg' | asset_url }}" alt="Nourishing Face Oil">
+          <div>
+            <strong>NOURISHING FACE OIL</strong>
+            <p>€98</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="details-section">
+        <details><summary>DETAILS</summary></details>
+        <details><summary>KEY INGREDIENTS</summary></details>
+        <details><summary>HOW TO USE</summary></details>
+        <details><summary>FULL INGREDIENTS</summary></details>
+        <details><summary>SUSTAINABLE PACKAGING</summary></details>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% schema %}
 {
