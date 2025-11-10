@@ -42,7 +42,12 @@ body:not(.template-index) .navbar a {
   style="background-image: url({{section.settings.error_image | image_url: width: 2000 }});">
   <div class="error-container">
     <h1>{{ section.settings.error_text }}</h1>
-    <a href="{{ routes.root_url }}" class="back-btn">{% render 'button' %}</a>
+    <a href="{{ routes.root_url }}" class="back-btn">
+      {% render 'button'
+        text: {{settings.button_text}},
+        link: {{settings.button_link}},
+      %}
+    </a>
   </div>
 </section>
 
@@ -50,6 +55,16 @@ body:not(.template-index) .navbar a {
 {
   "name": "404 Page",
   "settings": [
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Back to Home"
+    },
+    { "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
     {
       "type": "text",
       "id": "error_text",
