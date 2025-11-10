@@ -582,12 +582,84 @@
     },
     "custom_liquid_AcAKTn": {
       "type": "custom-liquid",
+      "disabled": true,
       "name": "t:sections.custom-liquid.presets.name",
       "settings": {
         "custom_liquid": "<!-- Elfsight Testimonials Slider | Untitled Testimonials Slider -->\n<script src=\"https://elfsightcdn.com/platform.js\" async></script>\n<div class=\"elfsight-app-f76ddb81-6e38-4d79-9e03-c6a3cae53a58\" data-elfsight-app-lazy></div>",
         "color_scheme": "",
         "padding_top": 40,
         "padding_bottom": 52
+      }
+    },
+    "gm_testimonial_slider_wwbdc3": {
+      "type": "gm-testimonial-slider",
+      "blocks": {
+        "testimonial_slide_UctLtP": {
+          "type": "testimonial-slide",
+          "settings": {
+            "testimonial_name": "Tommy",
+            "testimonial_number": 5,
+            "testimonial_description": "Så fina och bekväma, däremot så upplevde jag dem en aning mindre i storlek jämfört med mina blå i samma modell som jag köpte för ca 2 år sedan"
+          }
+        },
+        "testimonial_slide_TdkX36": {
+          "type": "testimonial-slide",
+          "settings": {
+            "testimonial_name": "Jenny",
+            "testimonial_number": 5,
+            "testimonial_description": "Stortrivs i MWHs kläder! Känner mig alltid välklädd och rätt. Kläderna sitter snyggt och skönt. Jag kan röra mig hur jag vill utan att passformen förändras eller blir skrynklig. Lätta att tvätta och behöver aldrig stryka. Lyx!"
+          }
+        },
+        "testimonial_slide_etzriX": {
+          "type": "testimonial-slide",
+          "settings": {
+            "testimonial_name": "Luce",
+            "testimonial_number": 5,
+            "testimonial_description": "Heeeelt otrolig! Kavajen är så skön och otroligt snygg! Jag är 178 cm och väger 70kg och storlek 40 satt perfekt på mig!"
+          }
+        },
+        "testimonial_slide_hCrqWB": {
+          "type": "testimonial-slide",
+          "settings": {
+            "testimonial_name": "Elena",
+            "testimonial_number": 5,
+            "testimonial_description": "Som alltid är kläderna så otroligt sköna. Den här klänningen är fin både till fest och vardag. En höjdare i garderoben. P.S har den redan i en annan färg med :-)"
+          }
+        },
+        "testimonial_slide_eEpWWD": {
+          "type": "testimonial-slide",
+          "settings": {
+            "testimonial_name": "Anya",
+            "testimonial_number": 5,
+            "testimonial_description": "The non wrinkle fabric is superb, nice texture, slightl gloss to it and a snug fit"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_slide_UctLtP",
+        "testimonial_slide_TdkX36",
+        "testimonial_slide_etzriX",
+        "testimonial_slide_hCrqWB",
+        "testimonial_slide_eEpWWD"
+      ],
+      "name": "GM Testimonial Slider",
+      "settings": {
+        "title": "WHAT OUR CUSTOMER SAY",
+        "autoplay_enabled": true,
+        "autoplay_delay": 1000,
+        "primary_color": "#121212",
+        "container_color": "#ffffff",
+        "title_color": "#121212",
+        "name_color": "#000000",
+        "text_color": "#000000",
+        "star_color": "#000000",
+        "rating_color": "#000000",
+        "title_fs": 16,
+        "subtitle_fs": 16,
+        "regular_fs": 16,
+        "font_weight_title": "500",
+        "font_weight_text": "400",
+        "font_weight_rating": "600"
       }
     }
   },
@@ -599,6 +671,7 @@
     "collection_list_aYfABH",
     "pl_feature_3_RrkcHg",
     "image_with_text_tMGpDk",
-    "custom_liquid_AcAKTn"
+    "custom_liquid_AcAKTn",
+    "gm_testimonial_slider_wwbdc3"
   ]
 }

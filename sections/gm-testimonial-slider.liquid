@@ -1,0 +1,547 @@
+{% comment %}
+---------------------------------------------------------
+Copyright © 2025 Genius Maker. All rights reserved.
+Unauthorized copying, modification, distribution, or use
+of this code or any portion of it, is strictly prohibited.
+Violators will be prosecuted to the fullest extent of the law.
+For inquiries or permissions, contact +91 9672 366 086
+---------------------------------------------------------
+{% endcomment %}
+
+<link href="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.css" rel="stylesheet">
+
+{% liquid
+  assign title = section.settings.title
+  assign autoplay_enabled = section.settings.autoplay_enabled
+  assign autoplay_delay = section.settings.autoplay_delay
+
+  assign primary_color = section.settings.primary_color
+  assign container_color = section.settings.container_color
+  assign title_color = section.settings.title_color
+  assign name_color = section.settings.name_color
+  assign text_color = section.settings.text_color
+  assign star_color = section.settings.star_color
+  assign rating_color = section.settings.rating_color
+
+  assign title_fs = section.settings.title_fs
+  assign subtitle_fs = section.settings.subtitle_fs
+  assign regular_fs = section.settings.regular_fs
+
+  assign font_weight_title = section.settings.font_weight_title
+  assign font_weight_text = section.settings.font_weight_text
+  assign font_weight_rating = section.settings.font_weight_rating
+%}
+
+{% capture gm_star_icon %}
+ <svg class="gm-testimonial__star-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z"></path></svg>
+{% endcapture %}
+
+{% capture gm_right_arrow %}
+  <svg class="gm-testimonial__right-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M1.99974 13.0001L1.9996 11.0002L18.1715 11.0002L14.2218 7.05044L15.636 5.63623L22 12.0002L15.636 18.3642L14.2218 16.9499L18.1716 13.0002L1.99974 13.0001Z"></path></svg>
+{% endcapture %}
+
+{% capture gm_left_arrow %}
+  <svg class="gm-testimonial__left-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M22.0003 13.0001L22.0004 11.0002L5.82845 11.0002L9.77817 7.05044L8.36396 5.63623L2 12.0002L8.36396 18.3642L9.77817 16.9499L5.8284 13.0002L22.0003 13.0001Z"></path></svg>
+{% endcapture %}
+
+<style>
+    .gm-testimonial * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+
+     .gm-testimonial {
+        --primary-color: {{ primary_color | default: "#6d28d9" }};       
+        --container-color: {{ container_color | default: "#ffffff" }};  
+        --title-color: {{ title_color | default: "#141721" }};          
+        --text-color: {{ text_color | default: "#555a68" }};             
+        --star-color: {{ star_color | default: "#f07330" }}; 
+        --name-color: {{ name_color | default: "#2a8b2a" }};            
+        --rating-color: {{ rating_color | default: "#2a8b2a" }};         
+        --title-font-size: {{ title_fs }}px;
+        --subtitle-font-size: {{ subtitle_fs }}px;
+        --regular-font-size: {{ regular_fs }}px;
+        box-sizing: border-box; 
+        overflow: hidden;
+        margin-bottom: 30px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .gm-testimonial__title {
+        font-size: var(--title-font-size);
+        text-align: center;
+        margin: 30px 0;
+        font-weight: {{ font_weight_title }};
+        color: var(--title-color);
+    }
+
+    .gm-testimonial .gm-testimonial__container {
+        margin: 0 25px;
+        padding-bottom: 100px;
+    }
+
+    .gm-testimonial .gm-testimonial__card{
+        width: 280px; 
+        box-shadow: 0 8px 16px hsla(265, 75%, 4%, .1);
+        background-color: var(--container-color);
+        border-radius: 15px;
+        padding: 20px 15px 30px;
+        text-align: center;
+        color: var(--text-color);
+    }
+
+    .gm-testimonial .gm-testimonial__image {
+        display: block;
+        aspect-ratio: 1/1;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 4px solid var(--primary-color);
+        margin: 0 auto 10px;
+    }
+
+     .gm-testimonial .gm-testimonial__name {
+        font-size: var(--subtitle-font-size);
+        font-weight: {{ font_weight_text }};
+        margin-bottom: 10px;
+        color: var(--name-color);
+    }
+
+    .gm-testimonial__rating {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .gm-testimonial__stars {
+        display: flex;
+        align-items: center;
+        column-gap: 2.5px;
+    }
+
+    .gm-testimonial__stars .gm-testimonial__star-icon {
+        width: 20px;
+        height: 20px;
+        fill: var(--star-color);
+    }
+
+    .gm-testimonial .gm-testimonial__number {
+        font-size: var(--subtitle-font-size);
+        font-weight: {{ font_weight_rating }};
+        color: var(--rating-color);
+    }
+
+    .gm-testimonial .gm-testimonial__description {
+        font-size: var(--regular-font-size);
+        line-height: 1.3;
+        user-select: none;
+        color: var(--text-color);
+    }
+
+    .gm-testimonial :is(.gm-testimonial__right-arrow, .gm-testimonial__left-arrow) {
+        width: 20px;
+        height: 20px;
+    }
+
+    /*=============== SWIPER CLASSES ===============*/
+
+    .gm-testimonial .swiper-pagination-bullets {
+        bottom: 60px;
+    }
+
+    .gm-testimonial .swiper-pagination-bullet {
+        background-color: var(--primary-color);
+        transition: opacity .4s;
+    }
+
+    .gm-testimonial .swiper-button-prev {
+        left: calc(50% - 35px);
+    }
+
+    .gm-testimonial .swiper-button-next {
+        right: calc(50% - 35px);
+    }
+
+    .gm-testimonial .swiper-button-prev::after,
+    .gm-testimonial .swiper-button-next::after {
+        content: '';
+    }
+
+    .gm-testimonial :is(.swiper-button-prev, .swiper-button-next) {
+        top: initial;
+        bottom: 0;
+        width: 30px;
+        height: 30px;
+        background-color: var(--primary-color);
+        color: #fff;
+        border-radius: 50%;
+    }
+
+    /*=============== BREAKPOINTS ===============*/
+    /* For small devices */
+    @media (max-width: 300px) {
+      .gm-testimonial__title {
+        font-size: 20px;
+      }
+      .gm-testimonial__card {
+        width: 240px;
+        padding-inline: 10px;
+      }
+    }
+
+    /* For medium devices */
+    @media (min-width: 640px) {
+      .gm-testimonial .gm-testimonial__container {
+        max-width: 640px;
+      }
+
+    }
+
+    /* For large devices */
+    @media (min-width: 1150px) {
+      .gm-testimonial .gm-testimonial__container {
+        max-width: 800px;
+      }
+      .gm-testimonial__title {
+        margin-bottom: 40px;
+        font-size: calc(var(--title-font-size) * 1.5);
+      }
+      .gm-testimonial__card {
+        width: 400px;
+        padding: 50px 30px 70px;
+        border-radius: 20px;
+      }
+
+      .gm-testimonial__stars .gm-testimonial__star-icon{
+        width: 24px;
+        height: 24px;
+      }
+
+      .gm-testimonial :is(.gm-testimonial__name, .gm-testimonial__number)  {
+        font-size: calc(var(--subtitle-font-size) * 1.125);
+      }
+
+      .gm-testimonial__description {
+        font-size: calc(var(--regular-font-size) * 1.5);
+      }
+    }
+</style>
+
+<section class="gm-testimonial">
+    {% if title %}
+    <h2 class="gm-testimonial__title">{{ title }}</h2>
+    {% endif %}
+    <div class="gm-testimonial__container swiper" 
+        data-autoplay-enabled="{{ autoplay_enabled }}"
+        data-autoplay-delay="{{ autoplay_delay }}"
+    >
+        <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+                {% assign testimonial_image = block.settings.testimonial_image %}
+                {% assign testimonial_name = block.settings.testimonial_name %}
+                {% assign testimonial_number = block.settings.testimonial_number %}
+                {% assign testimonial_description = block.settings.testimonial_description %}
+
+            {% comment %} === Testimonial-card ===  {% endcomment %}
+            <article class="gm-testimonial__card swiper-slide">
+            {% if testimonial_image %}
+                {{ testimonial_image | image_url: width: 100
+                     | image_tag: 
+                     width: 100,
+                     class: "gm-testimonial__image"
+                }}
+            {% endif %}
+            {% if testimonial_name %}
+                <h3 class="gm-testimonial__name">{{ testimonial_name | default: "Genius Maker" }}</h3>
+            {% endif %}
+                <div class="gm-testimonial__rating">
+                    <div class="gm-testimonial__stars">
+                        {% for i in (1..5) %}
+                           {{ gm_star_icon }}
+                        {% endfor %}
+                    </div>
+                    {% if testimonial_number %}
+                        <h3 class="gm-testimonial__number">{{ testimonial_number | default: 5 | append: ".0" }}</h3>
+                    {% endif %}
+                </div>
+
+                {% if testimonial_description %}
+                <p class="gm-testimonial__description">
+                    {{ testimonial_description }}
+                </p>
+            {% endif %}
+            </article>
+           {% comment %} === Testimonial-card ===  {% endcomment %}
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- Navigation buttons -->
+        <div class="swiper-button-prev">{{ gm_left_arrow }}</div>
+        <div class="swiper-button-next">{{ gm_right_arrow }}</div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@8.4.7/swiper-bundle.min.js" defer></script>
+
+<script>
+(function(){
+document.addEventListener("DOMContentLoaded", function(){
+const gmTestimonialSections = document.querySelectorAll('.gm-testimonial');
+    gmTestimonialSections.forEach(function(gmTestimonialSection){
+    const testimonialSwiper = gmTestimonialSection.querySelector('.gm-testimonial__container');
+
+        new Swiper(testimonialSwiper, {
+        loop: true,
+        slidesPerView: 'auto',
+        centeredSlides: 'auto',
+        speed: 600,
+        spaceBetween: 30,
+        grabCursor: true,
+        effect: 'coverflow',
+        coverflowEffect: {
+            rotate: -45,
+            depth: 300,
+            modifier: 0.8,
+            slideShadows: false,
+        },
+
+        // Pagination
+        pagination: {
+            el: testimonialSwiper.querySelector('.swiper-pagination'),
+            clickable: true,
+        },
+
+        // Navigation arrows
+        navigation: {
+            nextEl: testimonialSwiper.querySelector('.swiper-button-next'),
+            prevEl: testimonialSwiper.querySelector('.swiper-button-prev'),
+        },
+
+         autoplay: testimonialSwiper.dataset.autoplayEnabled === 'true' ? {
+          delay: parseInt(testimonialSwiper.dataset.autoplayDelay),
+          disableOnInteraction: false,
+       }:false,
+
+        });
+    });
+});
+})();
+</script>
+
+{% schema %}
+{
+    "name": "GM Testimonial Slider",
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Testimonial title",
+            "default": "What our customers say!"
+        },
+        {
+            "type": "header",
+            "content": "Autoplay settings"
+        },
+        {
+            "type": "checkbox",
+            "id": "autoplay_enabled",
+            "label": "Enable autoplay",
+            "default": false  
+        },
+        {
+            "type": "range",
+            "id": "autoplay_delay",
+            "label": "Autoplay delay/speed",
+            "min": 1000,
+            "max": 6000,
+            "step": 1000,
+            "default": 2000,
+            "unit": "ms"
+        },
+        {
+            "type": "header",
+            "content": "Color settings"
+        },
+        {
+            "type": "color",
+            "id": "primary_color",
+            "label": "Primary color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "container_color",
+            "label": "Container color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "title_color",
+            "label": "Title color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "name_color",
+            "label": "Name color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "star_color",
+            "label": "Star color",
+            "alpha": true
+        },
+        {
+            "type": "color",
+            "id": "rating_color",
+            "label": "Rating number color",
+            "alpha": true
+        },
+        {
+            "type": "header",
+            "content": "Font size settings"
+        },
+        {
+            "type": "range",
+            "id": "title_fs",
+            "label": "Title font size",
+            "min": 8,
+            "max": 80,
+            "step": 4,
+            "unit": "px",
+            "default": 40
+        },
+        {
+            "type": "range",
+            "id": "subtitle_fs",
+            "label": "Subtitle font size",
+            "min": 6,
+            "max": 48,
+            "step": 2,
+            "unit": "px",
+            "default": 28
+        },
+        {
+            "type": "range",
+            "id": "regular_fs",
+            "label": "Regular font size",
+            "min": 4,
+            "max": 32,
+            "step": 2,
+            "unit": "px",
+            "default": 16
+        },
+        {
+            "type": "select",
+            "id": "font_weight_title",
+            "label": "Font weight title",
+            "options": [
+                {
+                    "value": "400",
+                    "label": "Regular"
+                },
+                {
+                    "value": "500",
+                    "label": "Semi-bold"
+                },
+                {
+                    "value": "600",
+                    "label": "Bold"
+                }
+            ],
+            "default": "400"
+        },
+        {
+            "type": "select",
+            "id": "font_weight_text",
+            "label": "Font weight text",
+            "options": [
+                {
+                    "value": "400",
+                    "label": "Regular"
+                },
+                {
+                    "value": "500",
+                    "label": "Semi-bold"
+                },
+                {
+                    "value": "600",
+                    "label": "Bold"
+                }
+            ],
+            "default": "400"
+        },
+        {
+            "type": "select",
+            "id": "font_weight_rating",
+            "label": "Font weight rating",
+            "options": [
+                {
+                    "value": "400",
+                    "label": "Regular"
+                },
+                {
+                    "value": "500",
+                    "label": "Semi-bold"
+                },
+                {
+                    "value": "600",
+                    "label": "Bold"
+                }
+            ],
+            "default": "400"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "Testimonial Slide",
+            "type": "testimonial-slide",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "testimonial_image",
+                    "label": "Testimonial image"
+                },
+                {
+                    "type": "text",
+                    "id": "testimonial_name",
+                    "label": "Customer name"
+                },
+                {
+                    "type": "number",
+                    "id": "testimonial_number",
+                    "label": "Star ratings"
+                },
+                {
+                    "type": "textarea",
+                    "id": "testimonial_description",
+                    "label": "Testimonial description",
+                    "default": "Add description about the review here."
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "GM Testimonial Slider"
+        }
+    ]
+}
+{% endschema %}
