@@ -99,14 +99,56 @@
         "padding_bottom": 12
       }
     },
-    "custom_liquid_cHqAVA": {
-      "type": "custom-liquid",
-      "name": "t:sections.custom-liquid.presets.name",
+    "videobanner_DGrTdN": {
+      "type": "videobanner",
+      "blocks": {
+        "heading_AYaxGq": {
+          "type": "heading",
+          "settings": {
+            "heading_text": "FROM AM TO PM",
+            "desktop_width": 1000,
+            "mobile_width": 400,
+            "desktop_heading_size": 22,
+            "mobile_heading_size": 32,
+            "h1_heading": false
+          }
+        },
+        "text_LDgqh7": {
+          "type": "text",
+          "settings": {
+            "text_content": "<p>Our Suits are designed to move with you- from early morning to late nights, from boardrooms to after-hours. Trends fade, but a MWH suit that fits your life -from AM to PM -is forever.</p>"
+          }
+        },
+        "button_niPRdE": {
+          "type": "button",
+          "settings": {
+            "button_text": "SHOP HERE",
+            "button_link": "shopify://collections",
+            "button_text_color": "#ffffff",
+            "button_bg_color": "#242833",
+            "button_bg_hover": "#242833",
+            "button_radius": 0,
+            "font_weight": false,
+            "font_size": 13
+          }
+        }
+      },
+      "block_order": [
+        "heading_AYaxGq",
+        "text_LDgqh7",
+        "button_niPRdE"
+      ],
+      "name": "Video Banner",
       "settings": {
-        "custom_liquid": "<style>\nvideo {\nwidth: 100%;\nheight: auto;\ndisplay: block;\nmargin: 0 auto;\n}\n</style>\n<video muted autoplay playinline loop>\n<source src = \"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n<source src=\"https://cdn.shopify.com/videos/c/o/v/795d80f06b5e46158022b24b467f9cf1.mp4\" type=\"video/mp4\">\n</video>",
-        "color_scheme": "",
-        "padding_top": 0,
-        "padding_bottom": 20
+        "video": "shopify://files/videos/Shopify_ce0c8b4e-cf7e-4065-bcde-8f1400367e63.mp4",
+        "video_mobile": "shopify://files/videos/Shopify_ce0c8b4e-cf7e-4065-bcde-8f1400367e63.mp4",
+        "video_url": "",
+        "image_placeholder": "shopify://shop_images/woman-in-the-city_925x_d98798c3-1983-41f1-a06c-7e0f40a223df.jpg",
+        "video-alt": "",
+        "video_link": "shopify://collections/move-jacket-sporty-relaxed-fit",
+        "content_position": "bottom-left",
+        "desktop_height": 1000,
+        "mobile_height": 660
       }
     },
     "featured_collection": {
@@ -537,15 +579,26 @@
         "padding_top": 0,
         "padding_bottom": 36
       }
+    },
+    "custom_liquid_AcAKTn": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!-- Elfsight Testimonials Slider | Untitled Testimonials Slider -->\n<script src=\"https://elfsightcdn.com/platform.js\" async></script>\n<div class=\"elfsight-app-f76ddb81-6e38-4d79-9e03-c6a3cae53a58\" data-elfsight-app-lazy></div>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
     "image_banner",
     "image_with_text_9KaAE4",
-    "custom_liquid_cHqAVA",
+    "videobanner_DGrTdN",
     "featured_collection",
     "collection_list_aYfABH",
     "pl_feature_3_RrkcHg",
-    "image_with_text_tMGpDk"
+    "image_with_text_tMGpDk",
+    "custom_liquid_AcAKTn"
   ]
 }
