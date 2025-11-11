@@ -34,6 +34,53 @@
     ]
   },
   {
+    "name": "Extended Mega Menu",
+    "settings": [
+      {
+        "type": "select",
+        "label": "Show Images on Mega Menu Links",
+        "id": "extended-megamenu-show-imgs",
+        "default": "no",
+        "options": [
+          {
+            "label": "Yes",
+            "value": "yes"
+          },
+          {
+            "label": "No",
+            "value": "no"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "extended-megamenu-featured-img",
+        "label": "Featured Image"
+      },
+      {
+        "type": "select",
+        "label": "Show Featured Image",
+        "id": "extended-megamenu-show-featured",
+        "default": "no",
+        "options": [
+          {
+            "label": "Yes",
+            "value": "yes"
+          },
+          {
+            "label": "No",
+            "value": "no"
+          }
+        ]
+      },
+      {
+        "type": "url",
+        "id": "extended-megamenu-url",
+        "label": "Featured Image URL"
+      }
+    ]
+  },
+  {
     "name": "t:settings_schema.colors.name",
     "settings": [
       {

@@ -14,10 +14,10 @@
   <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
 {%- endif -%}
 
-{%- if section.settings.menu_type_desktop == 'mega' -%}
+{%- if section.settings.menu_type_desktop == 'mega' or section.settings.menu_type_desktop == 'mega-extended' -%}
   <link rel="stylesheet" href="{{ 'component-mega-menu.css' | asset_url }}" media="print" onload="this.media='all'">
+  <noscript>{{ 'component-mega-menu.css' | asset_url | stylesheet_tag }}</noscript>
 {%- endif -%}
-
 <style>
   header-drawer {
     justify-self: start;
@@ -182,15 +182,18 @@
       {%- endif -%}
     {%- endif -%}
 
-    {%- liquid
+    
+      {%- liquid
       if section.settings.menu != blank
         if section.settings.menu_type_desktop == 'dropdown'
           render 'header-dropdown-menu'
+        elsif section.settings.menu_type_desktop == 'mega-extended'
+          render 'header-mega-menu-extended'
         elsif section.settings.menu_type_desktop != 'drawer'
-          render 'header-mega-menu'
+        render 'header-mega-menu'
         endif
       endif
-    %}
+  %}
 
     {%- if section.settings.logo_position == 'middle-center' -%}
       {%- if request.page_type == 'index' -%}
@@ -601,12 +604,16 @@
         {
           "value": "drawer",
           "label": "t:sections.header.settings.menu_type_desktop.options__3.label"
-        }
+        },
+        {
+        "value": "mega-extended",
+        "label": "Megamenu Extended"
+         }
       ],
       "default": "dropdown",
       "label": "t:sections.header.settings.menu_type_desktop.label"
     },
-    
+
 {
   "type": "select",
   "id": "mega_menu_images_toggle",

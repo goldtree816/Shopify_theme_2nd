@@ -1,0 +1,141 @@
+{% comment %}
+  Renders a megamenu for the header.
+
+  Usage:
+  {% render 'header-mega-menu-extended' %}
+{% endcomment %}
+
+{% style %}
+  .curved-borders{
+    border-radius: 4px;
+  }
+
+  .full-width{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .featured-grid{
+    grid-template-areas: 
+      "link link link link featured featured"
+      "link link link link featured featured";
+    gap: 1.8rem 1rem;
+  }
+
+  .featured-item{
+    grid-area: featured;
+  }
+{% endstyle %}
+
+<nav class="header__inline-menu">
+  <ul class="list-menu list-menu--inline" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        {%- if link.links != blank -%}
+          <header-menu>
+            <details id="Details-HeaderMenu-{{ forloop.index }}" class="mega-menu">
+              <summary
+                id="HeaderMenu-{{ link.handle }}"
+                class="header__menu-item list-menu__item link focus-inset"
+              >
+                <span
+                  {%- if link.child_active %}
+                    class="header__active-menu-item"
+                  {% endif %}
+                >
+                  {{- link.title | escape -}}
+                </span>
+                {% render 'icon-caret' %}
+              </summary>
+              <div
+                id="MegaMenu-Content-{{ forloop.index }}"
+                class="mega-menu__content color-{{ section.settings.menu_color_scheme }} gradient motion-reduce global-settings-popup"
+                tabindex="-1"
+              >
+                <ul
+                  class="mega-menu__list page-width {% if settings.extended-megamenu-featured-img and settings.extended-megamenu-show-featured == "yes" %} featured-grid {% endif %}"
+                  role="list"
+                >
+                  {%- for childlink in link.links -%}
+                    <li>
+                        {% comment %} Put a Featured Image Here {% endcomment %}
+                        {% if settings.extended-megamenu-show-imgs == "yes" %}
+                          <a href="{{ childlink.url }}">
+                            {% if childlink.object.featured_image %}
+                              {{ childlink.object.featured_image |  image_url: width: 150, height: 150 | image_tag: class: 'curved-borders'  }}
+                            {% elsif childlink.object.image %}
+                              {{ childlink.object.image |  image_url: width: 150, height: 150 | image_tag: class: 'curved-borders'  }}
+                            {% endif %}
+                          </a>
+                        {% endif %}
+                        
+                      <a
+                        id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                        href="{{ childlink.url }}"
+                        class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %}"
+                        {% if childlink.current %}
+                          aria-current="page"
+                        {% endif %}
+                      >
+                        {{ childlink.title | escape }}
+                      </a>
+                      {%- if childlink.links != blank -%}
+                        <ul class="list-unstyled" role="list">
+                          {%- for grandchildlink in childlink.links -%}
+                            <li>
+                              <a
+                                id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                href="{{ grandchildlink.url }}"
+                                class="mega-menu__link link{% if grandchildlink.current %} mega-menu__link--active{% endif %}"
+                                {% if grandchildlink.current %}
+                                  aria-current="page"
+                                {% endif %}
+                              >
+                                {{ grandchildlink.title | escape }}
+                              </a>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                  {% if settings.extended-megamenu-featured-img and settings.extended-megamenu-show-featured == "yes" %}
+                   <li class = "featured-item">
+
+                    {% if settings.extended-megamenu-url %}
+                      <a href="{{ settings.extended-megamenu-url }}">
+                        {{ settings.extended-megamenu-featured-img | image_url: width: 450, height: 450 | image_tag: class: 'curved-borders full-width' }}
+                      </a>
+                    {% else %}
+                        {{ settings.extended-megamenu-featured-img | image_url: width: 450, height: 450 | image_tag: class: 'curved-borders full-width' }}
+                    {% endif %} 
+                  </li> 
+                {% endif %}
+                </ul>
+              </div>
+            </details>
+          </header-menu>
+        {%- else -%}
+          <a
+            id="HeaderMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="header__menu-item list-menu__item link link--text focus-inset"
+            {% if link.current %}
+              aria-current="page"
+            {% endif %}
+          >
+            <span
+              {%- if link.current %}
+                class="header__active-menu-item"
+              {% endif %}
+            >
+              {{- link.title | escape -}}
+            </span>
+          </a>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>

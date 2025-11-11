@@ -11,6 +11,8 @@
   "current": {
     "logo": "shopify://shop_images/Screenshot_2025-11-11_141334-removebg-preview.png",
     "logo_width": 90,
+    "extended-megamenu-show-imgs": "yes",
+    "extended-megamenu-show-featured": "yes",
     "type_header_font": "assistant_n4",
     "heading_scale": 100,
     "type_body_font": "assistant_n4",

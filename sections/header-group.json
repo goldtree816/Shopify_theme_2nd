@@ -74,7 +74,7 @@
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "main-menu",
-        "menu_type_desktop": "mega",
+        "menu_type_desktop": "mega-extended",
         "mega_menu_images_toggle": "none",
         "mega_menu_images_title": false,
         "megamenu_backdrop_toggle": false,
