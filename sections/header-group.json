@@ -18,35 +18,35 @@
           "type": "announcement",
           "settings": {
             "text": "Free Shipping on all orders",
-            "link": ""
+            "link": "shopify://collections"
           }
         },
         "announcement_kyEPjN": {
           "type": "announcement",
           "settings": {
             "text": "Made in Europe",
-            "link": ""
+            "link": "shopify://collections/all"
           }
         },
         "announcement_8EczNn": {
           "type": "announcement",
           "settings": {
             "text": "CODE: FULLSUIT30- 30% ON FULL SUIT",
-            "link": ""
+            "link": "shopify://products/classic-leather-jacket"
           }
         },
         "announcement_feQeym": {
           "type": "announcement",
           "settings": {
             "text": "Fast Delivery",
-            "link": ""
+            "link": "shopify://pages/contact"
           }
         },
         "announcement_Lxdrdb": {
           "type": "announcement",
           "settings": {
             "text": "Secure Payment with Klarna",
-            "link": ""
+            "link": "shopify://pages/contact"
           }
         }
       },
@@ -60,9 +60,9 @@
       "custom_css": [],
       "settings": {
         "auto_rotate": true,
-        "change_slides_speed": 10,
+        "change_slides_speed": 3,
         "color_scheme": "scheme-1",
-        "show_line_separator": false,
+        "show_line_separator": true,
         "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false
@@ -76,17 +76,25 @@
         "menu": "main-menu",
         "menu_type_desktop": "mega",
         "mega_menu_images_toggle": "none",
-        "mega_menu_images_title": true,
-        "sticky_header_type": "on-scroll-up",
+        "mega_menu_images_title": false,
+        "megamenu_backdrop_toggle": false,
+        "dropdown_menu_images_toggle": "none",
+        "drawer_menu_images_toggle": "none",
+        "menu_images_size": 50,
+        "menu_images_border_toggle": false,
+        "menu_images_border_color": "#eaeaea",
+        "sticky_header_type": "reduce-logo-size",
         "show_line_separator": false,
         "color_scheme": "scheme-1",
+        "transparent_header": true,
+        "content_color": "#000000",
         "menu_color_scheme": "scheme-1",
-        "enable_country_selector": true,
-        "enable_language_selector": true,
-        "enable_customer_avatar": true,
+        "enable_country_selector": false,
+        "enable_language_selector": false,
+        "enable_customer_avatar": false,
         "margin_bottom": 0,
-        "padding_top": 24,
-        "padding_bottom": 20
+        "padding_top": 0,
+        "padding_bottom": 0
       }
     }
   },

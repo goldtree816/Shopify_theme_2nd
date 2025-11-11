@@ -1,0 +1,52 @@
+{% if menu_images_toggle != 'none' %}
+  {% assign menu_image_url = '' %}
+  {% if menu_images_toggle == 'metafield' %}
+    {% if link.object.metafields.custom.image %}
+      {% assign menu_image_url = link.object.metafields.custom.image | image_url: width: menu_images_size, height: menu_images_size %}
+      <img src="{{ menu_image_url }}" alt="{{ link.title | escape }}" class="header-menu-image">
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+<style>
+
+  {% if menu_images_toggle and menu_images_border_toggle %}
+    .menu-drawer__menu {
+      list-style: none;
+      padding-left: 0; /* Remove default padding */
+    }
+    
+    .menu-drawer__menu li {
+      border-top: 1px solid {{ menu_images_border_color }};
+    }
+    
+    .menu-drawer__menu li:last-child {
+      border-bottom: 1px solid {{ menu_images_border_color }};
+    }  
+    
+    .header__submenu > li:not(:last-child) {
+      border-bottom: 1px solid {{ menu_images_border_color }};
+    }
+    
+    .header__submenu.header__submenu > li:not(:last-child) {
+      border-bottom: 1px solid {{ menu_images_border_color }};
+    }
+    
+    .header__submenu.list-menu {
+      padding: 0;
+    }
+    .header__submenu.header__submenu {
+      margin: 0;
+    }
+  
+  {% endif %}
+    
+  .header-menu-image {
+    margin-left: auto; /* This ensures that the link (image) is pushed to the far right */
+  }
+  
+  .list-menu--disclosure.list-menu--images {
+    width: {{ menu_dropdown_width }}rem;
+  }
+
+</style>

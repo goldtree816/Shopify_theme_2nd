@@ -9,6 +9,7 @@
  */
 {
   "current": {
+    "logo": "shopify://shop_images/Screenshot_2025-11-11_141334-removebg-preview.png",
     "logo_width": 90,
     "type_header_font": "assistant_n4",
     "heading_scale": 100,
@@ -39,7 +40,7 @@
     "inputs_radius": 0,
     "inputs_shadow_opacity": 0,
     "inputs_shadow_horizontal_offset": 0,
-    "inputs_shadow_vertical_offset": 4,
+    "inputs_shadow_vertical_offset": 12,
     "inputs_shadow_blur": 5,
     "card_style": "standard",
     "card_image_padding": 0,
@@ -121,7 +122,7 @@
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": false,
     "currency_code_enabled": true,
-    "cart_type": "notification",
+    "cart_type": "page",
     "show_vendor": false,
     "show_cart_note": false,
     "cart_drawer_collection": "",

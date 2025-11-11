@@ -1,3 +1,5 @@
+
+
 <link rel="stylesheet" href="{{ 'component-list-menu.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-menu-drawer.css' | asset_url }}" media="print" onload="this.media='all'">
@@ -136,7 +138,7 @@
       assign localization_forms = true
     endif
   -%}
-  <header class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %}">
+  <header id="site-header" class="header header--{{ section.settings.logo_position }} header--mobile-{{ section.settings.mobile_logo_position }} page-width{% if section.settings.menu_type_desktop == 'drawer' %} drawer-menu{% endif %}{% if section.settings.menu != blank %} header--has-menu{% endif %}{% if has_app_block %} header--has-app{% endif %}{% if social_links %} header--has-social{% endif %}{% if shop.customer_accounts_enabled %} header--has-account{% endif %}{% if localization_forms %} header--has-localizations{% endif %} {% if section.settings.transparent_header %}site-header-transparent{% endif %}">
     {%- liquid
       if section.settings.menu != blank
         render 'header-drawer'
@@ -466,6 +468,71 @@
   </script>
 {%- endif -%}
 
+{% if template == 'index' and section.settings.transparent_header %}
+{% style %}
+  .template-index .site-header-transparent .header__icon, .template-index .site-header-transparent .header__menu-item span, .template-index .site-header-transparent .header__menu-item svg, .template-index .site-header-transparent .header__active-menu-item {
+    color: {{ section.settings.content_color }};
+   }
+   .site-header-transparent {
+     background: transparent;
+     position: absolute;
+     border: none;
+     width: 100%;
+     left: 50%;
+     transform: translateX(-50%);
+   }
+   .site-header-transition {
+      margin-top: var(--header-height);
+   }
+{% endstyle %}
+<!--- Coded by websensepro.com - youtube.com/c/websensepro --->
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var headerHeight = document.getElementById('site-header').offsetHeight;
+    document.getElementById('MainContent').style.setProperty('--header-height', '-'+ headerHeight + 'px');
+  });
+  window.onscroll = function() {
+    var header = document.getElementById('site-header');
+    var main = document.getElementById('MainContent');
+    var height = document.getElementById('site-header').offsetHeight;
+    if ( window.pageYOffset > height ) {
+      header.classList.remove('site-header-transparent');
+      main.classList.add('site-header-transition');
+    } else {
+      header.classList.add('site-header-transparent');
+      main.classList.remove('site-header-transition');
+    }
+  }
+  document.getElementById("header-menu").addEventListener('click',function () {
+    var sideMenu = document.getElementById('Details-menu-drawer-container');
+    var header = document.getElementById('site-header');
+    var height = document.getElementById('site-header').offsetHeight;
+    if ( window.pageYOffset < height ) {
+    if (!sideMenu.classList.contains('menu-opening')) {
+      header.classList.remove('site-header-transparent');
+    } else {
+      header.classList.add('site-header-transparent');
+    }
+    }
+  });
+  document.getElementById("header-search").addEventListener('click',function () {
+    var search = document.getElementById('template-index');
+    var header = document.getElementById('site-header');
+    var main = document.getElementById('MainContent');
+    var height = document.getElementById('site-header').offsetHeight;
+    if ( window.pageYOffset < height ) {
+      if (search.classList.contains('overflow-hidden')) {
+        header.classList.remove('site-header-transparent');
+        main.classList.add('site-header-transition');
+      } else {
+        header.classList.add('site-header-transparent');
+        main.classList.remove('site-header-transition');
+      }
+    }
+  });
+</script>
+{% endif %}
+
 {% schema %}
 {
   "name": "t:sections.header.name",
@@ -539,7 +606,7 @@
       "default": "dropdown",
       "label": "t:sections.header.settings.menu_type_desktop.label"
     },
-
+    
 {
   "type": "select",
   "id": "mega_menu_images_toggle",
@@ -549,17 +616,12 @@
       "label": "None"
     },
     {
-      "value": "featured",
-      "label": "Featured"
-    },
-    {
       "value": "metafield",
       "label": "Metafield"
     }
   ],
   "default": "none",
-  "label": "Mega menu collection image type",
-  "info": "Only applies to mega menu"
+  "label": "Mega menu collection image type"
 },
 {
   "type": "checkbox",
@@ -567,6 +629,71 @@
   "label": "Hide the collection title (when mega menu images is active)",
   "default": false
 },
+{
+  "type": "checkbox",
+  "id": "megamenu_backdrop_toggle",
+  "label": "Add overlay when megamenu is open",
+  "default": true
+},
+{
+  "type": "select",
+  "id": "dropdown_menu_images_toggle",
+  "options": [
+    {
+      "value": "none",
+      "label": "None"
+    },
+    {
+      "value": "metafield",
+      "label": "Metafield"
+    }
+  ],
+  "default": "none",
+  "label": "Dropdown menu collection image type"
+},
+{
+  "type": "select",
+  "id": "drawer_menu_images_toggle",
+  "options": [
+    {
+      "value": "none",
+      "label": "None"
+    },
+    {
+      "value": "metafield",
+      "label": "Metafield"
+    }
+  ],
+  "default": "none",
+  "label": "Drawer menu collection image type"
+},
+{
+  "type": "range",
+  "id": "menu_images_size",
+  "label": "Menu Image Size",
+  "info": "Applies to drawer and dropdown menu",
+  "default": 60,
+  "min": 50,
+  "max": 100,
+  "step": 1,
+  "unit": "px"
+},
+{
+  "type": "checkbox",
+  "id": "menu_images_border_toggle",
+  "label": "Enable Menu Border",
+  "info": "Use with Dropdown and Drawer menu with images",
+  "default": false
+},
+{
+  "type": "color",
+  "id": "menu_images_border_color",
+  "label": "Menu Images Border Color",
+  "default": "#eaeaea"
+},
+    
+
+
 
     {
       "type": "select",
@@ -608,6 +735,22 @@
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
     },
+    {
+      "type": "header",
+      "content": "Transparent Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_header",
+      "label": "Enable transparent header",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Change icon & text color"
+    },
+
     {
       "type": "color_scheme",
       "id": "menu_color_scheme",

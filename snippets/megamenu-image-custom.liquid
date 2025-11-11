@@ -1,0 +1,97 @@
+<ul class="mega-menu__list megamenu-with-image page-width">
+  {%- for childlink in link.links -%}
+    {% assign image_url = '' %}
+    {% if menu_images_toggle == 'metafield' and childlink.object and childlink.object.metafields.custom.image != blank %}
+      {% assign image_url = childlink.object.metafields.custom.image | img_url: 'master' %}
+    {% endif %}
+    
+    <li>
+      <div class="mega-menu__column">
+        {% if image_url != blank %}
+          <a href="{{ childlink.url }}">
+            <img src="{{ image_url }}" alt="{{ childlink.title | escape }}" class="mega-menu__image">
+          </a>
+        {% endif %}
+        <a id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}" href="{{ childlink.url }}" class="mega-menu__link mega-menu__link--level-2 link{% if childlink.current %} mega-menu__link--active{% endif %} {% if menu_titles_toggle %}hide-title{% endif %}" {% if childlink.current %} aria-current="page" {% endif %}>
+          {{ childlink.title | escape }}
+        </a>
+      </div>
+    </li>
+  {%- endfor -%}
+</ul>
+
+
+<style>
+
+  .mega-menu__image {
+    width: 100%;
+    border-radius: 10px; /* Adjust the radius value as needed (ex: 10px for rounded corners, 0px for square corners, 50% makes the image a circle) */
+    object-fit: cover; 
+    aspect-ratio: 1 / 1;
+  }
+
+  .mega-menu__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    text-align: center;
+  }
+
+.mega-menu__list.megamenu-with-image {
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(calc((100% - (5 * 4rem)) / 6), calc((100% - (5 * 4rem)) / 6)));
+}
+
+.mega-menu__link.hide-title {
+  display: none; 
+}
+
+.menu-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: 3; 
+}
+
+</style>
+
+{% if megamenu_backdrop_toggle %}
+
+  <style>
+  #menu-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 3;
+  }
+  </style>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const menuBackdrop = document.getElementById('menu-backdrop');
+    document.querySelectorAll('.mega-menu').forEach(function(megaMenu) {
+      megaMenu.addEventListener('toggle', function () {
+        const isAnyMenuOpen = [...document.querySelectorAll('.mega-menu')].some(menu => menu.hasAttribute('open'));
+        menuBackdrop.style.display = isAnyMenuOpen ? 'block' : 'none';
+      });
+    });
+    menuBackdrop.addEventListener('click', function () {
+      document.querySelectorAll('.mega-menu').forEach(function(megaMenu) {
+        megaMenu.removeAttribute('open');
+      });
+      menuBackdrop.style.display = 'none';
+    });
+  });
+  
+  </script>
+
+{% endif %}
