@@ -39,13 +39,13 @@
         "image": "shopify://shop_images/smiling-woman-on-snowy-afternoon_925x_33687b6c-384f-4681-9e0f-d410e10a0f8c.jpg",
         "image_overlay_opacity": 40,
         "image_height": "large",
-        "image_behavior": "none",
+        "image_behavior": "zoom-in",
         "desktop_content_position": "bottom-right",
         "desktop_content_alignment": "center",
         "show_text_box": false,
         "color_scheme": "scheme-3",
         "stack_images_on_mobile": false,
-        "mobile_content_alignment": "center",
+        "mobile_content_alignment": "left",
         "show_text_below": false
       }
     },
