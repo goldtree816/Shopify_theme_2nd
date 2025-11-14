@@ -23,7 +23,7 @@
           "type": "buttons",
           "settings": {
             "button_label_1": "PREORDER",
-            "button_link_1": "https://www.mwhwear.com/products/rebel-jacket-classic-oversized-fit-kopia",
+            "button_link_1": "shopify://collections/mwh-collection-preminum-italian-fabric",
             "button_style_secondary_1": true,
             "button_label_2": "",
             "button_link_2": "",
@@ -70,7 +70,7 @@
           "type": "button",
           "settings": {
             "button_label": "INVEST NOW",
-            "button_link": "https://www.mwhwear.com/collections/black-week-teaser",
+            "button_link": "shopify://collections/mwh-collection",
             "button_style_secondary": true
           }
         }
@@ -160,11 +160,11 @@
         "heading_size": "h1",
         "description": "",
         "show_description": true,
-        "description_style": "subtitle",
+        "description_style": "uppercase",
         "columns_desktop": 4,
         "enable_desktop_slider": true,
         "full_width": true,
-        "show_view_all": false,
+        "show_view_all": true,
         "view_all_style": "link",
         "color_scheme": "scheme-2",
         "image_ratio": "portrait",

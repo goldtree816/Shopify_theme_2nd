@@ -54,7 +54,6 @@
     },
     "banner": {
       "type": "main-collection-banner",
-      "disabled": true,
       "settings": {
         "show_collection_description": true,
         "show_collection_image": false,
@@ -63,7 +62,6 @@
     },
     "product-grid": {
       "type": "main-collection-product-grid",
-      "disabled": true,
       "settings": {
         "products_per_page": 20,
         "columns_desktop": 3,
@@ -84,7 +82,6 @@
     },
     "page_Me876a": {
       "type": "page",
-      "disabled": true,
       "name": "t:sections.page.presets.name",
       "settings": {
         "page": "about-mwh",
@@ -116,6 +113,7 @@
         "heading_CiLDBV",
         "text_D9LMYt"
       ],
+      "disabled": true,
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/autumn-photographer-taking-picture_925x_309c90da-67b3-4d98-85d5-f7fe8ed4037c.jpg",
@@ -133,6 +131,7 @@
     },
     "page_DDXj6c": {
       "type": "page",
+      "disabled": true,
       "name": "t:sections.page.presets.name",
       "settings": {
         "page": "pre-access-begins-november-16th",
@@ -164,6 +163,7 @@
         "heading_ehbAgz",
         "text_GEgrXq"
       ],
+      "disabled": true,
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/young-female-models-denim_925x_230de593-1155-4874-9086-6d461e5e2c26.jpg",
@@ -182,6 +182,7 @@
     },
     "page_BUFwJY": {
       "type": "page",
+      "disabled": true,
       "name": "t:sections.page.presets.name",
       "settings": {
         "page": "investment-pieces-with-a-statement-1",
@@ -213,6 +214,7 @@
         "heading_gErabF",
         "text_a6Ftf7"
       ],
+      "disabled": true,
       "name": "t:sections.image-banner.presets.name",
       "settings": {
         "image": "shopify://shop_images/smiling-woman-poses_925x_6d117727-62ce-420e-81d8-3cc473eea3ff.jpg",
