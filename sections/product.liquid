@@ -14,17 +14,15 @@ body:not(.template-index) .top-banner {
   background-color: lightblue;
   color:pink;
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
-
 
 body:not(.template-index) .navbar a{
   color:black;
 }
 
 .add-to-bag{
-display:flex;
-align-items:center;
+  width:100%;
+  
 }
 
 .product-section {
@@ -51,38 +49,71 @@ align-items:center;
 
 .product-container {
   display: flex;
-  gap: 60px;
+  
+  gap: 20px;
 }
 
+/* Gallery layout */
 .product-gallery {
-  flex:1;
+  display: flex;
+  align-items: flex-start;
+  gap:5px;
+}
+
+.thumbnail-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  width: 90%;
-  scroll-snap-type: x mandatory;
-  overflow-y:hidden;
+  gap: 10px;
+  width: 100px;
 }
 
-.product-gallery img{
-  height:600px;
-  width:50px;
-  object-fit:cover;
-  overflow:hidden;
-}
-
-.product-gallery img {
+.thumbnail-list img {
   width: 100%;
-  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, border 0.2s ease;
 }
+
+.thumbnail-list img:hover {
+  opacity: 1;
+}
+
+.thumbnail-list img.active-thumb {
+  border: 2px solid #4a5a77;
+  opacity: 1;
+}
+
+.main-image {
+  {% comment %} border:1px solid black; {% endcomment %}
+  max-width:800px;
+  height:100%;
+  aspect-ratio:3/4;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-image img {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease, transform-origin 0.2s ease;
+  cursor: zoom-in;
+  object-fit:contain;
+  {% comment %} transition: transform 0.2s ease, transform-origin 0.2s ease;
+  cursor: zoom-in; {% endcomment %}
+}
+
+.main-image:hover img {
+  transform: scale(2); /* zoom level */
+}
+
 
 .product-info {
-  flex: 1;
+  flex:0.8;
 }
 
 .product-title {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 400;
   margin-bottom: 8px;
 }
 
@@ -93,23 +124,24 @@ align-items:center;
 }
 
 .product-price {
+  padding-top:20px;
   font-size: 18px;
   margin-bottom: 10px;
+  padding-bottom:40px;
 }
 
 .product-tags span {
+  margin-top:20px;
   background: #edf2fa;
-  color: #4a5a77;
-  font-size: 12px;
-  font-weight: 600;
+  color: blue;
+  font-size: 14px;
   padding: 4px 10px;
-  border-radius: 3px;
   margin-right: 6px;
+  text-transform:uppercase;
 }
 
 .product-description {
   font-size: 14px;
-  color: #555;
   line-height: 1.6;
   margin: 20px 0;
 }
@@ -125,13 +157,7 @@ align-items:center;
 }
 
 .btn-shop {
-  background: #5b3cf5;
-  color: white;
-  border: none;
-  padding: 12px 40px;
-  border-radius: 30px;
-  font-weight: 600;
-  cursor: pointer;
+width:100;
 }
 
 .buy-with {
@@ -141,6 +167,7 @@ align-items:center;
 .buy-with h4 {
   font-size: 14px;
   margin-bottom: 12px;
+  font-weight: 600;
 }
 
 .recommended {
@@ -154,19 +181,58 @@ align-items:center;
   border-radius: 4px;
 }
 
-.details-section {
+.product-accordion {
   margin-top: 40px;
+  border-top: 1px solid #dcdcdc;
+  font-family: 'Manrope', sans-serif;
 }
 
-.details-section summary {
-  font-weight: 600;
-  font-size: 14px;
-  padding: 8px 0;
-  border-bottom: 1px solid #ccc;
+.product-accordion details {
+  border-bottom: 1px solid #dcdcdc;
+  padding: 16px 0;
   cursor: pointer;
 }
 
+.product-accordion summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #222;
+  list-style: none;
+}
+
+.product-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.product-accordion summary::after {
+  content: "+";
+  font-size: 18px;
+  transition: transform 0.2s ease;
+  color: #777;
+}
+
+.product-accordion details[open] summary::after {
+  content: "−";
+  transform: rotate(180deg);
+}
+
+.product-accordion .accordion-content {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  padding-top: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
+
 <section class="product-section">
   <nav class="breadcrumb">
     <a href="{{ routes.root_url }}">HOME</a>
@@ -175,46 +241,49 @@ align-items:center;
   </nav>
 
   <div class="product-container">
-    <!-- LEFT SIDE: Image gallery -->
+
+    <!-- LEFT SIDE Image gallery -->
     <div class="product-gallery">
-      {% for image in product.images %}
-        <div class="gallery-item">
-          <img src="{{ image | img_url: '800x800' }}" alt="{{ image.alt | escape }}">
-        </div>
-      {% endfor %}
-    </div>
-
-    <!-- RIGHT SIDE: Info -->
-    <div class="product-info">
-      <h1 class="product-title">{{ product.title }}</h1>
-
-      <!-- Price -->
-      <div class="product-price">{{ product.price | money }}</div>
-
-      <!-- Core Purposes -->
-      <div class="product-tags">
-        <span>NOURISHES</span>
-        <span>BOOSTS REPAIR</span>
-        <span>STRENGTHENS THE SKIN BARRIER</span>
+      <!-- Thumbnails -->
+      <div class="thumbnail-list">
+        {% for image in product.images %}
+          <img 
+            src="{{ image | img_url: '200x200' }}" 
+            alt="{{ image.alt | escape }}" 
+            class="thumbnail {% if forloop.first %}active-thumb{% endif %}"
+            data-image="{{ image | img_url: '800x800' }}">
+        {% endfor %}
       </div>
 
-      <!-- Description -->
+      <!-- Main image -->
+      <div class="main-image">
+        <img id="mainImage" src="{{ product.featured_image | img_url: '800x800' }}" alt="{{ product.title }}">
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE: Product info -->
+    <div class="product-info">
+      <h1 class="product-title">{{ product.title }}</h1>
+      <div class="product-price">{{ product.price | money }}</div>
+
+      <div class="product-tags">
+        {% for tag in product.tags %}
+          <span>{{ tag }}</span>
+        {% endfor %}
+      </div>
+
       <div class="product-description">
         <p>SKIN TYPES: Dry Skin, Normal Skin, Cracked Skin</p>
         <p>{{ product.description }}</p>
       </div>
 
-      <!-- Add to Bag -->
       <div class="add-to-bag">
         <form method="post" action="/cart/add">
           <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-          {%render 'button.liquid'%}
-          <button class="btn-shop">Buy with <b>shop</b></button>
+          {% render 'button.liquid', text: "ADD TO BAG", class: 'btn-shop' %}
         </form>
       </div>
-      
 
-      <!-- Buy it with -->
       <div class="buy-with">
         <h4>BUY IT WITH:</h4>
         <div class="recommended">
@@ -225,25 +294,120 @@ align-items:center;
           </div>
         </div>
       </div>
+    <div class="product-accordion">
 
-      <!-- Details Section -->
-      <div class="details-section">
-        <details><summary>DETAILS</summary></details>
-        <details><summary>KEY INGREDIENTS</summary></details>
-        <details><summary>HOW TO USE</summary></details>
-        <details><summary>FULL INGREDIENTS</summary></details>
-        <details><summary>SUSTAINABLE PACKAGING</summary></details>
-      </div>
+      {% if product.metafields.custom.details %}
+        <details>
+          <summary>DETAILS</summary>
+          <div class="accordion-content">
+            {{ product.metafields.custom.details }}
+          </div>
+        </details>
+      {% endif %}
+
+      {% if product.metafields.custom.key_ingredients %}
+        <details>
+          <summary>KEY INGREDIENTS</summary>
+          <div class="accordion-content">
+            {{ product.metafields.custom.key_ingredients }}
+          </div>
+        </details>
+      {% endif %}
+
+      {% if product.metafields.custom.how_to_use %}
+        <details>
+          <summary>HOW TO USE</summary>
+          <div class="accordion-content">
+            {{ product.metafields.custom.how_to_use }}
+          </div>
+        </details>
+      {% endif %}
+
+      {% if product.metafields.custom.full_ingredients %}
+        <details>
+          <summary>FULL INGREDIENTS</summary>
+          <div class="accordion-content">
+            {{ product.metafields.custom.full_ingredients }}
+          </div>
+        </details>
+      {% endif %}
+
+      {% if product.metafields.custom.sustainable_packaging %}
+        <details>
+          <summary>SUSTAINABLE PACKAGING</summary>
+          <div class="accordion-content">
+            {{ product.metafields.custom.sustainable_packaging }}
+          </div>
+        </details>
+      {% endif %}
+
+    </div>
+
     </div>
   </div>
 </section>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const mainImage = document.getElementById("mainImage");
+  const thumbnails = document.querySelectorAll(".thumbnail");
+
+  // Thumbnail swap
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener("click", () => {
+      const newSrc = thumb.dataset.image;
+      if (!newSrc || mainImage.src === newSrc) return;
+
+      // when image loads, reset origin and clear any inline transform
+      const onLoad = () => {
+        mainImage.style.transformOrigin = "center center";
+        mainImage.style.removeProperty("transform"); // key fix
+        mainImage.removeEventListener("load", onLoad);
+      };
+      mainImage.addEventListener("load", onLoad);
+
+      mainImage.src = newSrc;
+
+      thumbnails.forEach(t => t.classList.remove("active-thumb"));
+      thumb.classList.add("active-thumb");
+    });
+  });
+
+  // Cursor-follow zoom
+  mainImage.addEventListener("mousemove", e => {
+    const rect = mainImage.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    mainImage.style.transformOrigin = `${x}% ${y}%`;
+  });
+
+  mainImage.addEventListener("mouseleave", () => {
+    mainImage.style.transformOrigin = "center center";
+    // do NOT set transform here
+  });
+
+  // Accordions
+  document.querySelectorAll(".product-accordion details").forEach(d => {
+    d.addEventListener("toggle", () => {
+      if (d.open) document.querySelectorAll(".product-accordion details").forEach(o => { if (o !== d) o.removeAttribute("open"); });
+    });
+  });
+});
+</script>
+
+
+
+
+
 {% schema %}
 {
-  "name": "t:general.product",
+  "name": "Product Page Section",
   "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
-  }
+  "presets": [
+    {
+      "name": "Product Page Section",
+      "category": "Product"
+    }
+  ]
 }
 {% endschema %}
