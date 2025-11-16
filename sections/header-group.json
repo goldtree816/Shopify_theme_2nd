@@ -14,18 +14,6 @@
     "header": {
       "type": "header",
       "blocks": {
-        "menu_images_qkdpYd": {
-          "type": "menu_images",
-          "settings": {
-            "menu_title": ""
-          }
-        },
-        "menu_images_xNddgF": {
-          "type": "menu_images",
-          "settings": {
-            "menu_title": ""
-          }
-        },
         "menu_images_8B8AxB": {
           "type": "menu_images",
           "settings": {
@@ -36,8 +24,6 @@
         }
       },
       "block_order": [
-        "menu_images_qkdpYd",
-        "menu_images_xNddgF",
         "menu_images_8B8AxB"
       ],
       "settings": {
@@ -49,7 +35,9 @@
         "left-navbar": "left-navbar",
         "right-navbar": "right-navbar",
         "nav_item_spacing": 20,
-        "nav_font_size": 14
+        "nav_font_size": 14,
+        "logo_font_size": 14,
+        "navbar_height": 15
       }
     }
   },

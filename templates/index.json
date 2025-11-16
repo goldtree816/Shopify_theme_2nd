@@ -15,18 +15,27 @@
         "slide_grDRB4": {
           "type": "slide",
           "settings": {
-            "subtitle": "",
-            "title": "",
+            "subtitle": "AEVI NORDIC CARE",
+            "title": "FOR PROFESSIONALS",
             "button_text": "Shop Now",
             "button_link": "",
             "image": "shopify://shop_images/hero-image-2.jpg"
           }
         },
-        "slide_QWX6je": {
+        "slide_iCbktV": {
           "type": "slide",
           "settings": {
             "subtitle": "",
             "title": "",
+            "button_text": "Shop Now",
+            "button_link": ""
+          }
+        },
+        "slide_QWX6je": {
+          "type": "slide",
+          "settings": {
+            "subtitle": "AEVI NORDIC CARE",
+            "title": "BY PROFESSIONALS",
             "button_text": "Shop Now",
             "button_link": "",
             "image": "shopify://shop_images/womens-hand-moon-bracelet-_925x_a5fa0cd8-e3ff-4106-bf51-30afa51adf03.jpg"
@@ -45,6 +54,7 @@
       },
       "block_order": [
         "slide_grDRB4",
+        "slide_iCbktV",
         "slide_QWX6je",
         "slide_Dkypzz"
       ],
@@ -94,6 +104,7 @@
       "type": "bestsellers",
       "settings": {
         "section_title": "BESTSELLERS",
+        "product_card_spacing": 20,
         "section_description": "Dermatologists verified and most trusted products by doctors."
       }
     },
@@ -125,6 +136,7 @@
       "name": "Bestsellers",
       "settings": {
         "section_title": "GIFTS, SETS + BUNDLES",
+        "product_card_spacing": 20,
         "section_description": "Curated edits of bestselling clean beauty"
       }
     },
