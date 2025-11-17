@@ -1,37 +1,342 @@
 {% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
+  Cart drawer layout
 {% endcomment %}
 
-<h1>{{ 'cart.title' | t }}</h1>
+<style>
+  .cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 9999;
+    display: flex;
+    justify-content: flex-end;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
 
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
+  .cart-drawer {
+    width: 400px;
+    max-width: 100vw;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
 
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
+  .cart-drawer-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
 
-{% schema %}
-{
-  "name": "t:general.cart",
-  "settings": []
-}
-{% endschema %}
+  .cart-drawer-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .cart-drawer-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px 24px;
+  }
+
+  .cart-free-shipping {
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+
+  .cart-free-shipping-bar {
+    height: 4px;
+    border-radius: 999px;
+    background: #e6e6e6;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .cart-free-shipping-fill {
+    height: 100%;
+    background: #9eb8d7;
+    width: 0;
+  }
+
+  .cart-items {
+    margin-bottom: 24px;
+  }
+
+  .cart-item {
+    display: grid;
+    grid-template-columns: 76px 1fr auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    font-size: 13px;
+  }
+
+  .cart-item-image img {
+    width: 76px;
+    height: 110px;
+    object-fit: cover;
+  }
+
+  .cart-item-info-title {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .cart-item-remove {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    opacity: .6;
+  }
+
+  .cart-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .cart-item-qty button {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.15);
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .cart-item-qty input {
+    width: 34px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 12px;
+  }
+
+  .cart-item-price {
+    font-size: 13px;
+    text-align: right;
+  }
+
+  .cart-upsell-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .16em;
+    margin: 8px 0 12px;
+  }
+
+  .cart-upsell-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .cart-upsell-card {
+    border: 1px solid rgba(0,0,0,0.05);
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .cart-upsell-card img {
+    width: 100%;
+    aspect-ratio: 3/5;
+    object-fit: cover;
+    margin-bottom: 4px;
+  }
+
+  .cart-upsell-card-title {
+    margin-bottom: 4px;
+  }
+
+  .cart-upsell-card-price {
+    font-size: 11px;
+    opacity: .7;
+  }
+
+  .cart-footer {
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 16px 24px 20px;
+    font-size: 13px;
+  }
+
+  .cart-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .cart-footer-checkout {
+    margin: 12px 0 10px;
+  }
+
+  .cart-checkout-button {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    background: #aec3df;
+  }
+
+  .cart-shipping-note {
+    font-size: 11px;
+    opacity: .7;
+    margin-bottom: 10px;
+  }
+
+  .cart-coupon {
+    margin-top: 10px;
+  }
+
+  .cart-coupon-label {
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+
+  .cart-coupon-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+  }
+
+  .cart-coupon-input {
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.2);
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .cart-coupon-button {
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,0.2);
+    padding: 8px 16px;
+    background: transparent;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+</style>
+
+{% assign free_shipping_threshold = 9000 %} {%- comment -%} 90 in cents {%- endcomment -%}
+{% assign cart_total = cart.total_price %}
+{% assign shipping_progress = cart_total | times: 100 | divided_by: free_shipping_threshold %}
+{% if shipping_progress > 100 %}
+  {% assign shipping_progress = 100 %}
+{% endif %}
+{% assign amount_to_free = free_shipping_threshold | minus: cart_total %}
+
+<div class="cart-overlay">
+  <div class="cart-drawer">
+    <div class="cart-drawer-header">
+      <span>{{ 'cart.title' | t }}</span>
+      <button type="button" class="cart-drawer-close" onclick="window.location='{{ routes.root_url }}'">×</button>
+    </div>
+
+    <form action="{{ routes.cart_url }}" method="post" class="cart-drawer-form">
+      <div class="cart-drawer-inner">
+        <div class="cart-free-shipping">
+          {% if cart_total >= free_shipping_threshold %}
+            <span>{{ 'You have free shipping' }}</span>
+          {% else %}
+            <span>{{ amount_to_free | money }} away from free shipping</span>
+          {% endif %}
+          <div class="cart-free-shipping-bar">
+            <div class="cart-free-shipping-fill" style="width: {{ shipping_progress }}%;"></div>
+          </div>
+        </div>
+
+        <div class="cart-items">
+          {% for item in cart.items %}
+            <div class="cart-item">
+              <div class="cart-item-image">
+                {% render 'image', image: item.image, url: item.url %}
+              </div>
+              <div class="cart-item-info">
+                <div class="cart-item-info-title">
+                  {{ item.product.title }}
+                </div>
+                <div class="cart-item-remove">
+                  {{ 'cart.remove' | t | link_to: item.url_to_remove }}
+                </div>
+              </div>
+              <div class="cart-item-price">
+                {{ item.final_line_price | money }}
+              </div>
+              <div></div>
+              <div class="cart-item-qty">
+                <button type="submit" name="updates[]" value="{{ item.quantity | minus: 1 }}">−</button>
+                <input type="number"
+                       name="updates[]"
+                       value="{{ item.quantity }}"
+                       min="0">
+                <button type="submit" name="updates[]" value="{{ item.quantity | plus: 1 }}">+</button>
+              </div>
+              <div></div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {%- comment -%}
+          Simple placeholder upsell area
+          Replace with your own recommendation snippet if you have one
+        {%- endcomment -%}
+        {% if cart.items_count > 0 %}
+          <div class="cart-upsell">
+            <div class="cart-upsell-title">You may also like</div>
+            <div class="cart-upsell-grid">
+              {% for product in collections.all.products limit: 2 %}
+                <a href="{{ product.url }}" class="cart-upsell-card">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '360x' }}" alt="{{ product.title }}">
+                  {% endif %}
+                  <div class="cart-upsell-card-title">{{ product.title }}</div>
+                  <div class="cart-upsell-card-price">{{ product.price | money }}</div>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-footer-row">
+          <span>{{ 'cart.subtotal' | t }}</span>
+          <span>{{ cart.total_price | money }}</span>
+        </div>
+
+        <div class="cart-footer-checkout">
+          <button type="submit" name="checkout" class="cart-checkout-button">
+            {{ 'cart.checkout' | t }} | {{ cart.total_price | money }}
+          </button>
+        </div>
+
+        <div class="cart-shipping-note">
+          Shipping and taxes calculated at checkout
+        </div>
+
+        <div class="cart-coupon">
+          <div class="cart-coupon-label">Coupon code</div>
+          <div class="cart-coupon-row">
+            <input type="text" class="cart-coupon-input" placeholder="Enter code">
+            <button type="button" class="cart-coupon-button">Apply</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
