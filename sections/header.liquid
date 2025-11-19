@@ -78,6 +78,11 @@ header:hover .top-banner {
   text-align: center;
 }
 
+.nav-right svg {
+  width: 26px;
+  height: 26px;
+}
+
 .nav-center a {
   color: white;
   text-decoration: none;
@@ -246,14 +251,28 @@ header:hover .top-banner {
       <!-- RIGHT NAV -->
       <nav class="nav-right">
         {% for link in linklists[section.settings.right-navbar].links %}
-          {% if link.title == "CART" %}
-            <a href="{{ link.url }}">&nbsp;{% render 'icon-shopping-bag' %}</a>
-          {% endif %}
-          <div class="nav-item">
-            <a href="{{ link.url }}">{{ link.title }}</a>
-          </div>
+
+          {% case link.title %}
+
+            {% when "CART" %}
+              <a href="#" class="open-cart-drawer cart-icon">{% render 'icon-shopping-bag' %}</a>
+
+            {% when "SEARCH" %}
+              <a href="/search" class="nav-icon search-icon">{% render 'icon-search' %}</a>
+
+            {% when "PROFILE" %}
+              <a href="/account" class="nav-icon profile-icon">{% render 'icon-profile' %}</a>
+
+            {% else %}
+              <div class="nav-item">
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              </div>
+
+          {% endcase %}
+
         {% endfor %}
       </nav>
+
     </div>
   </div>
 </header>
