@@ -99,10 +99,123 @@
         "padding_top": 36,
         "padding_bottom": 28
       }
+    },
+    "simple_testimonial_6b9qQk": {
+      "type": "simple-testimonial",
+      "blocks": {
+        "review_hTHyQx": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "review_text": "“The product arrived on time and in perfect condition. The quality is exactly what I expected, and the price felt fair. I’m happy with this purchase.”",
+            "client_name": "Susanna C",
+            "client_title": "Malmo, SE",
+            "client_image": "shopify://shop_images/woman-outside-brownstone_925x_85c8fc80-e358-404a-a1d8-78cdc1156a77.jpg"
+          }
+        },
+        "review_n8fkxm": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "review_text": "“Excellent build quality and works just as described. The packaging was neat and the overall experience was smooth. I would order again.”",
+            "client_name": "Evalotta G.",
+            "client_title": "Sundbyberg, SE",
+            "client_image": "shopify://shop_images/city-woman-fashion_925x_2x_8c18db40-1460-4f16-a823-f9edb1d27a9d.jpg"
+          }
+        },
+        "review_zB7kVU": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "review_text": "“Customer support responded quickly to my questions and helped me choose the right option. The item feels premium and performs well.”",
+            "client_name": "Cecilia ",
+            "client_title": "Stockholm, SE",
+            "client_image": "shopify://shop_images/smiling-woman-on-snowy-afternoon_925x_33687b6c-384f-4681-9e0f-d410e10a0f8c.jpg"
+          }
+        },
+        "review_BqkFwe": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "review_text": "“The design is modern and well-crafted. Everything matched the product photos. It was easy to set up and use.”",
+            "client_name": "Gabriela G.",
+            "client_title": "Norrköping, SE",
+            "client_image": "shopify://shop_images/autumn-photographer-taking-picture_925x_309c90da-67b3-4d98-85d5-f7fe8ed4037c.jpg"
+          }
+        },
+        "review_dCFzaU": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "review_text": "“My order was delivered earlier than expected. The product exceeded my expectations in terms of quality and comfort.”",
+            "client_name": "Eva J. ",
+            "client_title": "Bollnäs, SE",
+            "client_image": "shopify://shop_images/young-hip-woman-at-carnival_925x_1484446b-7643-4baf-8851-909a984c5fa7.jpg"
+          }
+        },
+        "review_HFFMnG": {
+          "type": "review",
+          "settings": {
+            "rating": 4,
+            "review_text": "“The item feels durable and looks stylish. It fits perfectly and the materials seem long-lasting. I’m satisfied with the purchase.”",
+            "client_name": "Sara N. ",
+            "client_title": "Skön kostym!",
+            "client_image": "shopify://shop_images/woman-in-the-city_925x_d98798c3-1983-41f1-a06c-7e0f40a223df.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "review_hTHyQx",
+        "review_n8fkxm",
+        "review_zB7kVU",
+        "review_BqkFwe",
+        "review_dCFzaU",
+        "review_HFFMnG"
+      ],
+      "name": "Simple Testimonial",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "star_color": "#000000",
+        "name_color": "#333333",
+        "title_color": "#666666",
+        "arrow_color": "#000000"
+      }
+    },
+    "featured_collection_TpKGUG": {
+      "type": "featured-collection",
+      "name": "t:sections.featured-collection.presets.name",
+      "settings": {
+        "collection": "mwh-collection-preminum-italian-fabric",
+        "products_to_show": 4,
+        "title": "BEST PAIRED WITH",
+        "heading_size": "h1",
+        "description": "",
+        "show_description": false,
+        "description_style": "body",
+        "columns_desktop": 4,
+        "enable_desktop_slider": false,
+        "full_width": true,
+        "show_view_all": true,
+        "view_all_style": "link",
+        "color_scheme": "",
+        "image_ratio": "portrait",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "columns_mobile": "2",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
     "main",
-    "related-products"
+    "related-products",
+    "simple_testimonial_6b9qQk",
+    "featured_collection_TpKGUG"
   ]
 }

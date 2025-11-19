@@ -1,0 +1,317 @@
+<!-- sections/custom-reviews.liquid -->
+{% style %}
+    #shopify-section-{{ section.id }} {
+      --bg-color: {{ section.settings.background_color }};
+      --text-color: {{ section.settings.text_color }};
+      --star-color: {{ section.settings.star_color }};
+      --name-color: {{ section.settings.name_color }};
+      --title-color: {{ section.settings.title_color }};
+      --arrow-color: {{ section.settings.arrow_color }};
+      padding: 4rem 0;
+      background: var(--bg-color);
+      position: relative;
+    }
+
+    .custom-reviews-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      color: var(--text-color);
+      position: relative;
+    }
+
+    .review-card {
+      scroll-snap-align: start;
+      flex: 0 0 calc(33.33% - 14px);
+      padding: 20px;
+      box-sizing: border-box;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .reviews-wrapper {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 20px;
+      padding: 20px 0;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .reviews-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .review-stars {
+      color: var(--star-color);
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .review-client {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .client-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .nav-arrows {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .arrow-btn {
+      pointer-events: all;
+      background: var(--arrow-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      border: none;
+    }
+
+    .arrow-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .arrow-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: white;
+    }
+
+    @media (max-width: 768px) {
+      .review-card {
+        flex: 0 0 calc(100% - 20px);
+      }
+
+      .arrow-btn {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+  @media (max-width: 768px) {
+      .review-card {
+          flex: 0 0 calc(100% - 20px);
+          padding-left: 37px;
+      }
+  }
+{% endstyle %}
+
+<div class="custom-reviews-container">
+  <div class="nav-arrows">
+    <button class="arrow-btn prev-arrow">
+      <svg viewBox="0 0 24 24">
+        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+      </svg>
+    </button>
+    <button class="arrow-btn next-arrow">
+      <svg viewBox="0 0 24 24">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="reviews-wrapper">
+    {% for block in section.blocks %}
+      <div class="review-card" {{ block.shopify_attributes }}>
+        <div class="review-stars">
+          {% for i in (1..block.settings.rating) %}
+            ★
+          {% endfor %}
+        </div>
+        <p class="review-text">{{ block.settings.review_text }}</p>
+        <div class="review-client">
+          {% if block.settings.client_image != blank %}
+            <img
+              src="{{ block.settings.client_image | img_url: '150x150' }}"
+              alt="{{ block.settings.client_name }}"
+              class="client-image"
+              loading="lazy"
+              height="60"
+              width="60"
+            >
+          {% endif %}
+          <div>
+            <h4 style="color: var(--name-color); margin: 0;">{{ block.settings.client_name }}</h4>
+            <p style="color: var(--title-color); margin: 0;">{{ block.settings.client_title }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const wrapper = document.querySelector('.reviews-wrapper');
+    const prevArrow = document.querySelector('.prev-arrow');
+    const nextArrow = document.querySelector('.next-arrow');
+
+    // Arrow navigation
+    const scrollAmount = () => {
+      const card = wrapper.querySelector('.review-card');
+      return card ? card.offsetWidth + 20 : 400;
+    };
+
+    nextArrow.addEventListener('click', () => {
+      wrapper.scrollBy({
+        left: scrollAmount(),
+        behavior: 'smooth'
+      });
+    });
+
+    prevArrow.addEventListener('click', () => {
+      wrapper.scrollBy({
+        left: -scrollAmount(),
+        behavior: 'smooth'
+      });
+    });
+
+    // Hide arrows on scroll extremes
+    const checkArrows = () => {
+      prevArrow.style.visibility = wrapper.scrollLeft > 0 ? 'visible' : 'hidden';
+      nextArrow.style.visibility = wrapper.scrollLeft + wrapper.offsetWidth < wrapper.scrollWidth ? 'visible' : 'hidden';
+    };
+
+    wrapper.addEventListener('scroll', checkArrows);
+    checkArrows();
+
+    // Drag scroll (existing functionality)
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    wrapper.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - wrapper.offsetLeft;
+      scrollLeft = wrapper.scrollLeft;
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      isDown = false;
+    });
+
+    wrapper.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    wrapper.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - wrapper.offsetLeft;
+      const walk = (x - startX) * 2;
+      wrapper.scrollLeft = scrollLeft - walk;
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Simple Testimonial",
+  "max_blocks": 15,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Stars Color",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Client Name Color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Client Title Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrows Color",
+      "default": "#000000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Star Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "Excellent product quality and service!"
+        },
+        {
+          "type": "text",
+          "id": "client_name",
+          "label": "Client Name",
+          "default": "John Doe"
+        },
+        {
+          "type": "text",
+          "id": "client_title",
+          "label": "Client Title",
+          "default": "Fashion Blogger"
+        },
+        {
+          "type": "image_picker",
+          "id": "client_image",
+          "label": "Client Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Simple Testimonial",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}
