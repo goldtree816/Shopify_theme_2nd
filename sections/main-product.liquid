@@ -227,6 +227,10 @@
                     </div>
                   </details>
                 </div>
+                {%- when 'whatsapp-button' -%}
+{% render 'whatsapp-button', block: block, section: section %}
+
+
               {%- when 'quantity_selector' -%}
                 <div
                   id="Quantity-Form-{{ section.id }}"
@@ -747,6 +751,97 @@
     {
       "type": "@app"
     },
+    {
+      "type": "whatsapp-button",
+      "name": "Whatsapp Button",
+      "limit": 1,
+      "settings": [
+        {
+      "type": "text",
+      "id": "whatsapp_number",
+      "label": "WhatsApp Number",
+      "info": "Enter your WhatsApp number with country code (e.g., +40700000000)",
+      "default": "+40700000000"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Order on WhatsApp"
+    },
+    {
+      "type": "text",
+      "id": "default_message",
+      "label": "Default Message (for non-product pages)",
+      "default": "Hello, I would like to know more about your products"
+    },
+    {
+      "type": "text",
+      "id": "product_message",
+      "label": "Product Message Format (for product pages)",
+      "default": "Hello, I would like to buy this product: {product_name} - Price: {product_price}",
+      "info": "Use {product_name} and {product_price} as placeholders"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#25D366"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_padding",
+      "label": "Button Padding",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Button Border Radius",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container Width",
+      "min": 100,
+      "max": 1200,
+      "step": 50,
+      "default": 300
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Button Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ] }
+        ]
+    },
+
     {
       "type": "text",
       "name": "t:sections.main-product.blocks.text.name",
