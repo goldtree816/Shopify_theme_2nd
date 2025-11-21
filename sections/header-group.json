@@ -96,10 +96,48 @@
         "padding_top": 0,
         "padding_bottom": 0
       }
+    },
+    "recent_sales_popup_kLQ9WW": {
+      "type": "recent-sales-popup",
+      "name": "Recent Sales Popup",
+      "settings": {
+        "popup_title": "Recently purchased",
+        "show_interval": 10,
+        "display_duration": 6,
+        "popup_background_color": "#ffffff",
+        "border_color": "#e6e6e6",
+        "text_color": "#000000",
+        "customer_text_color": "#666666",
+        "time_text_color": "#999999",
+        "accent_color": "#000f9f",
+        "border_radius": 8,
+        "image_border_radius": 6,
+        "product_1": "move-top-sporty-relaxed-fit",
+        "customer_name_1": "Mark",
+        "product_2": "harmony-rib-strap-top",
+        "customer_name_2": "Swikriti",
+        "product_3": "hoodie-sweatshirt",
+        "customer_name_3": "Julie",
+        "product_4": "northern-star-jacket-regular-straight-cut-fit",
+        "customer_name_4": "Malina",
+        "product_5": "rabel-top-classic-oversized-fit",
+        "customer_name_5": "Zoya",
+        "product_6": "work-joggers-classic-tight-fit",
+        "customer_name_6": "Pookie",
+        "product_7": "",
+        "customer_name_7": "",
+        "product_8": "",
+        "customer_name_8": "",
+        "product_9": "",
+        "customer_name_9": "",
+        "product_10": "",
+        "customer_name_10": ""
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "recent_sales_popup_kLQ9WW"
   ]
 }

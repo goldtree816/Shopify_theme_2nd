@@ -661,6 +661,16 @@
         "font_weight_text": "400",
         "font_weight_rating": "600"
       }
+    },
+    "custom_liquid_B8BEFy": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!-- Elfsight Popup | Untitled Popup -->\n<script src=\"https://elfsightcdn.com/platform.js\" async></script>\n<div class=\"elfsight-app-54f27e28-bf89-43f7-ac01-c0555b5f1eec\" data-elfsight-app-lazy></div>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
@@ -672,6 +682,7 @@
     "pl_feature_3_RrkcHg",
     "image_with_text_tMGpDk",
     "custom_liquid_AcAKTn",
-    "gm_testimonial_slider_wwbdc3"
+    "gm_testimonial_slider_wwbdc3",
+    "custom_liquid_B8BEFy"
   ]
 }

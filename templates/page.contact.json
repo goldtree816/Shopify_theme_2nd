@@ -11,6 +11,7 @@
   "sections": {
     "main": {
       "type": "main-page",
+      "disabled": true,
       "settings": {
         "padding_top": 36,
         "padding_bottom": 36
@@ -18,6 +19,7 @@
     },
     "form": {
       "type": "contact-form",
+      "disabled": true,
       "settings": {
         "heading": "",
         "heading_size": "h1",
@@ -25,10 +27,119 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_form_BkYaA8": {
+      "type": "custom-form",
+      "blocks": {
+        "textfield_HTV6Fh": {
+          "type": "textfield",
+          "settings": {
+            "title": "First name",
+            "placeholder": "",
+            "required": false,
+            "width": "half"
+          }
+        },
+        "textfield_V8CAEz": {
+          "type": "textfield",
+          "settings": {
+            "title": "Last name",
+            "placeholder": "",
+            "required": false,
+            "width": "half"
+          }
+        },
+        "email_WexBTC": {
+          "type": "email",
+          "settings": {
+            "title": "Email address",
+            "placeholder": "",
+            "width": "full"
+          }
+        },
+        "dropdown_q6BkHw": {
+          "type": "dropdown",
+          "settings": {
+            "title": "How often do you shop?",
+            "required": true,
+            "width": "half",
+            "option_list": "Every single day!, 1-2 times a month, Uhhh... almost never."
+          }
+        },
+        "date_cHVPAJ": {
+          "type": "date",
+          "settings": {
+            "title": "Date",
+            "required": false,
+            "width": "full"
+          }
+        },
+        "info_text_M43jhN": {
+          "type": "info_text",
+          "settings": {
+            "heading": "<p>We're here to help.</p>",
+            "text": "<p>Questions about our products or shipping? We respond to all enquiries within 24-48 hours of receiving your message.</p>",
+            "width": "full"
+          }
+        },
+        "range_BPjGAh": {
+          "type": "range",
+          "settings": {
+            "title": "Level of satisfaction",
+            "minimum": "0",
+            "maximum": "10",
+            "step": "1",
+            "required": false,
+            "width": "full"
+          }
+        },
+        "textarea_FgLidr": {
+          "type": "textarea",
+          "settings": {
+            "title": "Message",
+            "placeholder": "Tell us why you are contacting us.",
+            "required": false,
+            "width": "full"
+          }
+        }
+      },
+      "block_order": [
+        "textfield_HTV6Fh",
+        "textfield_V8CAEz",
+        "email_WexBTC",
+        "dropdown_q6BkHw",
+        "date_cHVPAJ",
+        "info_text_M43jhN",
+        "range_BPjGAh",
+        "textarea_FgLidr"
+      ],
+      "name": "Contact form with text",
+      "settings": {
+        "form_position": "center",
+        "heading": "MWH",
+        "text": "<p><strong>Email:</strong> hello@mwhwear.com<br/><strong>Hours:</strong> 7:00am–4:00pm AEST, Monday–Friday<br/><br/><strong>Have a question?</strong></p><p>Feel free to contact us with any question - we are happy to help! Fill in the form below or email us at hello@mwhwear.com and we will come back to you as soon as possible.</p>",
+        "text_position": "center top",
+        "text_size": 125,
+        "text_color": "#000000",
+        "button_label_color": "#ffffff",
+        "button_background_color": "#000000",
+        "background_color": "radial-gradient()",
+        "button_radius": 0,
+        "base_width": 85,
+        "max_width": "",
+        "inner_padding": 40,
+        "outer_margin": 0,
+        "custom_css": "",
+        "mobile_custom_css": "",
+        "override_theme_font": true,
+        "heading_font": "serif",
+        "main_font": "system_ui_n4"
+      }
     }
   },
   "order": [
     "main",
-    "form"
+    "form",
+    "custom_form_BkYaA8"
   ]
 }

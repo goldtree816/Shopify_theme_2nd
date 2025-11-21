@@ -1,0 +1,2099 @@
+
+
+{%- comment -%} Color: check if color is set to transparent {%- endcomment -%}
+{%- assign button_alpha = section.settings.button_background_color | color_extract: 'alpha' -%}
+
+{%- comment -%} Layout: has user entered measurement value into max-width field? {%- endcomment -%}
+{%- if section.settings.max_width contains 'px' or section.settings.max_width contains '%' -%}
+  {%- assign max_width = section.settings.max_width -%}
+{%- else -%}
+  {%- assign max_width = section.settings.max_width | append: 'px' -%}
+{%- endif -%}
+
+{%- comment -%} Text: check text position {%- endcomment -%}
+{%- assign horizontal_text_position = section.settings.text_position | split: ' ' | first -%}
+{%- assign vertical_text_position = section.settings.text_position | split: ' ' | last -%}
+
+{%- comment -%} Text: custom font_picker values {%- endcomment -%}
+{%- capture font_settings_list -%}
+{{ section.settings.main_font | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.main_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_face: font_display: 'swap' }}~
+{{ section.settings.heading_font | font_modify: 'style', 'italic' | font_modify: 'weight', 'bolder' | font_face: font_display: 'swap' }}
+{%- endcapture -%}
+{%- assign font_array = font_settings_list | split: '~' -%}
+
+{%- capture minify -%}
+{%- comment -%} CSS {%- endcomment -%}
+<style>
+
+/*** Global styles ***/
+
+[id^="DP--"] {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  text-transform: unset;
+  letter-spacing: unset;
+  margin: unset;
+  padding: unset;
+  z-index: 1;
+}
+
+.wbs-pck__section * {
+  box-sizing: border-box !important;
+}
+
+.wbs-pck__section img {
+  max-width: 100%;
+}
+
+[class^="wbs_pack_-_fixed"] {
+  display: none;
+}
+
+.wbs-pck__section h1,
+.wbs-pck__section h2,
+.wbs-pck__section h3,
+.wbs-pck__section h4,
+.wbs-pck__section h5,
+.wbs-pck__section h6 {
+  color: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.wbs-pck__rte,
+.wbs-pck__rte p,
+.wbs-pck__rte a,
+.wbs-pck__rte a:hover,
+.wbs-pck__rte a:visited,
+.wbs-pck__rte a:focus {
+  color: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.wbs-pck__rte a {
+  text-decoration: underline;
+}
+
+.wbs-pck__rte p {
+  margin-bottom: 0.8em;
+}
+
+.wbs-pck__rte p:last-of-type {
+  margin-bottom: 0;
+}
+
+.wbs-pck__rte ul {
+  margin: 1em 0;
+  padding-left: 40px;
+}
+
+.wbs-pck__rte li {
+  list-style: unset;
+}
+
+.wbs-pck__absolute-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 2;
+}
+
+.wbs-pck__relative {
+  position: relative;
+}
+
+h1.wbs-pck__heading,
+h2.wbs-pck__heading,
+h3.wbs-pck__heading,
+h4.wbs-pck__heading,
+h5.wbs-pck__heading,
+h6.wbs-pck__heading {
+  margin-bottom: 1.2rem;
+}
+
+.wbs-pck__text {
+  margin: 0;
+  color: inherit;
+}
+
+.wbs-pck__button {
+  font-family: inherit;
+  cursor: pointer;
+  text-transform: unset;
+  -webkit-appearance: none;
+}
+
+.wbs-pck__button::after {
+  display: none;
+}
+
+.wbs-pck__section button,
+.wbs-pck__section input[type="text"],
+.wbs-pck__section input[type="email"] {
+  -webkit-appearance: none;
+}
+
+.wbs-pck__sizer {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wbs-pck__height-sizer {
+  display: table;
+}
+
+.wbs-pck__height--x-small {
+  height: 125px;
+}
+
+.wbs-pck__height--small {
+  height: 300px;
+}
+
+.wbs-pck__height--medium {
+  height: 475px;
+}
+
+.wbs-pck__height--large {
+  height: 650px;
+}
+
+.wbs-pck__height--x-large {
+  height: 775px;
+}
+
+@media only screen and (max-width: 767px) {
+  .wbs-pck__height--x-small {
+    height: 94px;
+  }
+
+  .wbs-pck__height--small {
+    height: 225px;
+  }
+
+  .wbs-pck__height--medium {
+    height: 357px;
+  }
+
+  .wbs-pck__height--large {
+    height: 488px;
+  }
+
+  .wbs-pck__height--x-large {
+    height: 582px;
+  }
+}
+
+/*** Videos ***/
+
+.wbs-pck__video__wrapper video[loading=lazy],
+.wbs-pck__background-video[loading=lazy] {
+  opacity: 1;
+}
+
+/*** Images ***/
+.wbs-pck__image__wrapper {
+  display: grid;
+  position: relative;
+  margin: 0;
+}
+
+.wbs-pck__image__wrapper svg {
+  display: block;
+}
+
+.wbs-pck__image__wrapper:not(.wbs-pck__image__wrapper--contain) svg {
+  width: inherit;
+  height: inherit;
+}
+
+.wbs-pck__image__wrapper > * {
+  grid-area: 1 / 1 / 2 / 2;
+}
+
+.wbs-pck__image__wrapper img,
+.wbs-pck__image__wrapper .wbs-pck__placeholder {
+  object-fit: cover;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.wbs-pck__image__wrapper--contain img {
+  object-fit: contain;
+}
+
+.wbs_pck__image-link {
+  display: block;
+  overflow: hidden;
+}
+
+/*** Widths ***/
+
+div.DP__widths {
+  display: inline-block !important;
+  vertical-align: top;
+  font-size: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.DP__widths * {
+  font-size: initial;
+}
+
+@media (max-width: 767px) {
+  div.DP__widths {
+    width: 100% !important;
+  }
+}
+
+/*** Flex ***/
+.wbs-pck__flex {
+  display: flex;
+}
+
+.wbs-pck__flex-wrap {
+  flex-wrap: wrap;
+}
+
+.wbs-pck__flex--1-per-row .wbs-pck__flex-item {
+  flex-basis: 100%;
+}
+
+.wbs-pck__flex--2-per-row .wbs-pck__flex-item {
+  flex-basis: 50%;
+}
+
+.wbs-pck__flex--3-per-row .wbs-pck__flex-item {
+  flex-basis: 33.3333%;
+}
+
+.wbs-pck__flex--4-per-row .wbs-pck__flex-item {
+  flex-basis: 25%;
+}
+
+.wbs-pck__flex--5-per-row .wbs-pck__flex-item {
+  flex-basis: 20%;
+}
+
+.wbs-pck__flex--6-per-row .wbs-pck__flex-item {
+  flex-basis: 16.6666%;
+}
+
+.wbs-pck__flex--7-per-row .wbs-pck__flex-item {
+  flex-basis: 14.3%;
+}
+
+.wbs-pck__flex--8-per-row .wbs-pck__flex-item {
+  flex-basis: 12.5%;
+}
+
+.wbs-pck__flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.wbs-pck__grid-row-reverse {
+  direction: rtl;
+}
+
+.wbs-pck__grid-row-reverse * {
+  direction: ltr;
+}
+
+.wbs-pck__justify-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.wbs-pck__justify-center {
+  justify-content: center;
+  text-align: center;
+}
+
+.wbs-pck__justify-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.wbs-pck__justify-justify {
+  justify-content: space-between;
+  text-align: justify;
+}
+
+.wbs-pck__align-top {
+  align-items: flex-start;
+}
+
+.wbs-pck__align-center {
+  align-items: center;
+}
+
+.wbs-pck__align-bottom {
+  align-items: flex-end;
+}
+
+/** Text alignment **/
+
+.wbs-pck__text-alignment-left {
+  text-align: left;
+}
+
+.wbs-pck__text-alignment-center {
+  text-align: center;
+}
+
+.wbs-pck__text-alignment-right {
+  text-align: right;
+}
+
+.wbs-pck__text-alignment-justify {
+  text-align: justify;
+}
+
+/*** Grid ***/
+.wbs-pck__grid {
+  display: grid;
+}
+
+.wbs-pck__grid--1-per-row {
+  grid-template-columns: 1fr;
+}
+
+.wbs-pck__grid--2-per-row {
+  grid-template-columns: 1fr 1fr;
+}
+
+.wbs-pck__grid--3-per-row {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid--4-per-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid--5-per-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid--6-per-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid--7-per-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid--8-per-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.wbs-pck__grid-reverse {
+  direction: rtl;
+}
+
+.wbs-pck__grid-reverse * {
+  direction: ltr;
+}
+
+.wbs-pck__flex{
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.wbs-pck__flex-row-reverse{
+  display: flex;
+  flex-direction: row;
+}
+
+/*** Helpers ***/
+.wbs-pck__unset {
+  font-family: unset;
+  font-size: unset;
+  letter-spacing: unset;
+  line-height: unset;
+  margin: unset;
+  padding: unset;
+  list-style: none;
+}
+
+.wbs-pck__force-full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+.wbs-pck__visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+.wbs-pck__recaptcha-message {
+  margin-top: 0.8em;
+  font-size: 0.8em;
+}
+
+.wbs-pck__recaptcha-message a,
+.wbs-pck__recaptcha-message a:hover,
+.wbs-pck__recaptcha-message a:focus {
+  font-style: italic;
+  color: inherit;
+  font-size: inherit;
+}
+
+/** Pages **/
+.wbs-pck__page-intro {
+  width: 100%;
+}
+
+/** Theme editor warnings **/
+
+.wbs-pck__no-app-warning {
+  position: relative;
+  overflow: hidden;
+  padding: 1em;
+}
+
+.wbs-pck__no-app-warning-text {
+  position: relative;
+  background: #ff0;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 10px;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+.wbs-pck__no-app-warning-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 130%;
+  background: repeating-linear-gradient(-45deg, #ff0, #ff0 20px, #000 20px, #000 40px);
+  animation: wbs-pck__warning-background 1s linear infinite;
+}
+
+@keyframes wbs-pck__warning-background {
+  to {
+    transform: translateX(-56px);
+  }
+}
+
+/** Animations **/
+
+[style*="--wbs-pck-animate"] {
+  will-change: transform;
+  transform: translateZ(0);
+  opacity: 0;
+}
+
+.wbs-pck__animation-applied {
+  overflow: hidden;
+}
+
+.wbs-pck__animation-applied [style*="--wbs-pck-animate"] {
+  --wbs-pck-animation-multiplier: 0.5s;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+  animation-delay: calc(var(--wbs-pck-animation-multiplier) * var(--wbs-pck-animate));
+}
+
+@keyframes wbs-pck__animation--fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes wbs-pck__animation--fade-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wbs-pck__animation--fade-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wbs-pck__animation--fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wbs-pck__animation--fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/** Parallax **/
+.wbs-pck__parallax {
+  position: relative;
+  z-index: 1;
+}
+
+.wbs-pck__parallax > .wbs-pck__parallax-img {
+  position: absolute;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/** Responsive helpers **/
+
+.wbs-pck__desktop--visible {
+  display: inherit;
+}
+
+.wbs-pck__desktop--hidden {
+  display: none !important;
+}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+  .wbs-pck__tablet--visible {
+    display: block !important;
+  }
+
+  .wbs-pck__tablet--hidden {
+    display: none !important;
+  }
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+  .wbs-pck__mobile--visible {
+    display: block !important;
+  }
+
+  .wbs-pck__mobile--hidden {
+    display: none !important;
+  }
+}
+
+/** Theme specific **/
+
+/* Dawn */
+[class*="wbs-pck"]:empty {
+  display: inherit;
+}
+
+/* Debut - offset margin from the header */
+/* .main-content[id="MainContent"] .shopify-section[class*="DP__"]:first-child,
+.main-content[id="MainContent"] [id*="DP__"] {
+  margin-top: -35px;
+}
+
+@media only screen and (min-width: 750px) {
+  .main-content[id="MainContent"] .shopify-section[class*="DP__"]:first-child,
+  .main-content[id="MainContent"] .DP__widths.DP__width--half:first-child,
+  .main-content[id="MainContent"] .DP__widths.DP__width--half:first-child + .DP__widths.DP__width--half,
+  .main-content[id="MainContent"] [id*="DP__"] {
+    margin-top: -55px;
+  }
+} */
+
+/* Brooklyn - prevent default margins (but leave them on theme sections) */
+.index-sections [class*="DP__"] {
+  margin-top: 0;
+}
+
+.index-sections [class*="DP__"].shopify-section:first-child:not(.shopify-section--full-width) {
+  margin-top: 0;
+}
+
+/* Impulse - prevent default margins (but leave them on theme sections) */
+.main-content [class*="DP__"] {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Cornerstone - override overflow: hidden */
+[class*="DP__"].shopify-section {
+  overflow: unset;
+}
+
+
+{%- if section.settings.override_theme_font != blank -%}
+  {%- for font in font_array -%}
+    {%- unless font contains 'error' -%}{{ font }}{%- endunless -%}
+  {%- endfor -%}
+  #DP--{{ section.id }} {
+    --main-font: {{ section.settings.main_font.family }}, {{ section.settings.main_font.fallback_families }};
+    --main-font-weight: {{ section.settings.main_font.weight }};
+    --main-font-style: {{ section.settings.main_font.style }};
+    --heading-font: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-font-weight: {{ section.settings.heading_font.weight }};
+    --heading-font-style: {{ section.settings.heading_font.style }};
+  }
+{%- endif -%}
+
+#DP--{{ section.id }} {
+  position: relative;
+  color: {{ section.settings.text_color }};
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+  background: {{ section.settings.background_color }};
+  margin-top: {{ section.settings.outer_margin }}px;
+  margin-bottom: {{ section.settings.outer_margin }}px;
+}
+
+#DP--{{ section.id }} .wbs-pck__sizer {
+  padding-top: {{ section.settings.inner_padding }}px;
+  padding-bottom: {{ section.settings.inner_padding }}px;
+  width: {{ section.settings.base_width }}%;
+  max-width: {{ max_width }};
+  flex-wrap: wrap;
+  z-index: 2;
+  position: relative;
+}
+
+#DP--{{ section.id }} p {
+  color: inherit;
+}
+
+#DP--{{ section.id }} .wbs-pck__form-column {
+  flex: 1 0 65%;
+  padding: 0 40px;
+}
+
+#DP--{{ section.id }} .wbs-pck__content {
+  flex: 1 0 35%;
+  padding: 0 40px;
+  margin: 40px 0;
+  position: relative;
+}
+
+#DP--{{ section.id }} .wbs-pck__heading {
+  margin: 0;
+  line-height: calc(3px + 2ex + 3px);
+  color: {{ section.settings.heading_color }};
+  font-size: calc(var(--dp-g-heading-size, var(--dp-heading-size, 35px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--heading-font);
+  font-weight: var(--heading-font-weight);
+  font-style: var(--heading-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__heading + .wbs-pck__text {
+  margin-top: calc(10px * {{ section.settings.text_size | times: 0.008 }});
+}
+
+#DP--{{ section.id }} .wbs-pck__text {
+  line-height: calc(3px + 3ex + 3px);
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} form {
+  width: 100%;
+}
+
+#DP--{{ section.id }} .wbs-pck__form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+}
+
+#DP--{{ section.id }} .wbs-pck__form-reply--success {
+  line-height: calc(3px + 2ex + 3px);
+  color: {{ section.settings.text_color }};
+  font-size: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--heading-font);
+  font-weight: var(--heading-font-weight);
+  font-style: var(--heading-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__element {
+  padding: 0.8em 0;
+}
+
+#DP--{{ section.id }} .wbs-pck__field--full {
+  grid-column: 1 / 3;
+}
+
+#DP--{{ section.id }} .wbs-pck__element label,
+#DP--{{ section.id }} .wbs-pck__element legend {
+  text-transform: normal;
+  font-weight: normal;
+  padding-bottom: 0.2em;
+  display: inline-block;
+  font-size: clamp(16px, {{ section.settings.text_size | times: 0.01 }}em, 2em);
+}
+
+#DP--{{ section.id }} .wbs-pck__field {
+  background: rgba(255,255,255,0.2);
+  margin: unset;
+  width: 100%;
+  padding: 0.8em;
+  color: {{ section.settings.text_color }};
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  border: thin solid {{ section.settings.text_color }};
+}
+
+#DP--{{ section.id }} .wbs-pck__element label {
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  color: {{ section.settings.text_color }};
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__field::placeholder {
+  opacity: 0.6;
+  color: {{ section.settings.text_color }};
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__checkboxes,
+#DP--{{ section.id }} .wbs-pck__radio-buttons {
+  list-style-type: none;
+  padding: 0;
+  margin-left: 0;
+}
+
+
+#DP--{{ section.id }} input[type="checkbox"],
+#DP--{{ section.id }} input[type="radio"] {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    margin-right: 5px;
+}
+
+#DP--{{ section.id }} .wbs-pck__checkboxes .wbs-pck__checkbox-item:before {
+  display: none;
+}
+
+#DP--{{ section.id }} .wbs-pck__checkbox + label {
+  display: inline;
+}
+
+#DP--{{ section.id }} .wbs-pck__form-heading {
+  color: {{ section.settings.text_color }};
+  line-height: calc(3px + 2ex + 3px);
+  font-size: calc(var(--dp-g-small-heading-size, var(--dp-small-heading-size, 24px)) * {{ section.settings.text_size | times: 0.01 }});
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--heading-font);
+  font-weight: var(--heading-font-weight);
+  font-style: var(--heading-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__form-paragraph {
+  color: {{ section.settings.text_color }};
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+}
+
+#DP--{{ section.id }} .wbs-pck__select {
+  width: 100%;
+  padding: 0.8em;
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  appearance: none;
+  padding-right: 30px;
+}
+
+#DP--{{ section.id }} .wbs-pck__select-wrapper {
+  position: relative;
+}
+
+#DP--{{ section.id }} .wbs-pck__select-wrapper:after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' class='Icon_Icon__Dm3QW' style='width: 20px; height: 20px;'%3E%3Cpath d='M10 14a.997.997 0 0 1-.707-.293l-5-5a.999.999 0 1 1 1.414-1.414l4.293 4.293 4.293-4.293a.999.999 0 1 1 1.414 1.414l-5 5a.997.997 0 0 1-.707.293z' fill='{{ section.settings.text_color | url_encode }}'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z' fill='{{ section.settings.text_color | url_encode }}'/%3E%3C/svg%3E");
+}
+
+#DP--{{ section.id }} .wbs-pck__range-slider-wrap {
+  position: relative;
+}
+
+#DP--{{ section.id }} .wbs-pck__range-slider {
+  padding: 0;
+  width: 100%;
+}
+
+#DP--{{ section.id }} .wbs-pck__range-slider-bubble {
+  background: {{ section.settings.button_background_color }};
+  color: {{ section.settings.button_label_color }};
+  padding: 4px 12px;
+  position: absolute;
+  border-radius: {{ section.settings.button_radius }}px;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  font-family: sans-serif;
+  pointer-events: none;
+  border: thin solid {{ section.settings.button_background_color }};
+}
+
+{% comment %} range {% endcomment %}
+
+#DP--{{ section.id }} input[type=range] {
+  -webkit-appearance: none;
+}
+
+
+#DP--{{ section.id }} input[type=range]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  border: none;
+  height: 6px;
+  width: 100%;
+  cursor: pointer;
+  background: {{ section.settings.text_color }};
+  border-radius: {{ section.settings.button_radius }}px;
+}
+
+
+/** FF*/
+#DP--{{ section.id }} input[type="range"]::-moz-range-progress {
+  background-color: {{ section.settings.button_background_color }};
+}
+#DP--{{ section.id }} input[type="range"]::-moz-range-track {
+  background-color: {{ section.settings.button_label_color }};
+}
+/* IE*/
+#DP--{{ section.id }} input[type="range"]::-ms-fill-lower {
+  background-color: {{ section.settings.button_background_color }};
+}
+#DP--{{ section.id }} input[type="range"]::-ms-fill-upper {
+  background-color: {{ section.settings.button_label_color }};
+}
+
+
+{% comment %} end range  {% endcomment %}
+
+#DP--{{ section.id }} .bubble::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: red;
+  top: -1px;
+  left: 50%;
+}
+
+#DP--{{ section.id }} .wbs-pck__button {
+  border: none;
+  margin: unset;
+  width: 100%;
+  margin-top: 10px;
+  padding: 0.5em 1.2em;
+  transition: all 0.3s ease-in-out;
+  border: thin solid;
+  border-radius: {{ section.settings.button_radius }}px;
+  border-color: {%- if button_alpha != 0 -%}{{ section.settings.button_background_color }}{%- else -%}{{ section.settings.button_label_color }}{%- endif -%};
+  font-size: calc(var(--dp-g-body-size, var(--dp-body-size, 18px)) * {{ section.settings.text_size | times: 0.01 }});
+  color: {{ section.settings.button_label_color }};
+  background-color: {{ section.settings.button_background_color }};
+  {%- if section.settings.override_theme_font != blank -%}
+  font-family: var(--main-font);
+  font-weight: var(--main-font-weight);
+  font-style: var(--main-font-style);
+  {%- endif -%}
+}
+
+#DP--{{ section.id }} .wbs-pck__button:hover {
+  opacity: 1;
+  {%- if button_alpha != 0 -%}
+  background-color: {{ section.settings.button_background_color | color_darken: 10 }};
+  border-color: transparent;
+  {%- else -%}
+  background-color: {{ section.settings.button_label_color | color_modify: 'alpha', 0.1 }}
+  {%- endif -%};
+}
+
+#DP--{{ section.id }} .wbs-pck__recaptcha-message a {
+  font-size: inherit;
+  color: inherit;
+}
+
+{%- if section.settings.custom_css != blank -%}
+  {%- assign custom_section_declarations = section.settings.custom_css | split: '}' -%}
+  {%- for declaration in custom_section_declarations -%}
+    {%- if declaration contains '{' -%}
+      #DP--{{ section.id }} {{ declaration }} }
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) {
+  #DP--{{ section.id }} .wbs-pck__flex > .wbs-pck__form-column {
+    flex: 1 0 100%;
+    z-index: 3;
+    width: 100%;
+  }
+}
+
+/* Landscape phones and down */
+@media (max-width: 480px) {
+  #DP--{{ section.id }} {
+    margin-top: {{ section.settings.outer_margin | divided_by: 2 }}px;
+    margin-bottom: {{ section.settings.outer_margin | divided_by: 2 }}px;
+  }
+
+  #DP--{{ section.id }} .wbs-pck__sizer {
+    min-width: 70%;
+    padding-top: {{ section.settings.inner_padding | divided_by: 2 }}px;
+    padding-bottom: {{ section.settings.inner_padding | divided_by: 2 }}px;
+  }
+
+  #DP--{{ section.id }} .wbs-pck__form {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  #DP--{{ section.id }} .wbs-pck__field--full {
+    grid-column: 1;
+  }
+
+  {%- if section.settings.mobile_custom_css != blank -%}
+    {%- assign mobile_custom_declarations = section.settings.mobile_custom_css | split: '}' -%}
+    {%- for declaration in mobile_custom_declarations -%}
+      {%- if declaration contains '{' -%}
+        #DP--{{ section.id }} {{ declaration }} }
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+}
+</style>
+
+{%- comment -%} HTML {%- endcomment -%}
+<section id="DP--{{ section.id }}" class="DP--{{ section.id }} wbs-pck__contact-form wbs-pck__section">
+  <div class="wbs-pck__sizer
+              {% if section.settings.form_position == 'right' -%}
+                wbs-pck__flex
+              {%- endif -%}
+              {% if section.settings.form_position == 'left' %}
+                wbs-pck__flex wbs-pck__flex-row-reverse
+              {%- endif -%}">
+    {%- if section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="wbs-pck__content wbs-pck__flex wbs-pck__justify-{{ horizontal_text_position }} wbs-pck__align-{{ vertical_text_position }}">
+        <div class="wbs-pck__inner-content">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="wbs-pck__heading">
+              {{ section.settings.heading }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="wbs-pck__text wbs-pck__rte">
+              {{ section.settings.text }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="wbs-pck__form-column wbs-pck__flex wbs-pck__align-center">
+      {%- capture form_id -%}wbs-pck__form-{{ section.id }}{%- endcapture -%}
+      {%- form 'contact', id: form_id -%}
+
+        {%- comment -%} Error and success messages for submitted form {%- endcomment -%}
+        <div class="wbs-pck__form-response">
+          {%- if form.posted_successfully? -%}
+            <p class="wbs-pck__form-reply--success">{{ 'success' | t }}</p>
+          {%- elsif form.errors -%}
+            {%- for field in form.errors -%}
+              <p class="wbs-pck__form-reply--error">{{ field }} - {{ form.errors.messages[field] }}</p>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Hidden contact-form fields {%- endcomment -%}
+        <input type="hidden" name="challenge" value="false" />
+
+        <div class="wbs-pck__form">
+          {%- comment -%} Custom fields loop {%- endcomment -%}
+          {%- for block in section.blocks -%}
+
+            <div id="DP--{{ block.id }}" class="wbs-pck__element wbs-pck__element--{{ block.type }} wbs-pck__field--{{ block.settings.width }}" {{ block.shopify_attributes }}>
+
+              {%- if block.type == 'checkboxes' -%}
+              {%- comment -%} Checkbox {%- endcomment -%}
+                <style>
+                  {% if block.settings.per_row > 1 %}
+                    #DP--{{ block.id }} .wbs-pck__checkboxes {
+                      display: grid;
+                      grid-template-columns: repeat({{ block.settings.per_row }}, minmax(40px, 1fr));
+                      grid-gap: 0 20px;
+                    }
+                    @media (max-width: 480px) {
+                      #DP--{{ block.id }} .wbs-pck__checkboxes {
+                        display: block;
+                      }
+                    }
+                  {% endif %}
+                </style>
+                {% assign all_options = block.settings.option_list | split: ',' %}
+                <legend for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </legend>
+                <input type="hidden" name="contact[{{ block.settings.title }}]" value=""/>
+
+                <ul class="wbs-pck__checkboxes" {%- if block.settings.required -%}data-is-required{%- endif -%}>
+                  {% for option in all_options %}
+                      {% if option != blank %}
+                        <li class="wbs-pck__checkbox-item">
+                        <input type="checkbox" id="{{ option }}" class="wbs-pck__checkbox" name="contact[{{ option }}]" value="✓"/>
+                        <label for="{{ option }}">
+                          {{ option }}
+                        </label>
+                      </li>
+                      {% endif %}
+                  {% endfor %}
+                </ul>
+
+              {%- elsif block.type == 'date' -%}
+              {%- comment -%} Date {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <input class="wbs-pck__field" type="date" placeholder="{{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}" name="contact[{{ block.settings.title }}]" id="{{ block.settings.title | replace: ' ', '_' }}" {%- if block.settings.required -%}required="required"{%- endif -%} />
+
+              {%- elsif block.type == 'dropdown' -%}
+              {%- comment -%} Dropdown {%- endcomment -%}
+                {% assign all_options = block.settings.option_list | split: ',' %}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <div class="wbs-pck__select-wrapper">
+                  <select class="wbs-pck__select wbs-pck__field" name="contact[{{ block.settings.title }}]" {%- if block.settings.required -%}required="required"{%- endif -%}>
+                    {% for option in all_options %}
+                      {% if option != blank %}
+                        <option value="{{ option }}">
+                          {{ option }}
+                        </option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+
+              {%- elsif block.type == 'email' -%}
+              {%- comment -%} Email {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">{{ block.settings.title }}*</label>
+
+                <input class="wbs-pck__field" type="email" name="contact[email]" required id="{{ block.settings.title | replace: ' ', '_' }}" placeholder="{{ block.settings.placeholder }}"/>
+
+              {%- elsif block.type == 'info_text' -%}
+              {%- comment -%} Info text {%- endcomment -%}
+
+                <div class="wbs-pck__form-heading">
+                  {{ block.settings.heading }}
+                </div>
+
+                <div class="wbs-pck__form-paragraph">
+                  {{ block.settings.text }}
+                </div>
+
+              {%- elsif block.type == 'phone_number' -%}
+              {%- comment -%} Phone number {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <input class="wbs-pck__field" type="tel" name="contact[{{ block.settings.title }}]" id="{{ block.settings.title | replace: ' ', '_' }}" {%- if block.settings.required -%}required="required"{%- endif -%} pattern="[0-9]{10}" placeholder="{{ block.settings.placeholder }}"/>
+
+              {%- elsif block.type == 'radio' -%}
+              {%- comment -%} Radio {%- endcomment -%}
+                <style>
+                  {% if block.settings.per_row > 1 %}
+                    #DP--{{ block.id }} .wbs-pck__radio-buttons {
+                      display: grid;
+                      grid-template-columns: repeat({{ block.settings.per_row }}, minmax(40px, 1fr));
+                      grid-gap: 0 20px;
+                    }
+                    @media (max-width: 480px) {
+                      #DP--{{ block.id }} .wbs-pck__radio-buttons {
+                        display: block;
+                      }
+                    }
+                  {% endif %}
+                </style>
+                {% assign all_options = block.settings.option_list | split: ',' %}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <ul class="wbs-pck__radio-buttons">
+                  {% for option in all_options %}
+                    {% if option != blank %}
+                      <li class="wbs-pck__radio-button">
+                        <label>
+                          <input type="radio" id="radio[option]" class="radio" name="contact[{{ block.settings.title }}]" value="{{ option }}" {%- if forloop.first -%}checked{%- endif -%} {% if block.settings.required %}required="required"{%- endif -%} />
+                            {{ option }}
+                        </label>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+
+
+              {%- elsif block.type == 'range' -%}
+              {%- comment -%} Range {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+                <div class="wbs-pck__range-slider-wrap">
+                  <input class="wbs-pck__range-slider" type="range" id="{{ block.settings.title | replace: ' ', '_' }}" name="contact[{{ block.settings.title }}]" min="{{ block.settings.minimum }}" max="{{ block.settings.maximum }}" step="{{ block.settings.step }}" {%- if block.settings.required -%}required="required"{%- endif -%}>
+                  <output class="wbs-pck__range-slider-bubble"></output>
+                </div>
+
+              {%- elsif block.type == 'single_checkbox' -%}
+              {%- comment -%} Single checkbox {%- endcomment -%}
+
+                <input type="checkbox" id="{{ block.settings.title }}" class="wbs-pck__checkbox" name="contact[{{ block.settings.title }}]" value="✓" {%- if block.settings.required -%}required="required"{%- endif -%}>
+                <label for="{{ block.settings.title }}">
+                  {{ block.settings.title }}
+                </label>
+
+              {%- elsif block.type == 'textarea' -%}
+              {%- comment -%} Textarea {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <textarea class="wbs-pck__field" id="{{ block.settings.title | replace: ' ', '_' }}" name="contact[{{ block.settings.title }}]" {%- if block.settings.required -%}required="required"{%- endif -%} placeholder="{{ block.settings.placeholder }}"></textarea>
+
+              {%- elsif block.type == 'textfield' -%}
+              {%- comment -%} Text field {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <input class="wbs-pck__field" type="text" name="contact[{{ block.settings.title }}]" id="{{ block.settings.title | replace: ' ', '_' }}" {%- if block.settings.required -%}required="required"{%- endif -%} placeholder="{{ block.settings.placeholder }}"/>
+
+              {%- elsif block.type == 'url' -%}
+              {%- comment -%} Website {%- endcomment -%}
+
+                <label for="{{ block.settings.title | replace: ' ', '_' }}">
+                  {{ block.settings.title }}{%- if block.settings.required -%}*{%- endif -%}
+                </label>
+
+                <input class="wbs-pck__field" type="text" name="contact[{{ block.settings.title | replace: ' ', '_' }}]" id="{{ block.settings.title | replace: ' ', '_' }}" {%- if block.settings.required -%}required="required"{%- endif -%} placeholder="{{ block.settings.placeholder }}"/>
+
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+          {%- comment -%} Finish custom fields loop {%- endcomment -%}
+
+          <input type="hidden" name="contact[{{ 'form_name__form_location' | t | default: 'Form location'}}]" value="{{ 'form_label__page_title' | t | escape }}: {{ page_title | escape }} | {{ 'form_label__template' | t | escape }}: {{ template | escape }}"/>
+
+          <input class="wbs-pck__button wbs-pck__button btn wbs-pck__field--full" type="submit" value="{{ 'submit' | t }}" />
+        </div>
+
+        {%- comment -%} Keeping this string below the form keeps the little fixed floating widget from appearing on the page. But this message can be disabled by turning off the "Enable Google reCAPTCHA on contact form with texts" setting under Online Store > Preferences > Spam protection {%- endcomment -%}
+        <div class="wbs-pck__recaptcha-message">
+          {{ 'shopify.online_store.spam_detection.disclaimer_html' | t }}
+        </div>
+
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+{%- endcapture -%}
+{{ minify | strip_newlines }}
+
+{% schema %}
+{
+  "name": "Contact form with text",
+  "class": "DP__contact-form-text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "form_position",
+      "label": "Form position",
+      "default": "right",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Drop us a line."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Get more details from your customers by using custom fields in your contact form with text. The more data you know about your audience, the more you can tailor the shopping experience to their liking!</p><p>If you have a retail space, this is the ideal area to add your location and store hours.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_position",
+      "label": "Text position",
+      "default": "left center",
+      "options": [
+        {
+          "value": "left top",
+          "label": "Top left"
+        },
+        {
+          "value": "center top",
+          "label": "Top center"
+        },
+        {
+          "value": "right top",
+          "label": "Top right"
+        },
+        {
+          "value": "left center",
+          "label": "Left"
+        },
+        {
+          "value": "center center",
+          "label": "Center"
+        },
+        {
+          "value": "right center",
+          "label": "Right"
+        },
+        {
+          "value": "left bottom",
+          "label": "Bottom left"
+        },
+        {
+          "value": "center bottom",
+          "label": "Bottom center"
+        },
+        {
+          "value": "right bottom",
+          "label": "Bottom right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Text appearance"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Text size",
+      "min": 80,
+      "max": 150,
+      "step": 5,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "wbs"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "button_label_color",
+      "label": "Button label",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Button background",
+      "default": "#283144"
+    },
+    {
+      "type": "color_background",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Button border radius",
+      "min": 0,
+      "max": 50,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "base_width",
+      "label": "Size",
+      "min": 60,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "%"
+    },
+    {
+      "type": "text",
+      "id": "max_width",
+      "label": "Maximum width",
+      "placeholder": "eg. 1200px",
+      "info": "Sets width constraint for content."
+    },
+    {
+      "type": "range",
+      "id": "inner_padding",
+      "label": "Inner padding",
+      "info": "Only applies to top and bottom.",
+      "min": 0,
+      "max": 100,
+      "default": 40,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "outer_margin",
+      "label": "Outer margin",
+      "info": "Only applies to top and bottom.",
+      "min": 0,
+      "max": 100,
+      "default": 0,
+      "step": 5,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_css",
+      "label": "CSS",
+      "info": "Specific to this section only."
+    },
+    {
+      "type": "liquid",
+      "id": "mobile_custom_css",
+      "label": "Mobile CSS",
+      "info": "Applied on screens less than 480px."
+    },
+    {
+      "type": "checkbox",
+      "id": "override_theme_font",
+      "label": "Override default theme font",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading",
+      "default": "serif"
+    },
+    {
+      "type": "font_picker",
+      "id": "main_font",
+      "label": "Text",
+      "default": "sans-serif"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "checkboxes",
+      "name": "Checkboxes",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "What kind of services are you looking for?"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "per_row",
+          "label": "Number of columns",
+          "default": 1,
+          "min": 1,
+          "max": 3
+        },
+        {
+          "type": "header",
+          "content": "Options"
+        },
+        {
+          "type": "text",
+          "id": "option_list",
+          "label": "Option List",
+          "default": "Styling session, Mini makeover, Perfect fit consulting",
+          "info": "Use a list of options separated by commas"
+        }
+      ]
+    },
+    {
+      "type": "date",
+      "name": "Date",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Date"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Drop-down",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "How often do you shop?"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "content": "Options"
+        },
+        {
+          "type": "text",
+          "id": "option_list",
+          "label": "Option List",
+          "default": "Every single day!, 1-2 times a month, Uhhh... almost never.",
+          "info": "Use a list of options separated by commas"
+        }
+      ]
+    },
+    {
+      "type": "email",
+      "name": "Email *required",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Email address"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "info_text",
+      "name": "Info text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>We're here to help.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Questions about our products or shipping? We respond to all enquiries within 24-48 hours of receiving your message.</p>"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "phone_number",
+      "name": "Phone number",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Phone number"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "radio",
+      "name": "Radio buttons",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "How did you hear about us?"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "per_row",
+          "label": "Number of columns",
+          "default": 1,
+          "min": 1,
+          "max": 3
+        },
+        {
+          "type": "header",
+          "content": "Options"
+        },
+        {
+          "type": "text",
+          "id": "option_list",
+          "label": "Option List",
+          "default": "Google, Friend/ family, Social media",
+          "info": "Use a list of options separated by commas"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "name": "Range slider",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Level of satisfaction"
+        },
+        {
+          "type": "text",
+          "id": "minimum",
+          "label": "Minimum value",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "maximum",
+          "label": "Maximum value",
+          "default": "10"
+        },
+        {
+          "type": "text",
+          "id": "step",
+          "label": "Step",
+          "default": "1",
+          "info": "Increment range slider values (eg. 1, 5, 10)"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "single_checkbox",
+      "name": "Single checkbox",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "This field can be used to encourage customers to opt-in to recieve marketing, but their information needs to be manually added in [customers](/admin/customers?query=&accepts_marketing=1)."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Yes, please add me to your mailing list for discount codes and updates."
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "name": "Textarea",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Message"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder",
+          "default": "Tell us why you are contacting us."
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "textfield",
+      "name": "Text input",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Social media account"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "url",
+      "name": "Website",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Field label",
+          "info": "Label cannot be left blank",
+          "default": "Website address"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Placeholder"
+        },
+        {
+          "type": "checkbox",
+          "id": "required",
+          "label": "Field is required"
+        },
+        {
+          "type": "select",
+          "id": "width",
+          "label": "Width",
+          "default": "full",
+          "options": [
+            {
+              "value": "full",
+              "label": "Full"
+            },
+            {
+              "value": "half",
+              "label": "Half"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact form with text",
+      "settings": {
+      },
+      "blocks": [
+        {
+          "type": "textfield",
+          "settings": {
+            "title": "First name",
+            "width": "half"
+          }
+        },
+        {
+          "type": "textfield",
+          "settings": {
+            "title": "Last name",
+            "width": "half"
+          }
+        },
+        {
+          "type": "email"
+        },
+        {
+          "type": "textarea"
+        }
+      ]
+    }
+  ],
+  "locales": {
+    "en": {
+      "form_name__form_location": "Form location",
+      "form_label__page_title": "Page title",
+      "form_label__template": "Template",
+      "success": "Thanks for contacting us. We'll get back to you as soon as possible.",
+      "submit": "Submit"
+    }
+  }
+}
+{% endschema %}
+
+{%- comment -%} JSON Settings {%- endcomment -%}
+<script type="application/json" data-wbs-pck="{{ section.id }}">
+  {
+    "id": {{ section.id | json }}
+  }
+</script>
+{%- comment -%} External scripts {%- endcomment -%}
+<script data-wbs-pck-external-js="{{ section.id }}" src="https://cdn.shopify.com/s/files/1/0577/7673/4361/files/configurable-date-input-polyfill.dist.js?v=1641477261" defer></script>
+{%- comment -%} JavaScript {%- endcomment -%}
+<script data-wbs-pck-js="{{ section.id }}" type="module" defer>
+(function(){
+  'use strict';
+
+  const wbsPack = {
+    settings: {},
+    rangeSliderBubble: function (range, bubble) {
+      const val = range.value;
+      const min = range.min ? range.min : 0;
+      const max = range.max ? range.max : 100;
+      const newVal = Number(((val - min) * 100) / (max - min));
+      bubble.innerHTML = val;
+      bubble.style.left = `calc(${newVal}% + (${8 - newVal * 0.15}px))`;
+    },
+    load: function (section) {
+      const rangeSliders = section.querySelectorAll('.wbs-pck__range-slider-wrap');
+      rangeSliders.forEach(wrap => {
+        const range = wrap.querySelector('.wbs-pck__range-slider');
+        const bubble = wrap.querySelector('.wbs-pck__range-slider-bubble');
+
+        range.addEventListener('input', () => {
+          wbsPack.rangeSliderBubble(range, bubble);
+        });
+
+        wbsPack.rangeSliderBubble(range, bubble);
+      });
+    },
+    unload: function (section) {
+
+    }
+  }
+
+  window.addEventListener('shopify:section:unload', function (e) {
+    const settings = document.querySelector(`[data-wbs-pck="${e.detail.sectionId}"]`);
+    const sectionId = e.detail.sectionId;
+    const section = document.querySelector(`#DP--${e.detail.sectionId}`);
+    if (sectionId == wbsPack.settings.id){
+      wbsPack.unload(section);
+    }
+  });
+
+  wbsPack.settings = JSON.parse(document.querySelector('[data-wbs-pck="{{ section.id }}"]').innerHTML);
+  const sectionId = {{ section.id | json }};
+  const section = document.querySelector(`#DP--${sectionId}`);
+  if (sectionId == wbsPack.settings.id){
+    wbsPack.load(section);
+  }
+
+})();
+</script>

@@ -1,0 +1,558 @@
+{% assign wsp_section_id = section.id | replace: '-', '' | downcase %}
+
+{% style %}
+  .wsp-recent-purchase-popup-{{ wsp_section_id }} {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: {{ section.settings.popup_background_color }};
+    border-radius: {{ section.settings.border_radius }}px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    max-width: 320px;
+    width: calc(100vw - 40px);
+    z-index: 1000;
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 1px solid {{ section.settings.border_color }};
+  }
+
+  .wsp-recent-purchase-popup-{{ wsp_section_id }}.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .wsp-recent-purchase-popup-header-{{ wsp_section_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .wsp-recent-purchase-popup-icon-{{ wsp_section_id }} {
+    width: 20px;
+    height: 20px;
+    color: {{ section.settings.accent_color }};
+    flex-shrink: 0;
+  }
+
+  .wsp-recent-purchase-popup-title-{{ wsp_section_id }} {
+    font-size: 14px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    margin: 0;
+  }
+
+  .wsp-recent-purchase-popup-content-{{ wsp_section_id }} {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .wsp-recent-purchase-popup-image-{{ wsp_section_id }} {
+    width: 60px;
+    height: 60px;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .wsp-recent-purchase-popup-image-{{ wsp_section_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .wsp-recent-purchase-popup-image-placeholder-{{ wsp_section_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wsp-recent-purchase-popup-image-placeholder-{{ wsp_section_id }} svg {
+    width: 30px;
+    height: 30px;
+    color: #999;
+  }
+
+  .wsp-recent-purchase-popup-details-{{ wsp_section_id }} {
+    flex-grow: 1;
+    min-width: 0;
+  }
+
+  .wsp-recent-purchase-popup-customer-{{ wsp_section_id }} {
+    font-size: 13px;
+    color: {{ section.settings.customer_text_color }};
+    margin: 0 0 4px 0;
+    font-weight: 500;
+  }
+
+  .wsp-recent-purchase-popup-product-{{ wsp_section_id }} {
+    font-size: 14px;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 4px 0;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .wsp-recent-purchase-popup-time-{{ wsp_section_id }} {
+    font-size: 12px;
+    color: {{ section.settings.time_text_color }};
+    margin: 0;
+  }
+
+  .wsp-recent-purchase-popup-close-{{ wsp_section_id }} {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: {{ section.settings.text_color }};
+    opacity: 0.6;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wsp-recent-purchase-popup-close-{{ wsp_section_id }}:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .wsp-recent-purchase-popup-close-{{ wsp_section_id }} svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .wsp-recent-purchase-popup-{{ wsp_section_id }} {
+      bottom: 10px;
+      left: 10px;
+      max-width: 280px;
+      width: calc(100vw - 20px);
+    }
+  }
+
+  .wsp-recent-purchase-popup-{{ wsp_section_id }},
+  .wsp-recent-purchase-popup-container-{{ wsp_section_id }}{
+    z-index: 999 !important;
+  }
+{% endstyle %}
+
+<recent-purchase-popup-{{ wsp_section_id }}
+  class="wsp-recent-purchase-popup-container-{{ wsp_section_id }}"
+  data-show-interval="{{ section.settings.show_interval }}"
+  data-display-duration="{{ section.settings.display_duration }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="wsp-recent-purchase-popup-{{ wsp_section_id }}" id="wsp-recent-purchase-popup-{{ wsp_section_id }}">
+    <button class="wsp-recent-purchase-popup-close-{{ wsp_section_id }}" aria-label="Close notification">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="wsp-recent-purchase-popup-header-{{ wsp_section_id }}">
+      <svg class="wsp-recent-purchase-popup-icon-{{ wsp_section_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="m1 1 4 4 2.5 11h9.5"></path>
+      </svg>
+      <h3 class="wsp-recent-purchase-popup-title-{{ wsp_section_id }}">{{ section.settings.popup_title }}</h3>
+    </div>
+
+    <div class="wsp-recent-purchase-popup-content-{{ wsp_section_id }}">
+      <div class="wsp-recent-purchase-popup-image-{{ wsp_section_id }}">
+        <div class="wsp-recent-purchase-popup-image-placeholder-{{ wsp_section_id }}">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      </div>
+      <div class="wsp-recent-purchase-popup-details-{{ wsp_section_id }}">
+        <p class="wsp-recent-purchase-popup-customer-{{ wsp_section_id }}"></p>
+        <p class="wsp-recent-purchase-popup-product-{{ wsp_section_id }}"></p>
+        <p class="wsp-recent-purchase-popup-time-{{ wsp_section_id }}"></p>
+      </div>
+    </div>
+  </div>
+</recent-purchase-popup-{{ wsp_section_id }}>
+
+<script>
+  (function() {
+    class RecentPurchasePopup{{ wsp_section_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.products = [];
+        this.currentIndex = 0;
+        this.showInterval = parseInt(this.dataset.showInterval) * 1000;
+        this.displayDuration = parseInt(this.dataset.displayDuration) * 1000;
+        this.popup = this.querySelector('#wsp-recent-purchase-popup-{{ wsp_section_id }}');
+        this.isVisible = false;
+        this.timeoutId = null;
+        this.intervalId = null;
+      }
+
+      connectedCallback() {
+        this.loadProducts();
+        this.setupEventListeners();
+        this.startCycle();
+      }
+
+      disconnectedCallback() {
+        if (this.timeoutId) clearTimeout(this.timeoutId);
+        if (this.intervalId) clearInterval(this.intervalId);
+      }
+
+      loadProducts() {
+        {% for i in (1..10) %}
+          {% liquid
+            assign product_key = 'product_' | append: i
+            assign customer_key = 'customer_name_' | append: i
+            assign product = section.settings[product_key]
+            assign customer_name = section.settings[customer_key]
+          %}
+          
+          {% if product != blank and customer_name != blank %}
+            this.products.push({
+              id: {{ product.id }},
+              title: {{ product.title | json }},
+              image: {% if product.featured_image %}{{ product.featured_image | image_url: width: 120 | json }}{% else %}null{% endif %},
+              customerName: {{ customer_name | json }},
+              url: {{ product.url | json }}
+            });
+          {% endif %}
+        {% endfor %}
+      }
+
+      setupEventListeners() {
+        const closeButton = this.popup.querySelector('.wsp-recent-purchase-popup-close-{{ wsp_section_id }}');
+        closeButton.addEventListener('click', () => {
+          this.hidePopup();
+        });
+
+        this.popup.addEventListener('click', (e) => {
+          if (!e.target.closest('.wsp-recent-purchase-popup-close-{{ wsp_section_id }}')) {
+            const currentProduct = this.products[this.currentIndex];
+            if (currentProduct && currentProduct.url) {
+              window.location.href = currentProduct.url;
+            }
+          }
+        });
+      }
+
+      startCycle() {
+        if (this.products.length === 0) return;
+
+        this.showPopup();
+        
+        this.intervalId = setInterval(() => {
+          this.showPopup();
+        }, this.showInterval);
+      }
+
+      showPopup() {
+        if (this.products.length === 0 || this.isVisible) return;
+
+        const product = this.products[this.currentIndex];
+        this.updatePopupContent(product);
+        
+        this.popup.classList.add('show');
+        this.isVisible = true;
+
+        this.timeoutId = setTimeout(() => {
+          this.hidePopup();
+        }, this.displayDuration);
+
+        this.currentIndex = (this.currentIndex + 1) % this.products.length;
+      }
+
+      hidePopup() {
+        this.popup.classList.remove('show');
+        this.isVisible = false;
+        if (this.timeoutId) {
+          clearTimeout(this.timeoutId);
+          this.timeoutId = null;
+        }
+      }
+
+      updatePopupContent(product) {
+        const imageContainer = this.popup.querySelector('.wsp-recent-purchase-popup-image-{{ wsp_section_id }}');
+        const customerElement = this.popup.querySelector('.wsp-recent-purchase-popup-customer-{{ wsp_section_id }}');
+        const productElement = this.popup.querySelector('.wsp-recent-purchase-popup-product-{{ wsp_section_id }}');
+        const timeElement = this.popup.querySelector('.wsp-recent-purchase-popup-time-{{ wsp_section_id }}');
+
+        if (product.image) {
+          imageContainer.innerHTML = `<img src="${product.image}" alt="${product.title}" loading="lazy">`;
+        } else {
+          imageContainer.innerHTML = `
+            <div class="wsp-recent-purchase-popup-image-placeholder-{{ wsp_section_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          `;
+        }
+
+        customerElement.textContent = product.customerName;
+        productElement.textContent = product.title;
+        
+        const randomMinutes = Math.floor(Math.random() * 30) + 1;
+        timeElement.textContent = `${randomMinutes} minute${randomMinutes === 1 ? '' : 's'} ago`;
+      }
+    }
+
+    customElements.define('recent-purchase-popup-{{ wsp_section_id }}', RecentPurchasePopup{{ wsp_section_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Recent Purchase Popup",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General Settings"
+    },
+    {
+      "type": "text",
+      "id": "popup_title",
+      "label": "Popup title",
+      "default": "Recently purchased"
+    },
+    {
+      "type": "range",
+      "id": "show_interval",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "label": "Show interval",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "display_duration",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "label": "Display duration",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Style Settings"
+    },
+    {
+      "type": "color",
+      "id": "popup_background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "customer_text_color",
+      "label": "Customer name color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "time_text_color",
+      "label": "Time text color",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#000f9f"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_1",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_2",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_3",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_4",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_5",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "product",
+      "id": "product_6",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_6",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 7"
+    },
+    {
+      "type": "product",
+      "id": "product_7",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_7",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 8"
+    },
+    {
+      "type": "product",
+      "id": "product_8",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_8",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 9"
+    },
+    {
+      "type": "product",
+      "id": "product_9",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_9",
+      "label": "Customer name"
+    },
+    {
+      "type": "header",
+      "content": "Product 10"
+    },
+    {
+      "type": "product",
+      "id": "product_10",
+      "label": "Product"
+    },
+    {
+      "type": "text",
+      "id": "customer_name_10",
+      "label": "Customer name"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recent Sales Popup"
+    }
+  ]
+}
+{% endschema %}
