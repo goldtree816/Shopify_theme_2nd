@@ -235,34 +235,52 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-  const overlay = document.querySelector('.cart-overlay');
-  const openButtons = document.querySelectorAll('.open-cart-drawer');
-  const closeButton = document.querySelector('.cart-drawer-close');
+  const overlay = document.querySelector(".cart-overlay");
 
-  openButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+  // Prevent the drawer form from redirecting
+  document.querySelectorAll(".cart-drawer form").forEach(form => {
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
-      overlay.style.display = 'flex';
-      setTimeout(() => { overlay.classList.add('active'); }, 10);
     });
   });
 
-  closeButton.addEventListener('click', () => {
-    overlay.classList.remove('active');
-    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+  // Handle + and - quantity buttons
+  document.querySelectorAll(".cart-item-qty button").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      e.preventDefault();
+      const newQty = this.value;
+
+      fetch('/cart/update.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: { [this.dataset.key]: Number(newQty) } })
+      })
+      .then(res => res.json())
+      .then(data => {
+        location.reload();  // easiest refresh for UI
+      });
+    });
   });
 
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) {
-      overlay.classList.remove('active');
-      setTimeout(() => { overlay.style.display = 'none'; }, 300);
-    }
+  // Handle REMOVE links
+  document.querySelectorAll(".cart-item-remove a").forEach(link => {
+    link.addEventListener("click", function(e) {
+      e.preventDefault();
+
+      fetch(this.href.replace('change?', 'change.js?'))
+
+      .then(r => r.json())
+      .then(data => {
+        location.reload();
+      });
+    });
   });
 
 });
 </script>
+
 
 
   <body>

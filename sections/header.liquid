@@ -278,15 +278,51 @@ header:hover .top-banner {
 </header>
 
 <script>
-window.addEventListener('scroll', function() {
-  const navbar = document.getElementById('navbar');
-  if (window.scrollY > 10) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
+document.addEventListener('DOMContentLoaded', () => {
+
+  function bindCartDrawerEvents() {
+    const overlay = document.querySelector('.cart-overlay');
+    if (!overlay) return;
+
+    const closeButton = overlay.querySelector('.cart-drawer-close');
+    const drawer = overlay.querySelector('.cart-drawer');
+    const openButtons = document.querySelectorAll('.open-cart-drawer');
+
+    // Open drawer from navbar
+    openButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        overlay.style.display = 'flex';
+        requestAnimationFrame(() => {
+          overlay.classList.add('active');
+        });
+      });
+    });
+
+    // Close with X
+    if (closeButton) {
+      closeButton.addEventListener('click', () => {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 300);
+      });
+    }
+
+    // Close when clicking outside
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => overlay.style.display = 'none', 300);
+      }
+    });
   }
+
+  // Run now + run again after section hydration
+  bindCartDrawerEvents();
+
+  document.addEventListener('shopify:section:load', bindCartDrawerEvents);
 });
 </script>
+
 
 {% schema %}
 {

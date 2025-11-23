@@ -388,10 +388,11 @@ display:block;
       </div>
 
       <div class="add-to-bag">
-        <form method="post" action="/cart/add">
-          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-          {% render 'button.liquid', text: "ADD TO BAG", class: 'btn-shop' %}
-        </form>
+       <form id="addToCartForm">
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+        {% render 'button.liquid', text: "ADD TO BAG", class: 'btn-shop' %}
+      </form>
+
       </div>
 
 
@@ -459,6 +460,37 @@ display:block;
 </section>
 
 <script>
+
+
+ document.getElementById("addToCartForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: {{ product.variants.first.id }},
+      quantity: 1
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    const overlay = document.querySelector('.cart-overlay');
+
+    // show overlay
+    overlay.style.display = 'flex';
+
+    // allow animation frame
+    setTimeout(() => {
+      overlay.classList.add('active');
+    }, 10);
+
+  })
+  .catch(err => console.error(err));
+});
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const slider = document.querySelector(".main-image-inner");
   const slides = document.querySelectorAll(".main-slide");

@@ -95,34 +95,68 @@ h3{
 
 </style>
 <div class="product-card">
-<a href="{{product.url}}">
-    <div class="product-image">
-        <img src="{{product.featured_image | img_url: 'medium'}}" alt="{{product.title}}">
-        <div class="add-button">
-         {% render 'button',
-        text: 'ADD TO BAG',
-        %}
-        </div>
+
+  <div class="product-image">
+    <a href="{{ product.url }}">
+      <img src="{{product.featured_image | img_url: 'medium'}}" alt="{{product.title}}">
+    </a>
+
+    <div class="add-button">
+      <button  class="btn-primary quick-add-btn"data-variant="{{ product.variants.first.id }}">
+        ADD TO BAG
+      </button>
+
+
     </div>
+  </div>
+
+ 
+
+
+
   <div class="product-info">
     <h3>{{product.title}}</h3>
     <div class="price">
-    <p>{{product.price | money}}</p>
+      <p>{{product.price | money}}</p>
     </div>
   </div>
-    <div class="description">
+
+  <div class="description">
     <p>{{product.description}}</p>
-    </div>
+  </div>
+
   <div class="product-rating">
-  {% for i in (1..5) %}
-    {% if i <= product.metafields.reviews.rating %}
-      ★
-    {% else %}
-      ☆
-    {% endif %}
-  {% endfor %}
-  <span>{{ product.metafields.reviews.count }}</span>
-</div>
-</a>
+    {% for i in (1..5) %}
+      {% if i <= product.metafields.reviews.rating %} ★ {% else %} ☆ {% endif %}
+    {% endfor %}
+    <span>{{ product.metafields.reviews.count }}</span>
+  </div>
+
 </div>
 
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.quick-add-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const id = this.dataset.variant;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, quantity: 1 })
+      })
+      .then(r => r.json())
+      .then(data => {
+        const overlay = document.querySelector('.cart-overlay');
+        overlay.style.display = 'flex';
+        setTimeout(() => { overlay.classList.add('active'); }, 10);
+      });
+    });
+  });
+});
+</script>
