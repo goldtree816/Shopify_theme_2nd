@@ -3595,3 +3595,7 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
+
+.cart-count-bubble{
+  background-color: #ce2029;
+}

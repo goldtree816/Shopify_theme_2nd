@@ -45,6 +45,12 @@
             "show_gift_card_recipient": true
           }
         },
+        "custom_liquid_hiCcg7": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "<style>\n.icon-list-custom{max-width: 44rem;}\n.icon-list-custom {\n    display: flex;\n    flex-wrap: wrap;\n    list-style: none;\n    justify-content: center;\n    margin: 0;\n    gap: 8px;\n    padding: 0;\n    margin-top: -1rem;\n}\n</style>\n\n<ul class=\"icon-list-custom\" role=\"list\">\n  {% assign enabled_payment_types = 'visa,master,apple_pay,paypal' | remove: ' ' | split: ',' %}\n  {% for type in enabled_payment_types %}\n      <li>{{ type | payment_type_svg_tag: class: 'icon-svg' }}</li>\n  {% endfor %}\n</ul>"
+          }
+        },
         "description": {
           "type": "description",
           "settings": {}
@@ -78,6 +84,7 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "custom_liquid_hiCcg7",
         "description",
         "whatsapp_button_eUEQpz",
         "share"

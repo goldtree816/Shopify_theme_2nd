@@ -208,9 +208,31 @@
                         {%- endif -%}
                       </div>
                     </td>
+{%- if settings.use_quantity_rules -%}
+  {%- if settings.use_total_product_quantity -%}
+    {% assign quantity_rule = item.product.metafields.custom.quantity_rule.value %}
+    {% assign total_product_quantity = 0 %}
+    {% assign global_max = item.product.metafields.custom.quantity_rule.value.max | plus: 0 %}
+    {% for cart_item in cart.items %}
+      {% if cart_item.product.id == item.product.id %}
+        {% assign total_product_quantity = total_product_quantity | plus: cart_item.quantity %}
+      {% endif %}
+    {% endfor %}
+    {% assign item_remaining_qty = global_max | minus: total_product_quantity %}
+    {% assign max_for_variant = item.quantity | plus: item_remaining_qty %}
+    {% if max_for_variant > global_max %}
+      {% assign max_for_variant = global_max %}
+    {% endif %}
+  {% else %}
+    {% assign quantity_rule = item.product.selected_or_first_available_variant.metafields.custom.quantity_rule.value %}
+  {% endif %}
+{% else %}
+  {% assign quantity_rule = item.variant.quantity_rule %}
+{% endif %}
+
                     {%- liquid
                       assign has_qty_rules = false
-                      if item.variant.quantity_rule.increment > 1 or item.variant.quantity_rule.min > 1 or item.variant.quantity_rule.max != null
+                      if quantity_rule.increment > 1 or quantity_rule.min > 1 or quantity_rule.max != null
                         assign has_qty_rules = true
                       endif
 
@@ -263,7 +285,11 @@
                                 min="0"
                                 data-min="{{ item.variant.quantity_rule.min }}"
                                 {% if item.variant.quantity_rule.max != null %}
-                                  max="{{ item.variant.quantity_rule.max }}"
+                                  {% if settings.use_total_product_quantity %}
+                                        max="{{ max_for_variant }}"
+                                      {% else %}
+                                        max="{{ quantity_rule.max }}"
+                                      {% endif %}
                                 {% endif %}
                                 step="{{ item.variant.quantity_rule.increment }}"
                                 {% # theme-check-enable %}

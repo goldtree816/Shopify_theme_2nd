@@ -1496,7 +1496,45 @@
         "id": "cart_color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "scheme-1"
-      }
+      },
+{
+  "type": "color",
+  "id": "cart_progress_bar_color",
+  "label": "Progress Bar Color",
+  "default": "#d53600",
+  "info": "Color of the progress bar."
+},
+
+
+{
+  "type": "header",
+  "content": "Payment method icons"
+},
+{
+  "type": "checkbox",
+  "id": "payment_enable",
+  "default": true,
+  "label": "t:sections.footer.settings.payment_enable.label"
+}
+
     ]
-  }
+  },
+  {
+  "name": "Custom Quantity Rules",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "use_quantity_rules",
+      "label": "Enable custom quantity rules",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "use_total_product_quantity",
+      "label": "Use total product quantity",
+      "info": "Add the total of all variant quantities together",
+      "default": false
+    }
+  ]
+}
 ]

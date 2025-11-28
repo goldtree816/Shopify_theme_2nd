@@ -1,0 +1,54 @@
+{% assign cart_item_count = 0 %}
+
+{% for item in cart.items %}
+  {% assign cart_item_count = cart_item_count | plus: item.quantity %}
+{% endfor %}
+
+{% assign goal = 3 %}
+{% assign progress = cart_item_count | divided_by: goal | times: 100 %}
+
+{% if progress > 100 %}
+  {% assign progress = 100 %}
+{% endif %}
+
+<div class="cart-progress-wrapper">
+  
+  <div class="cart-progress-bar-container">
+    <div class="cart-progress-bar" style="width: {{ progress }}%;"></div>
+  </div>
+
+  <div class="cart-goal-message">
+    {% if cart_item_count < goal %}
+      Add <strong>{{ goal | minus: cart_item_count }}</strong> more product(s) to unlock <strong>FREE SHIPPING</strong>.
+    {% else %}
+      🎉 You unlocked Free Shipping!
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+.cart-progress-bar-container {
+  width: 100%;
+  background: #eee;
+  height: 10px;
+  border-radius: 10px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.cart-progress-bar {
+  height: 10px;
+  background: #00c853;
+  width: 0%;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.cart-goal-message {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-top: 6px;
+}
+</style>

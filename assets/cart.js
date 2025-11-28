@@ -214,6 +214,9 @@ class CartItems extends HTMLElement {
 
         CartPerformance.measureFromEvent(`${eventTarget}:user-action`, event);
 
+        const updatedCartTotal = parsedState.total_price;
+        this.updateProgressBar(updatedCartTotal);
+
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
       })
       .catch(() => {
