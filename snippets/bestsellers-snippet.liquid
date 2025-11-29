@@ -1,0 +1,77 @@
+<style>
+
+.bestsellers-product::-webkit-scrollbar {
+  height: 8px; /* thickness */
+}
+
+.bestsellers-product::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.bestsellers-product::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 10px;
+  transition: background 0.5s ease;
+}
+
+.bestsellers-product { /*for firefox*/
+  scrollbar-color: #c4c4c4 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+.heading {
+  padding-top: 60px;
+  padding-left: 80px;
+}
+.heading h1 {
+  font-size: 36px;
+}
+
+.heading p{
+  font-weight:400;
+  font-size:14px;
+}
+
+.bestsellers-product {
+  margin: 0 auto;
+  align-items: stretch;
+  overflow-x: auto;
+  display: flex;
+  padding-top: 20px;
+  width: 90%;
+  scroll-snap-type: x mandatory;
+  overflow-y:hidden;
+}
+
+.bestsellers-product::-webkit-scrollbar {
+  display: none;
+}
+
+</style>
+
+{%- assign heading_text = heading | default: '' -%}
+{%- assign description_text = description | default: '' -%}
+{%- assign gap_value = gap | default: 20 -%}
+
+
+
+<div class="heading">
+  {% if heading_text != '' %}
+    <h1 class="text-3xl font-sans-500">{{ heading_text }}</h1>
+  {% endif %}
+  {% if description_text != '' %}
+    <p class="text-sm">{{ description_text }}</p>
+  {% endif %}
+</div>
+
+<div class="bestsellers-product" style="gap: {{ gap_value }}px;">
+  {% assign selected_collection = collection %}
+  {% if selected_collection and selected_collection.products_count > 0 %}
+    {% for product in selected_collection.products %}
+      {% render 'card', product: product %}
+    {% endfor %}
+  {% else %}
+    <p>No products found.</p>
+  {% endif %}
+</div>

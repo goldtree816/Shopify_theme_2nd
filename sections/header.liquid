@@ -278,6 +278,21 @@ header:hover .top-banner {
 </header>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const navbar = document.getElementById("navbar");
+
+  function toggleNavbarScroll() {
+    if (window.scrollY > 10) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  }
+
+  window.addEventListener("scroll", toggleNavbarScroll);
+  toggleNavbarScroll();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
 
   function bindCartDrawerEvents() {

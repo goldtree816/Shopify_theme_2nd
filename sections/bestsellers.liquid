@@ -1,69 +1,9 @@
-<style>
-
-.bestsellers-product::-webkit-scrollbar {
-  height: 8px; /* thickness */
-}
-
-.bestsellers-product::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-
-.bestsellers-product::-webkit-scrollbar-thumb {
-  background: #c4c4c4;
-  border-radius: 10px;
-  transition: background 0.5s ease;
-}
-
-
-
-.bestsellers-product { /*for firefox*/
-  scrollbar-color: #c4c4c4 #f1f1f1;
-  scrollbar-width: thin;
-}
-
-.heading {
-  padding-top: 60px;
-  padding-left: 80px;
-}
-.heading h1 {
-  font-size: 36px;
-}
-
-.heading p{
-  font-weight:400;
-  font-size:14px;
-}
-
-.bestsellers-product {
-  margin: 0 auto;
-  align-items: stretch;
-  overflow-x: auto;
-  display: flex;
-  padding-top: 20px;
-  width: 90%;
-  scroll-snap-type: x mandatory;
-  overflow-y:hidden;
-}
-
-
-.bestsellers-product::-webkit-scrollbar {
-  display: none;
-}
-
-</style>
-<div class="heading">
-  <h1 class="text-3xl font-sans-500">{{ section.settings.section_title }}</h1>
-  <p class="text-sm">{{ section.settings.section_description }}</p>
-</div>
-
-<div class="bestsellers-product" style="gap: {{ section.settings.product_card_spacing }}px;">
-  {% assign collection = collections['bestsellers'] %}
-  {% for product in collection.products %}
-    {% render 'card', product: product %}
-  {% endfor %}
-</div>
-
+{% render 'bestsellers-snippet',
+  heading: section.settings.section_title,
+  description: section.settings.section_description,
+  gap: section.settings.product_card_spacing,
+  collection: section.settings.section_collection
+%}
 
 {% schema %}
 {
@@ -72,13 +12,13 @@
     {
       "type": "text",
       "id": "section_title",
-      "label": "Section Title",
+      "label": "Section title",
       "default": "COLLECTION"
     },
     {
       "type": "range",
       "id": "product_card_spacing",
-      "label": "Product Card Spacing (px)",
+      "label": "Product card spacing",
       "min": 0,
       "max": 100,
       "step": 1,
@@ -87,7 +27,12 @@
     {
       "type": "text",
       "id": "section_description",
-      "label": "Section Description",
+      "label": "Section description"
+    },
+    {
+      "type": "collection",
+      "id": "section_collection",
+      "label": "Collection"
     }
   ],
   "presets": [

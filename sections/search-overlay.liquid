@@ -1,0 +1,318 @@
+<div id="search-overlay" class="search-overlay">
+  <div class="search-inner">
+
+    <!-- Search bar -->
+    <div class="search-bar">
+      <form action="/search" method="get" class="search-bar">
+  <input
+    type="text"
+    name="q"
+    placeholder="Search"
+    class="search-input"
+  >
+  <button type="button" class="search-close">✕</button>
+</form>
+
+    </div>
+
+    <div class="search-content">
+
+      <!-- Recommended Searches -->
+      <div class="recommended-searches">
+        <h3>{{ section.settings.search_heading }}</h3>
+
+        <ul id="search-suggestions">
+        {% for block in section.blocks %}
+            {% if block.type == 'search_term' %}
+            <li class="suggestion-item">{{ block.settings.term }}</li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+
+      </div>
+
+{% if section.settings.show_products %}
+  <div class="recommended-products-wrapper">
+    {% if section.settings.products_collection != blank %}
+      {% render 'bestsellers-snippet',
+        heading: section.settings.products_subheading,
+        description: section.settings.products_description,
+        gap: section.settings.products_gap,
+        collection: section.settings.products_collection
+      %}
+    {% else %}
+      <p>Select a collection to show products.</p>
+    {% endif %}
+  </div>
+{% endif %}
+
+</div>
+        </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+
+.search-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.search-product-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+
+.search-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.search-overlay.active {
+  display: flex;
+  justify-content: center;
+  opacity: 1;
+}
+
+/* Floating white search box */
+.search-inner {
+  width: 100%;
+  background: #fff;
+  padding: 80px 50px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  font-family: 'Manrope', sans-serif;
+  max-height: 95vh;
+  overflow-y: auto;
+}
+
+
+/* Search top bar */
+.search-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.search-input {
+  width: 100%;
+  font-size: 20px;
+  padding: 10px 15px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-close {
+  font-size: 25px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+/* Layout grid like AEVI */
+.search-content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 60px;
+}
+
+.recommended-searches h3,
+.recommended-products h3 {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.recommended-searches ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recommended-searches li {
+  margin-bottom: 10px;
+}
+
+.recommended-searches a {
+  color: #000;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.recommended-searches a:hover {
+  text-decoration: underline;
+}
+
+.recommended-products-wrapper {
+  display: block;
+}
+.recommended-products-wrapper .bestsellers-product {
+  width: 100%
+}
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('search-overlay');
+  const searchButtons = document.querySelectorAll('.search-icon');
+  const closeBtn = document.querySelector('.search-close');
+
+  searchButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      overlay.classList.add('active');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('active');
+  });
+});
+
+// Dynamic suggestions
+document.querySelector('.search-input').addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  const items = document.querySelectorAll('#search-suggestions .suggestion-item');
+
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(query) ? 'block' : 'none';
+  });
+});
+
+
+// AJAX product search
+const searchInput = document.getElementById('search-input');
+const productsWrapper = document.querySelector('.recommended-products-wrapper');
+
+searchInput.addEventListener('input', function() {
+  let query = this.value.trim();
+
+  if (query.length < 2) {
+    // Clear results if too short
+    productsWrapper.innerHTML = '';
+    return;
+  }
+
+  fetch(`/search/suggest.json?q=${query}&resources[type]=product&resources[limit]=6`)
+    .then(res => res.json())
+    .then(data => {
+      const products = data.resources.results.products;
+
+      if (!products.length) {
+        productsWrapper.innerHTML = `<p>No products found</p>`;
+        return;
+      }
+
+      // Build product cards
+      let html = '<div class="search-products-grid">';
+      products.forEach(p => {
+        html += `
+          <a href="${p.url}" class="search-product-card">
+            <img src="${p.image}" alt="${p.title}">
+            <p>${p.title}</p>
+            <span>${p.price}</span>
+          </a>
+        `;
+      });
+      html += '</div>';
+
+      productsWrapper.innerHTML = html;
+    });
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Search Overlay",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_products",
+      "label": "Show recommended products",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Recommended Products"
+    },
+    {
+      "type": "collection",
+      "id": "products_collection",
+      "label": "Collection to display"
+    },
+    {
+      "type": "text",
+      "id": "products_subheading",
+      "label": "Products subheading",
+      "default": "Bestsellers for you"
+    },
+    {
+      "type": "text",
+      "id": "products_description",
+      "label": "Products description",
+      "default": "Description here"
+    },
+    {
+      "type": "range",
+      "id": "products_gap",
+      "label": "Product card spacing",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "text",
+      "id": "search_heading",
+      "label": "Recommended Searches Heading",
+      "default": "RECOMMENDED SEARCHES"
+    },
+    {
+      "type": "text",
+      "id": "products_heading",
+      "label": "Recommended Products Heading",
+      "default": "RECOMMENDED PRODUCTS"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "search_term",
+      "name": "Recommended Search Term",
+      "settings": [
+        {
+          "type": "text",
+          "id": "term",
+          "label": "Term",
+          "default": "Bestseller"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search Overlay"
+    }
+  ]
+}
+
+
+
+{% endschema %}
