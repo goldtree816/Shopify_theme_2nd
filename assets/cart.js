@@ -229,6 +229,10 @@ class CartItems extends HTMLElement {
       });
   }
 
+
+
+  
+
   updateLiveRegions(line, message) {
     const lineItemError =
       document.getElementById(`Line-item-error-${line}`) || document.getElementById(`CartDrawer-LineItemError-${line}`);
