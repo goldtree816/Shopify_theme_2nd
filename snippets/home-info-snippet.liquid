@@ -1,0 +1,130 @@
+<section class="aevi-feature {% if layout == 'image-right' %}reverse{% endif %}">
+  <div class="aevi-container">
+    <div class="aevi-image">
+      {% if feature_image != blank %}
+        <img src="{{ feature_image | img_url: 'master' }}" alt="Feature Image">
+      {% endif %}
+    </div>
+
+    <div class="aevi-content">
+      <h2>{{ heading }}</h2>
+      <div class="aevi-description">
+        {{ description }}
+      </div>
+
+      {% if button_text != blank %}
+        <a href="{{ button_link }}" class="aevi-btn">{{ button_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<style>
+.aevi-feature {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 80px 0;
+  width: 100%;
+}
+
+.aevi-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Reverse layout for image on right */
+.aevi-feature.reverse .aevi-container {
+  flex-direction: row-reverse;
+}
+
+/* Image container takes half width */
+.aevi-image {
+  flex: 1 1 50%;
+  width: 50%;
+  aspect-ratio: 1 / 1; /* ✅ makes it perfectly square */
+  overflow: hidden;
+}
+
+/* Image fills the square area */
+.aevi-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ✅ crops and fills neatly */
+}
+
+/* Content takes other half */
+.aevi-content {
+  flex: 1 1 50%;
+  max-width: 50%;
+  padding-left:250px;
+  padding-right: 250px;
+}
+
+.aevi-content h2 {
+  font-size: 40px;
+  margin-bottom: 15px;
+  font-weight:400;
+}
+
+.aevi-description p {
+  letter-spacing:-0.5px;
+  color: #000000;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.aevi-btn {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #000;
+  text-decoration: underline;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .aevi-feature {
+    flex-direction: column;
+    padding: 40px 0;
+    text-align: center;
+  }
+  .aevi-container {
+    flex-direction: column !important;
+  }
+  .aevi-image {
+    width: 100%;
+    aspect-ratio: 1/1;
+  }
+  .aevi-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* ✅ crops and fills neatly */
+}
+  .aevi-content {
+    max-width: 90%;
+    padding: 0;
+  }
+  .aevi-content h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+  font-weight:400;
+  text-align:left;
+  }
+  .aevi-description p
+  {
+    text-align:left;
+    font-size:14px;
+    font-weight:100;
+  }
+  .aevi-btn
+  {
+    display:flex;  
+  }
+}
+
+</style>
+

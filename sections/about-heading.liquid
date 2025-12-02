@@ -1,0 +1,77 @@
+<section class="about-info-section">
+
+  {% render 'headings',
+    label: section.settings.label,
+    heading: section.settings.heading
+  %}
+
+</section>
+
+<style>
+.about-info-section {
+  width: 100%;
+  padding: 120px 0;
+  text-align: center;
+}
+
+.about-info-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-info-label {
+  font-size: 14px;
+  color: #555;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+
+.about-info-heading {
+  font-size: 42px;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  color: #000;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .about-info-section {
+    padding: 80px 20px;
+  }
+
+  .about-info-heading {
+    font-size: 28px;
+  }
+
+  .about-info-label {
+    font-size: 12px;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "About Info Block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Top Label",
+      "default": "NORDIC BY NATURE"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Main Heading",
+      "default": "AEVI IS INSPIRED BY THE PURITY + POWER OF NORDIC NATURE"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Heading"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "main": {
+      "type": "about-hero",
+      "settings": {}
+    },
+
+    "heading": {
+      "type": "about-heading",
+      "settings": {}
+    },
+
+    "info-1": {
+      "type": "about-info",
+      "settings": {}
+    },
+
+    "info-2": {
+      "type": "about-info",
+      "settings": {}
+    }
+  },
+
+  "order": [
+    "main",
+    "heading",
+    "info-1",
+    "info-2"
+  ]
+}
