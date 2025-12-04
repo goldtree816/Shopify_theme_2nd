@@ -1,35 +1,152 @@
-{% comment %}
-  This section is used in the blog template to render the blog page listing all
-  articles within a blog.
+<style>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/blog
-{% endcomment %}
+body{
+  font-family:'Manrope',sans-serif;
+  padding-top:70px;
+}
 
-<h1>{{ blog.title }}</h1>
+.journal-container{
+  max-width:1400px;
+  margin:0 auto;
+  padding:40px 20px;
+}
 
-{% paginate blog.articles by 5 %}
-  {% for article in blog.articles %}
-    <div>
+.journal-header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.journal-header h1{
+  font-size:44px;
+  font-weight:400;
+}
+
+.journal-categories{
+  text-align:center;
+  margin-bottom:50px;
+}
+.journal-categories a{
+  margin:0 12px;
+  font-size:14px;
+  color:#6c6c6c;
+  text-transform:uppercase;
+}
+.journal-categories a.active{
+  color:black;
+  border-bottom:2px solid black;
+  padding-bottom:3px;
+}
+
+
+/* AEVI GRID: 2 cards per row, natural height */
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  margin-bottom:80px;
+}
+
+.card img{
+  width:100%;
+  height:auto;
+  object-fit:cover;
+  border-radius:2px;
+}
+
+.card-meta{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#666;
+  margin-top:12px;
+}
+
+.card-title{
+  margin-top:6px;
+  font-size:28px;
+  font-weight:400;
+  line-height:1.32;
+  color:black;
+}
+
+.card-excerpt{
+  margin-top:10px;
+  font-size:16px;
+  color:#555;
+}
+
+</style>
+
+
+<div class="journal-container">
+
+  <div class="journal-header">
+    <h1>{{ blog.title }}</h1>
+  </div>
+
+  <div class="journal-categories">
+    <a href="{{ blog.url }}" class="active">All</a>
+    {% for tag in blog.all_tags %}
+      <a href="{{ blog.url }}/tagged/{{ tag | handleize }}">{{ tag }}</a>
+    {% endfor %}
+  </div>
+
+
+{% paginate blog.articles by 20 %}
+
+{% assign index = 0 %}
+
+{% for article in blog.articles %}
+
+  {% assign pos = index | modulo: 2 %}
+
+  {% if pos == 0 %}
+  <div class="row">
+  {% endif %}
+
+    <div class="card">
+
       {% if article.image %}
-        {{ article.image | image_url: width: 1000 | image_tag }}
+        <a href="{{ article.url }}">
+          <img src="{{ article.image | image_url: width:1600 }}">
+        </a>
       {% endif %}
-      <h2>
-        {{ article.title | link_to: article.url }}
-      </h2>
-      {% assign date = article.published_at | time_tag: format: 'date' %}
-      <p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
-      <p>{{ article.excerpt }}</p>
-    </div>
-  {% endfor %}
 
-  {%- if paginate.pages > 1 -%}
-    {{- paginate | default_pagination -}}
-  {%- endif -%}
+      <div class="card-meta">
+        {% for t in article.tags %}{{ t }} {% endfor %}
+      </div>
+
+      <a href="{{ article.url }}" class="card-title">{{ article.title }}</a>
+
+      {% if article.excerpt %}
+      <div class="card-excerpt">{{ article.excerpt }}</div>
+      {% endif %}
+
+    </div>
+
+  {% assign index = index | plus: 1 %}
+
+  {% if pos == 1 %}
+  </div>
+  {% endif %}
+
+{% endfor %}
+
+
+{% if paginate.pages > 1 %}
+  <div class="pagination-wrapper" style="text-align:center;margin-top:40px;">
+    {{ paginate | default_pagination }}
+  </div>
+{% endif %}
+
 {% endpaginate %}
+
+</div>
+
 
 {% schema %}
 {
-  "name": "t:general.blog",
+  "name": "AEVI Journal Layout",
   "settings": []
 }
 {% endschema %}
