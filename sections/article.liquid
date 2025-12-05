@@ -1,68 +1,226 @@
-{% comment %}
-  This section is used in the article template to render the article page, which
-  displays the full content of the blog post and can optionally include a
-  comments section for customers (not shown in this example).
+<style>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/article
-{% endcomment %}
+body{
+  font-family: 'Manrope', sans-serif;
+  padding-top:70px;
+}
 
-{% if article.image %}
-  {{ article.image | image_url: width: 1000 | image_tag }}
-{% endif %}
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
 
-<h1>{{ article.title }}</h1>
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+}
 
-{% assign date = article.published_at | time_tag: format: 'date' %}
-<p>{{ 'blog.article_metadata_html' | t: date: date, author: article.author }}</p>
+body:not(.template-index) .navbar a{
+  color:black;
+}
 
-{{ article.content }}
+.article-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+  font-family: "Manrope", sans-serif;
+}
 
-{% if blog.comments_enabled? %}
-  <h2>{{ 'blog.article_comments' | t }}</h2>
+/* back link */
 
-  <div id="comments">
-    {% paginate article.comments by 10 %}
-      {% for comment in article.comments %}
-        <div>
-          <p>{{ comment.author }}</p>
-          <p>
-            {{- comment.created_at | time_tag: format: 'date' -}}
-          </p>
-          <p>{{ comment.content }}</p>
+.article-back {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 30px;
+  text-decoration: none;
+}
+
+.article-back:hover {
+  color: #000;
+}
+
+/* hero two column */
+
+.article-hero {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  gap: 40px;
+  align-items: stretch;
+  margin-bottom: 60px;
+}
+
+.article-hero-text h1 {
+  font-size: 52px;
+  line-height: 1.05;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.article-date {
+  font-size: 14px;
+  margin-bottom: 18px;
+  color: #777;
+}
+
+.article-tags {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #777;
+}
+
+.article-tags a {
+  color: inherit;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.article-hero-image img {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+  display: block;
+}
+
+/* body area */
+
+.article-body {
+  max-width: 1100px;
+  margin: 60px auto 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #222;
+}
+
+.article-body p {
+  margin-bottom: 18px;
+}
+
+/* generic images inside content */
+
+.article-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 30px auto;
+}
+
+/* image row helper for two images side by side */
+
+.article-image-row {
+  display: flex;
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.article-image-row img {
+  width: 50%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* captions */
+
+.article-caption {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* small screens */
+
+@media (max-width: 900px) {
+  .article-wrapper {
+    padding: 40px 20px 70px;
+  }
+
+  .article-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .article-hero-image img {
+    height: 380px;
+  }
+
+  .article-hero-text h1 {
+    font-size: 36px;
+  }
+
+  .article-body {
+    margin-top: 40px;
+  }
+
+  .article-image-row {
+    flex-direction: column;
+  }
+
+  .article-image-row img {
+    width: 100%;
+  }
+}
+</style>
+
+<div class="article-wrapper">
+
+  <a href="{{ blog.url }}" class="article-back">
+    {% if section.settings.back_label != blank %}
+      {{ section.settings.back_label }}
+    {% else %}
+      Back to journal
+    {% endif %}
+  </a>
+
+  <div class="article-hero">
+    <div class="article-hero-text">
+      <p class="article-date">
+        {{ article.published_at | date: "%B %e, %Y" }}
+      </p>
+
+      <h1>{{ article.title }}</h1>
+
+      {% if article.tags.size > 0 %}
+        <div class="article-tags">
+          {% for tag in article.tags %}
+            <a href="{{ blog.url }}/tagged/{{ tag | handleize }}">
+              {{ tag }}
+            </a>
+          {% endfor %}
         </div>
-      {% endfor %}
+      {% endif %}
+    </div>
 
-      {{ paginate | default_pagination: anchor: 'comments' }}
-    {% endpaginate %}
+    {% if article.image %}
+      <div class="article-hero-image">
+        <img
+          src="{{ article.image | image_url: width: 2000 }}"
+          alt="{{ article.image.alt | escape }}"
+        >
+      </div>
+    {% endif %}
   </div>
 
-  {% form 'new_comment', article %}
-    <h2>{{ 'blog.comment_form_title' | t }}</h2>
+  <div class="article-body rte">
+    {{ article.content }}
+  </div>
 
-    {{ form.errors | default_errors }}
-
-    <div>
-      <label for="author">{{ 'blog.comment_form_name' | t }}</label>
-      <input type="text" name="comment[author]" id="author" value="{{ form.author }}" required>
-    </div>
-
-    <div>
-      <label for="email">{{ 'blog.comment_form_email' | t }}</label>
-      <input type="email" name="comment[email]" id="email" value="{{ form.email }}" required>
-    </div>
-
-    <div>
-      <label for="body">{{ 'blog.comment_form_body' | t }}</label>
-      <textarea name="comment[body]" id="body" required>{{ form.body }}</textarea>
-    </div>
-
-    <input type="submit" value="{{ 'blog.comment_form_submit' | t }}">
-  {% endform %}
-{% endif %}
+</div>
 
 {% schema %}
 {
-  "name": "t:general.article",
-  "settings": []
+  "name": "Article layout",
+  "settings": [
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back link label",
+      "default": "Back to journal"
+    }
+  ]
 }
 {% endschema %}
