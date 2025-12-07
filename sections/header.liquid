@@ -27,7 +27,7 @@ header:hover .top-banner {
 
 /* Navbar */
 .navbar {
-  width:100vw;
+  width:100%;
   background-color: transparent;
   padding: {{section.settings.navbar_height}}px 40px;
   transition: all 0.3s ease;
@@ -46,7 +46,7 @@ header:hover .top-banner {
 
 }
 
-.navbar:hover,
+header:hover .navbar:hover,
 .navbar.scrolled {
   background-color: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -125,6 +125,7 @@ header:hover .top-banner {
   transform: translateY(-20px);
   transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+ pointer-events: none;
   z-index: 999;
 }
 
@@ -133,6 +134,7 @@ header:hover .top-banner {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 /* Dropdown layout */
@@ -191,7 +193,7 @@ header:hover .top-banner {
 
 </style>
 
-<header class="fixed top-0 left-0 w-100vw z-50">
+<header class="fixed top-0 left-0 w-full z-50">
   <div class="top-banner" style="background-color: {{ section.settings.banner_bg_color }};">
     {{ section.settings.banner_text }}
     {% if section.settings.banner_link != blank %}

@@ -98,11 +98,7 @@ body:not(.template-index) .navbar a{
   color: #222;
 }
 
-.article-body p {
-  margin-bottom: 18px;
-}
-
-/* generic images inside content */
+.article-body p { margin-bottom: 18px; }
 
 .article-body img {
   max-width: 100%;
@@ -111,7 +107,7 @@ body:not(.template-index) .navbar a{
   margin: 30px auto;
 }
 
-/* image row helper for two images side by side */
+/* image row */
 
 .article-image-row {
   display: flex;
@@ -125,7 +121,7 @@ body:not(.template-index) .navbar a{
   object-fit: cover;
 }
 
-/* captions */
+/* caption */
 
 .article-caption {
   font-size: 14px;
@@ -133,12 +129,62 @@ body:not(.template-index) .navbar a{
   margin-top: 8px;
 }
 
+/* comments styling */
+
+.article-comments {
+  max-width: 1100px;
+  margin: 60px auto;
+}
+
+.comment-item {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.comment-author {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.comment-date {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.comment-body {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* comment form */
+
+.article-comment-form {
+  max-width: 1100px;
+  margin: 60px auto;
+}
+
+.article-comment-form input,
+.article-comment-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.article-comment-form button {
+  padding: 12px 20px;
+  background:black;
+  color:white;
+  border:none;
+  cursor:pointer;
+}
+
 /* small screens */
 
 @media (max-width: 900px) {
-  .article-wrapper {
-    padding: 40px 20px 70px;
-  }
+  .article-wrapper { padding: 40px 20px 70px; }
 
   .article-hero {
     grid-template-columns: 1fr;
@@ -152,18 +198,12 @@ body:not(.template-index) .navbar a{
     font-size: 36px;
   }
 
-  .article-body {
-    margin-top: 40px;
-  }
+  .article-body { margin-top: 40px; }
 
-  .article-image-row {
-    flex-direction: column;
-  }
-
-  .article-image-row img {
-    width: 100%;
-  }
+  .article-image-row { flex-direction: column; }
+  .article-image-row img { width: 100%; }
 }
+
 </style>
 
 <div class="article-wrapper">
@@ -207,6 +247,57 @@ body:not(.template-index) .navbar a{
 
   <div class="article-body rte">
     {{ article.content }}
+  </div>
+
+  <!-- COMMENTS SECTION -->
+  {% if article.comments_count > 0 %}
+    <div class="article-comments">
+      <h2>Comments ({{ article.comments_count }})</h2>
+
+      {% for comment in article.comments %}
+        <div class="comment-item">
+          <p class="comment-author">{{ comment.author }}</p>
+          <p class="comment-date">{{ comment.created_at | date: "%B %e, %Y" }}</p>
+          <div class="comment-body">{{ comment.content }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- COMMENT FORM -->
+  <div class="article-comment-form">
+    <h3>Leave a comment</h3>
+
+    {% form 'new_comment', article, redirect: article.url %}
+      {{ form.errors | default_errors }}
+
+      <input
+        type="text"
+        name="comment[author]"
+        placeholder="Name"
+        required
+      >
+
+      <input
+        type="email"
+        name="comment[email]"
+        placeholder="Email"
+        required
+      >
+
+      <textarea
+        name="comment[body]"
+        placeholder="Comment"
+        required
+      ></textarea>
+
+      <button type="submit">Submit</button>
+
+      {% if form.posted_successfully? %}
+        <p>Your comment has been submitted{% if blog.moderated? %} and is awaiting approval{% endif %}.</p>
+      {% endif %}
+
+    {% endform %}
   </div>
 
 </div>
