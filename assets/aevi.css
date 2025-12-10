@@ -16,6 +16,183 @@ body {
   font-family: 'Manrope', sans-serif;
 }
 
+/* Account layout */
+.aevi-account-layout {
+  display: flex;
+  gap: 40px;
+}
+
+/* Sidebar */
+.aevi-account-sidebar {
+  width: 260px;
+  border: 1px solid #cfd4da;
+  padding: 25px;
+}
+
+.aevi-account-sidebar a {
+  display: block;
+  margin-bottom: 12px;
+  color: black;
+}
+
+.aevi-account-sidebar a.active {
+  text-decoration: underline;
+}
+
+/* Content */
+.aevi-account-content {
+  flex: 1;
+  border: 1px solid #cfd4da;
+  padding: 25px;
+}
+
+.aevi-address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.aevi-add-address-link {
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+/* Address Card */
+.aevi-address-card {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+/* Address Form Sidebar Sliding */
+.aevi-address-form-wrapper {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 440px;
+  height: 100%;
+  background: white;
+  border-left: 1px solid #ddd;
+  padding: 40px;
+  overflow-y: auto;
+  display: none;
+}
+
+.aevi-address-form-wrapper:target {
+  display: block;
+}
+
+.aevi-address-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.aevi-cancel, .aevi-save {
+  padding: 12px 26px;
+  border-radius: 25px;
+}
+
+.aevi-save {
+  background: #d5e2ef;
+  border: 1px solid #95aabf;
+}
+
+
+/* AEVI AUTH PAGES */
+
+.aevi-auth-wrapper {
+  max-width: 420px;
+  margin: 140px auto;
+  text-align: center;
+  font-family: 'Manrope', sans-serif;
+}
+
+.aevi-title {
+  font-size: 26px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.aevi-subtitle {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 40px;
+}
+
+.aevi-auth-wrapper label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.aevi-auth-wrapper input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 14px 6px;
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.aevi-button {
+  width: 100%;
+  padding: 14px 0;
+  border-radius: 30px;
+  background: #d5e2ef;
+  border: 1px solid #95aabf;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.aevi-bottom-text {
+  font-size: 14px;
+  margin-top: 25px;
+}
+
+/* AEVI ACCOUNT DASHBOARD */
+
+.aevi-account-wrapper {
+  max-width: 1200px;
+  margin: 140px auto;
+  font-family: 'Manrope', sans-serif;
+}
+
+.aevi-welcome {
+  margin-bottom: 40px;
+}
+
+.aevi-account-layout {
+  display: flex;
+  gap: 30px;
+}
+
+.aevi-account-sidebar {
+  width: 260px;
+  border: 1px solid #cfd4da;
+  padding: 25px;
+}
+
+.aevi-account-sidebar a {
+  display: block;
+  margin-bottom: 12px;
+  color: black;
+}
+
+.aevi-account-content {
+  flex: 1;
+  border: 1px solid #cfd4da;
+  padding: 25px;
+}
+
+.aevi-account-content h3 {
+  margin-bottom: 20px;
+}
+
+
+
 .btn-primary {
   background-color: #a3bfdb;
   border: 1px solid black;

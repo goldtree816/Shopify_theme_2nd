@@ -1,0 +1,41 @@
+<div class="aevi-account-wrapper">
+
+  <h2 class="aevi-welcome">Welcome, {{ customer.first_name }}</h2>
+
+  <div class="aevi-account-layout">
+
+    <div class="aevi-account-sidebar">
+      <a href="{{ routes.account_url }}">Contact information</a>
+      <a href="{{ routes.account_addresses_url }}" class="active">Addresses</a>
+      <a href="{{ routes.account_url }}">Orders</a>
+      <a href="{{ routes.account_logout_url }}">Sign out</a>
+    </div>
+
+    <div class="aevi-account-content">
+      <h3>ACTIVE DELIVERY ADDRESS</h3>
+
+      {% for address in customer.addresses %}
+        <div class="aevi-address-box">
+          <p><strong>Name</strong><br>{% if customer.last_name == blank %}
+  {{ customer.first_name }}
+{% else %}
+  {{ customer.first_name }} {{ customer.last_name }}
+{% endif %}
+</p>
+          <p><strong>Phone</strong><br>{{ address.phone }}</p>
+          <p><strong>City</strong><br>{{ address.city }}</p>
+          <p><strong>Country</strong><br>{{ address.country }}</p>
+
+          <a href="{{ address.url }}" aria-label="Edit">Edit</a>
+          <a href="{{ address.url }}?delete=true" aria-label="Delete">Delete</a>
+        </div>
+      {% else %}
+        <p>No saved addresses yet.</p>
+      {% endfor %}
+
+      <a href="{{ routes.account_addresses_new_url }}" class="aevi-add-btn">+ Add Address</a>
+    </div>
+
+  </div>
+
+</div>

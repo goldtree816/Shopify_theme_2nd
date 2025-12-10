@@ -1,0 +1,48 @@
+<style>
+    body{
+  font-family: 'Manrope', sans-serif;
+  padding-top:70px;
+}
+
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+}
+
+body:not(.template-index) .navbar a{
+  color:black;
+}
+
+</style>
+
+<div class="aevi-account-wrapper">
+
+  <h2 class="aevi-welcome">Welcome, {{ customer.first_name }}</h2>
+
+  <div class="aevi-account-layout">
+
+    <div class="aevi-account-sidebar">
+      <a href="#" class="active">Contact information</a>
+      <a href="{{ routes.account_addresses_url }}">Addresses</a>
+      <a href="{{ routes.account_url }}">Orders</a>
+      <a href="{{ routes.account_logout_url }}">Sign out</a>
+    </div>
+
+    <div class="aevi-account-content">
+      <h3>CONTACT INFORMATION</h3>
+      <p><strong>Name</strong><br>{{ customer.first_name }} {{ customer.last_name }}</p>
+      <p><strong>Email</strong><br>{{ customer.email }}</p>
+
+      <a href="{{ routes.account_addresses_url }}">Edit</a>
+    </div>
+
+  </div>
+
+</div>

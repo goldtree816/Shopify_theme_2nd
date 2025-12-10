@@ -1,0 +1,27 @@
+<div class="aevi-auth-wrapper">
+
+  <h1 class="aevi-title">CREATE ACCOUNT</h1>
+  <p class="aevi-subtitle">Please fill in information below.</p>
+
+  {% form 'create_customer' %}
+    {% if form.errors %}
+      <p class="aevi-error">{{ form.errors | default_errors }}</p>
+    {% endif %}
+
+    <label>Full name</label>
+    <input type="text" name="customer[first_name]" required>
+
+    <label>E-mail</label>
+    <input type="email" name="customer[email]" required>
+
+    <label>Password</label>
+    <input type="password" name="customer[password]" required>
+
+    <button class="aevi-button">CREATE ACCOUNT</button>
+  {% endform %}
+
+  <p class="aevi-bottom-text">Already have an account?
+    <a href="{{ routes.account_login_url }}">Log in</a>
+  </p>
+
+</div>

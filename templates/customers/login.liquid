@@ -1,0 +1,54 @@
+<div class="aevi-auth-wrapper">
+
+  {% if form.recover_customer_password %}
+
+      <h1 class="aevi-title">RESET PASSWORD</h1>
+      <p class="aevi-subtitle">Enter your email and we will send you a link.</p>
+
+      {% form 'recover_customer_password' %}
+        {% if form.errors %}
+          <p class="aevi-error">{{ form.errors | default_errors }}</p>
+        {% endif %}
+
+        <label>Email</label>
+        <input type="email" name="email" required>
+
+        <button class="aevi-button">Send</button>
+        
+      {% endform %}
+
+      <p class="aevi-bottom-text">
+        Return to <a href="{{ routes.account_login_url }}">Login</a>
+      </p>
+
+  {% else %}
+
+      <h1 class="aevi-title">LOG IN</h1>
+      <p class="aevi-subtitle">Please fill in your details below.</p>
+
+      {% form 'customer_login' %}
+        {% if form.errors %}
+          <p class="aevi-error">{{ form.errors | default_errors }}</p>
+        {% endif %}
+
+        <label>Email</label>
+        <input type="email" name="customer[email]" required>
+
+        <label>Password</label>
+        <input type="password" name="customer[password]" required>
+
+        <div class="aevi-forgot">
+          <a href="{{ routes.account_login_url }}?recover=true">Forgot password?</a>
+        </div>
+
+        <button class="aevi-button">LOG IN</button>
+      {% endform %}
+
+      <p class="aevi-bottom-text">
+        Don't have an account?
+        <a href="{{ routes.account_register_url }}">Register</a>
+      </p>
+
+  {% endif %}
+
+</div>
