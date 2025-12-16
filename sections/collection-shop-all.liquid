@@ -1,0 +1,244 @@
+{% assign products_per_page = 12 %}
+
+<section class="shop-all">
+
+<div id="filter-drawer-content" hidden>
+
+  <form method="get" action="{{ collection.url }}" class="filter-form">
+
+    <!-- SORT -->
+    <div class="filter-block">
+      <h4>Sort by</h4>
+
+      {% for option in collection.sort_options %}
+        <label>
+          <input
+            type="radio"
+            name="sort_by"
+            value="{{ option.value }}"
+            {% if option.value == collection.sort_by %}checked{% endif %}
+          >
+          {{ option.name }}
+        </label>
+      {% endfor %}
+    </div>
+
+    <!-- FILTERS -->
+    {% for filter in collection.filters %}
+      <div class="filter-block">
+        <h4>{{ filter.label }}</h4>
+
+        {% for value in filter.values %}
+          <label>
+            <input
+              type="checkbox"
+              name="{{ value.param_name }}"
+              value="{{ value.value }}"
+              {% if value.active %}checked{% endif %}
+            >
+            {{ value.label }}
+          </label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <div class="filter-actions">
+      <a href="{{ collection.url }}" class="clear-filters">Clear all</a>
+      <button type="submit" class="apply-filters">Apply</button>
+    </div>
+
+  </form>
+
+</div>
+
+
+  <!-- Breadcrumb -->
+  <div class="shop-all-breadcrumb">
+    <a href="/">Home</a> / <span>Shop All</span>
+  </div>
+
+  <!-- Heading -->
+  <div class="shop-all-header">
+    <h1>{{ collection.title }}</h1>
+    {% if collection.description != blank %}
+      <p>{{ collection.description }}</p>
+    {% endif %}
+  </div>
+
+
+  <nav class="shop-all-nav">
+    {% for link in linklists.shop-all.links %}
+      <a
+        href="{{ link.url }}"
+        class="{% if link.url == collection.url %}active{% endif %}"
+      >
+        {{ link.title }}
+      </a>
+    {% endfor %}
+
+    <button
+      class="filter-button"
+      data-drawer-open="#filter-drawer-content"
+      data-drawer-title="Filter">
+      Filter
+    </button>
+
+  </nav>
+
+  <!-- Products -->
+  <div class="shop-all-grid">
+    {% paginate collection.products by products_per_page %}
+      {% for product in collection.products %}
+        <div class="shop-all-item">
+          {% render 'card', product: product %}
+        </div>
+      {% endfor %}
+
+      {% if paginate.next %}
+        <div class="load-more">
+          <a href="{{ paginate.next.url }}">Next</a>
+        </div>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+
+</section>
+
+<style>
+
+body{
+  font-family: 'Manrope', sans-serif;
+  padding-top:70px;
+}
+
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+}
+
+body:not(.template-index) .navbar a{
+  color:black;
+}
+
+.filter-form {
+  font-size: 13px;
+}
+
+.filter-block {
+  margin-bottom: 32px;
+}
+
+.filter-block h4 {
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.filter-block label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.apply-filters {
+  background: #b3cce6;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.clear-filters {
+  font-size: 13px;
+}
+
+
+.shop-all {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.shop-all-breadcrumb {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 24px;
+}
+
+.shop-all-header h1 {
+  font-size: 42px;
+  font-weight: 400;
+  margin-bottom: 12px;
+}
+
+.shop-all-header p {
+  max-width: 520px;
+  font-size: 14px;
+  color: #555;
+}
+
+.shop-all-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 40px 0;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 14px;
+}
+
+.shop-all-nav a {
+  font-size: 13px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shop-all-nav a.active {
+  color: #000;
+  border-bottom: 2px solid #000;
+  padding-bottom: 6px;
+}
+
+.filter-button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.shop-all-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 64px 48px;
+}
+
+.load-more {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 80px;
+}
+
+.load-more a {
+  font-size: 13px;
+  color: #999;
+}
+</style>
+
+{% schema %}
+{
+  "name": "Collection Shop All",
+  "settings": []
+}
+{% endschema %}
+

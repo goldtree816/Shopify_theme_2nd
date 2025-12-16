@@ -1,0 +1,95 @@
+<div class="drawer-overlay" data-drawer-overlay></div>
+
+<div class="drawer" data-drawer>
+  <div class="drawer-inner">
+    <div class="drawer-header">
+      <span data-drawer-title></span>
+      <button data-drawer-close>Close</button>
+    </div>
+
+    <div class="drawer-content" data-drawer-content>
+      <!-- injected dynamically -->
+    </div>
+  </div>
+</div>
+
+<style>
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 9998;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 420px;
+  height: 100vh;
+  background: #fff;
+  transition: right 0.3s ease;
+  z-index: 9999;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.drawer-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.drawer-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+</style>
+
+<script>
+document.addEventListener('click', function (e) {
+  const openBtn = e.target.closest('[data-drawer-open]');
+  const closeBtn = e.target.closest('[data-drawer-close]');
+  const overlay = document.querySelector('[data-drawer-overlay]');
+  const drawer = document.querySelector('[data-drawer]');
+  const content = document.querySelector('[data-drawer-content]');
+  const title = document.querySelector('[data-drawer-title]');
+
+  if (openBtn) {
+    const source = document.querySelector(openBtn.dataset.drawerOpen);
+    const drawerTitle = openBtn.dataset.drawerTitle || '';
+
+    if (source && content) {
+      content.innerHTML = source.innerHTML;
+      title.textContent = drawerTitle;
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+    }
+  }
+
+  if (closeBtn || e.target === overlay) {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    content.innerHTML = '';
+  }
+});
+
+</script>
