@@ -1,0 +1,118 @@
+<style>
+body{
+  font-family: 'Manrope', sans-serif;
+  padding-top:70px;
+}
+
+body:not(.template-index) .navbar {
+  background-color: white;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body:not(.template-index) .top-banner {
+  background-color: lightblue;
+  color:pink;
+  position: relative;
+}
+
+body:not(.template-index) .navbar a{
+  color:black;
+}
+</style>
+
+<section class="contact-page">
+  <div class="contact-grid">
+
+    <div class="contact-info">
+      <h3>GET IN TOUCH</h3>
+
+      <p>You can send us a message below or email us at:</p>
+
+      <p>
+        General Enquiries:
+        <a href="mailto:hello@aeviwellness.com">hello@aeviwellness.com</a>
+      </p>
+
+      <p>
+        Customer Help:
+        <a href="mailto:care@aeviwellness.com">care@aeviwellness.com</a>
+      </p>
+
+      <div class="socials">
+        <h4>FOLLOW US!</h4>
+        <a href="#" target="_blank">Instagram</a>
+        <a href="#" target="_blank">Facebook</a>
+      </div>
+    </div>
+
+    <div class="contact-form-wrapper">
+      {% form 'contact' %}
+        <h3>SEND A MESSAGE</h3>
+
+        <div class="field">
+          <input type="text" name="contact[first_name]" required>
+          <label>First Name</label>
+        </div>
+
+        <div class="field">
+          <input type="text" name="contact[last_name]" required>
+          <label>Last name</label>
+        </div>
+
+        <div class="field">
+          <input type="email" name="contact[email]" required>
+          <label>Email</label>
+        </div>
+
+        <div class="field textarea">
+          <textarea name="contact[body]" rows="4" required></textarea>
+          <label>Message</label>
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" required>
+          <span>
+            I have read and agree with Revolution’s
+            <a href="#">Terms & Conditions</a>
+          </span>
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" name="contact[marketing]">
+          <span>
+            I would like to receive more information about products, events, news, & offers
+          </span>
+        </div>
+
+        {% render 'button',
+        type: 'submit',
+        text: section.settings.button_label,
+        class: 'send-btn'
+        %}
+
+
+
+        {% if form.posted_successfully? %}
+          <p class="success">Message sent successfully.</p>
+        {% endif %}
+      {% endform %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button text",
+      "default": "SEND"
+    }
+  ]
+}
+{% endschema %}
+

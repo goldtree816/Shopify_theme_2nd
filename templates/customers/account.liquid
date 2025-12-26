@@ -40,9 +40,65 @@ body:not(.template-index) .navbar a{
       <p><strong>Name</strong><br>{{ customer.first_name }} {{ customer.last_name }}</p>
       <p><strong>Email</strong><br>{{ customer.email }}</p>
 
-      <a href="{{ routes.account_addresses_url }}">Edit</a>
+    <a
+      href="#"
+      data-drawer-open="#edit-default-address"
+      data-drawer-title="Edit address"
+    >
+      Edit
+    </a>
+
     </div>
 
   </div>
 
 </div>
+
+{% if customer.default_address %}
+  <div id="edit-default-address" hidden>
+    {% form 'customer_address', customer.default_address, return_to: routes.account_url %}
+
+      <input
+        type="text"
+        name="address[first_name]"
+        value="{{ customer.default_address.first_name }}"
+      >
+
+      <input
+        type="text"
+        name="address[last_name]"
+        value="{{ customer.default_address.last_name }}"
+      >
+
+      <input
+        type="text"
+        name="address[address1]"
+        value="{{ customer.default_address.address1 }}"
+        required
+      >
+
+      <input
+        type="text"
+        name="address[city]"
+        value="{{ customer.default_address.city }}"
+      >
+
+      <input
+        type="text"
+        name="address[zip]"
+        value="{{ customer.default_address.zip }}"
+      >
+
+      <input
+        type="hidden"
+        name="address[country]"
+        value="{{ customer.default_address.country }}"
+      >
+
+      <button type="submit">
+        Update address
+      </button>
+
+    {% endform %}
+  </div>
+{% endif %}

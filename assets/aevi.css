@@ -16,6 +16,108 @@ body {
   font-family: 'Manrope', sans-serif;
 }
 
+.contact-page {
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 0 20px;
+  font-family: Manrope, sans-serif;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+}
+
+.contact-info h3,
+.contact-form-wrapper h3 {
+  font-size: 14px;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+}
+
+.contact-info p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.contact-info a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.socials {
+  margin-top: 40px;
+}
+
+.socials a {
+  display: block;
+  margin-top: 8px;
+}
+
+.contact-form-wrapper {
+  border: 1px solid #9db8dc;
+  padding: 40px;
+}
+
+.field {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #1f3c88;
+  padding: 10px 0;
+  font-size: 14px;
+  background: transparent;
+}
+
+.field label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.textarea label {
+  top: 0;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.send-btn {
+  margin-top: 30px;
+  background: #a8c4e1;
+  border: none;
+  padding: 10px 40px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.success {
+  margin-top: 20px;
+  font-size: 13px;
+  color: green;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
 /* Account layout */
 .aevi-account-layout {
   display: flex;
@@ -163,6 +265,7 @@ body {
 .aevi-welcome {
   margin-bottom: 40px;
 }
+
 
 .aevi-account-layout {
   display: flex;

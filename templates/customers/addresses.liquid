@@ -4,6 +4,7 @@
 
   <div class="aevi-account-layout">
 
+    <!-- SIDEBAR -->
     <div class="aevi-account-sidebar">
       <a href="{{ routes.account_url }}">Contact information</a>
       <a href="{{ routes.account_addresses_url }}" class="active">Addresses</a>
@@ -11,31 +12,176 @@
       <a href="{{ routes.account_logout_url }}">Sign out</a>
     </div>
 
+    <!-- CONTENT -->
     <div class="aevi-account-content">
-      <h3>ACTIVE DELIVERY ADDRESS</h3>
 
-      {% for address in customer.addresses %}
-        <div class="aevi-address-box">
-          <p><strong>Name</strong><br>{% if customer.last_name == blank %}
-  {{ customer.first_name }}
-{% else %}
-  {{ customer.first_name }} {{ customer.last_name }}
-{% endif %}
-</p>
-          <p><strong>Phone</strong><br>{{ address.phone }}</p>
-          <p><strong>City</strong><br>{{ address.city }}</p>
-          <p><strong>Country</strong><br>{{ address.country }}</p>
+      <!-- HEADER ROW -->
+      <div class="aevi-address-header">
+        <h3>ACTIVE DELIVERY ADDRESS</h3>
 
-          <a href="{{ address.url }}" aria-label="Edit">Edit</a>
-          <a href="{{ address.url }}?delete=true" aria-label="Delete">Delete</a>
-        </div>
+        <button
+          type="button"
+          class="aevi-add-address-btn"
+          data-drawer-open="#add-address"
+          data-drawer-title="Add address"
+        >
+          + ADD ADDRESS
+        </button>
+      </div>
+
+      {% if customer.addresses.size > 0 %}
+
+        {% for address in customer.addresses %}
+
+          <div class="aevi-address-box">
+
+            <p>
+              <strong>Name</strong><br>
+              {% if address.last_name == blank %}
+                {{ address.first_name }}
+              {% else %}
+                {{ address.first_name }} {{ address.last_name }}
+              {% endif %}
+            </p>
+
+            <p><strong>Phone</strong><br>{{ address.phone }}</p>
+            <p><strong>City</strong><br>{{ address.city }}</p>
+            <p><strong>Country</strong><br>{{ address.country }}</p>
+
+            <!-- ACTIONS -->
+            <div class="aevi-address-actions">
+
+              <!-- EDIT -->
+              <button
+                type="button"
+                data-drawer-open="#edit-address-{{ address.id }}"
+                data-drawer-title="Edit address"
+              >
+                Edit
+              </button>
+
+              <!-- DELETE (POST FORM REQUIRED) -->
+              <form
+                method="post"
+                action="{{ address.url }}"
+                class="aevi-delete-form"
+              >
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit">
+                  Delete
+                </button>
+              </form>
+
+            </div>
+
+          </div>
+
+          <!-- EDIT ADDRESS DRAWER -->
+          <div id="edit-address-{{ address.id }}" hidden>
+            {% form 'customer_address', address, return_to: routes.account_addresses_url %}
+
+              <input type="text" name="address[first_name]" value="{{ address.first_name }}">
+              <input type="text" name="address[last_name]" value="{{ address.last_name }}">
+              <input type="text" name="address[address1]" value="{{ address.address1 }}" required>
+              <input type="text" name="address[city]" value="{{ address.city }}">
+              <input type="text" name="address[zip]" value="{{ address.zip }}">
+              <input type="tel" name="address[phone]" value="{{ address.phone }}">
+
+              <!-- COUNTRY -->
+              <label>Country</label>
+              <select
+                id="AddressCountry_{{ address.id }}"
+                name="address[country]"
+                data-address-country-select
+                data-default="{{ address.country }}"
+              >
+                {{ all_country_option_tags }}
+              </select>
+
+              <!-- PROVINCE -->
+              <div id="AddressProvinceContainer_{{ address.id }}" style="display:none;">
+                <label>Province</label>
+                <select
+                  id="AddressProvince_{{ address.id }}"
+                  name="address[province]"
+                  data-address-province-select
+                  data-default="{{ address.province }}"
+                ></select>
+              </div>
+
+              <button type="submit">Update address</button>
+
+            {% endform %}
+          </div>
+
+        {% endfor %}
+
       {% else %}
-        <p>No saved addresses yet.</p>
-      {% endfor %}
 
-      <a href="{{ routes.account_addresses_new_url }}" class="aevi-add-btn">+ Add Address</a>
+        <!-- EMPTY STATE (REFERENCE CLONE) -->
+        <div class="aevi-empty-address">
+          <p>No address is currently saved</p>
+        </div>
+
+      {% endif %}
+
+      <!-- ADD ADDRESS DRAWER -->
+      <div id="add-address" hidden>
+        {% form 'customer_address', customer.new_address, return_to: routes.account_addresses_url %}
+
+          <input type="text" name="address[first_name]">
+          <input type="text" name="address[last_name]">
+          <input type="text" name="address[address1]" required>
+          <input type="text" name="address[city]">
+          <input type="text" name="address[zip]">
+          <input type="tel" name="address[phone]">
+
+          <label>Country</label>
+          <select
+            id="AddressCountryNew"
+            name="address[country]"
+            data-address-country-select
+          >
+            {{ all_country_option_tags }}
+          </select>
+
+          <div id="AddressProvinceContainerNew" style="display:none;">
+            <label>Province</label>
+            <select
+              id="AddressProvinceNew"
+              name="address[province]"
+              data-address-province-select
+            ></select>
+          </div>
+
+          <button type="submit">Add address</button>
+
+        {% endform %}
+      </div>
+
     </div>
 
   </div>
 
 </div>
+
+<!-- COUNTRY / PROVINCE INITIALIZER -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.Shopify || !Shopify.CountryProvinceSelector) return;
+
+  document.querySelectorAll('[data-address-country-select]').forEach(function (select) {
+    var form = select.closest('form');
+    if (!form) return;
+
+    var province = form.querySelector('[data-address-province-select]');
+    var container = form.querySelector('[id^="AddressProvinceContainer"]');
+
+    new Shopify.CountryProvinceSelector(
+      select.id,
+      province ? province.id : null,
+      { hideElement: container ? container.id : null }
+    );
+  });
+});
+</script>
