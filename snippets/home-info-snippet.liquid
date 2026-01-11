@@ -22,107 +22,105 @@
 
 <style>
 .aevi-feature {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 80px 0;
   width: 100%;
+  padding: 80px 0;
 }
 
 .aevi-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  gap: 80px;
 }
 
-/* Reverse layout for image on right */
+/* Reverse layout */
 .aevi-feature.reverse .aevi-container {
   flex-direction: row-reverse;
 }
 
-/* Image container takes half width */
+/* IMAGE */
 .aevi-image {
-  flex: 1 1 50%;
-  width: 50%;
-  aspect-ratio: 1 / 1; /* ✅ makes it perfectly square */
+  flex: 0 0 50%;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 
-/* Image fills the square area */
 .aevi-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* ✅ crops and fills neatly */
+  object-fit: cover;
+  display: block;
 }
 
-/* Content takes other half */
+/* CONTENT */
 .aevi-content {
-  flex: 1 1 50%;
-  max-width: 50%;
-  padding-left:250px;
-  padding-right: 250px;
+  flex: 0 0 50%;
+  max-width: 520px;
+  padding: 0;
 }
 
 .aevi-content h2 {
-  font-size: 40px;
-  margin-bottom: 15px;
-  font-weight:400;
+  font-size: 48px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  line-height: 1.05;
 }
 
 .aevi-description p {
-  letter-spacing:-0.5px;
-  color: #000000;
   font-size: 14px;
   line-height: 1.6;
+  letter-spacing: -0.3px;
+  margin: 0;
+  max-width: 420px;
 }
 
 .aevi-btn {
   display: inline-block;
   margin-top: 20px;
   font-size: 14px;
-  color: #000;
   text-decoration: underline;
+  color: #000;
 }
 
-/* Mobile layout */
-@media (max-width: 768px) {
-  .aevi-feature {
-    flex-direction: column;
-    padding: 40px 0;
-    text-align: center;
+/* TABLET */
+@media (max-width: 1024px) {
+  .aevi-container {
+    gap: 48px;
+    padding: 0 24px;
   }
+
+  .aevi-content h2 {
+    font-size: 40px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
   .aevi-container {
     flex-direction: column !important;
+    gap: 32px;
+    padding: 0 16px;
   }
+
   .aevi-image {
     width: 100%;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1 / 1;
   }
-  .aevi-image img {
-  width: 100%;
-  height: auto;
-  object-fit: cover; /* ✅ crops and fills neatly */
-}
+
   .aevi-content {
-    max-width: 90%;
-    padding: 0;
+    width: 100%;
+    max-width: 100%;
   }
+
   .aevi-content h2 {
-  font-size: 30px;
-  margin-bottom: 15px;
-  font-weight:400;
-  text-align:left;
+    font-size: 30px;
   }
-  .aevi-description p
-  {
-    text-align:left;
-    font-size:14px;
-    font-weight:100;
-  }
-  .aevi-btn
-  {
-    display:flex;  
+
+  .aevi-description p {
+    max-width: 100%;
   }
 }
 

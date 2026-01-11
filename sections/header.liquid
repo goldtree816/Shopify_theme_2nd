@@ -2,54 +2,56 @@
 html {
   overflow-x: hidden;
 }
-body{
-    font-family: 'Manrope', sans-serif;
+
+body {
+  font-family: 'Manrope', sans-serif;
 }
-/* Top banner */
+
+/* ================= TOP BANNER ================= */
 .top-banner {
   position: relative;
-  color: white;
+  width: 100vw;
   text-align: center;
   font-size: 14px;
   font-weight: bold;
+  color: white;
   padding: 5px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 1;
-  width:100vw;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  background-color: {{ section.settings.banner_bg_color }};
+  transition: height 0.25s ease, padding 0.25s ease, opacity 0.25s ease;
+  overflow: hidden;
 }
 
 header:hover .top-banner {
   background-color: #a3bfdb;
   color: blue;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
-/* Navbar */
+/* ================= NAVBAR ================= */
 .navbar {
-  width:100%;
+  width: 100%;
   background-color: transparent;
-  padding: {{section.settings.navbar_height}}px 40px;
-  transition: all 0.3s ease;
+  padding: {{ section.settings.navbar_height }}px 40px;
   position: relative;
   z-index: 1000;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1400px;
-  margin: 0 auto;
   position: relative;
-  align-items: center;
-
 }
 
+/* Hover / scroll background */
 header:hover .navbar:hover,
 .navbar.scrolled {
   background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .navbar.scrolled a {
@@ -60,13 +62,13 @@ header:hover .navbar:hover,
   color: black;
 }
 
-/* Left and right navbars */
+/* ================= NAV GROUPS ================= */
 .nav-left,
 .nav-right {
-  font-size: {{ section.settings.nav_font_size }}px;
   display: flex;
   align-items: center;
   gap: {{ section.settings.nav_item_spacing }}px;
+  font-size: {{ section.settings.nav_font_size }}px;
 }
 
 /* Center logo */
@@ -74,82 +76,70 @@ header:hover .navbar:hover,
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  white-space: nowrap;
-  text-align: center;
-}
-
-.nav-right svg {
-  width: 26px;
-  height: 26px;
 }
 
 .nav-center a {
   color: white;
+  font-size: {{ section.settings.logo_font_size }}px;
   text-decoration: none;
-  font-size: {{section.settings.logo_font_size}}px;
 }
 
-.navbar:hover .nav-center a,
-.navbar.scrolled .nav-center a {
+.navbar.scrolled .nav-center a,
+.navbar:hover .nav-center a {
   color: black;
 }
 
-/* Navbar links */
+/* Links */
 .navbar a {
   color: white;
   text-decoration: none;
-  transition: color 0.3s ease;
-  position: relative;
+  transition: color 0.25s ease;
 }
 
 .navbar a:hover {
   text-decoration: underline;
 }
 
-/* Dropdown wrapper */
-.nav-item {
-  position: relative;  
+/* Icons */
+.nav-right svg {
+  width: 26px;
+  height: 26px;
 }
 
-/* Full-width dropdown */
+/* ================= DROPDOWN ================= */
+.nav-item {
+  position: relative;
+}
+
 .dropdown-menu {
-  margin-top:15px;
   position: fixed;
   left: 0;
   width: 100vw;
-  background: white;
-  color: black;
   padding: 30px 120px;
+  background: white;
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px);
-  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
- pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
   z-index: 999;
 }
 
 .nav-item:hover .dropdown-menu {
-  display: flex;
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
 }
 
-/* Dropdown layout */
 .dropdown-content {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
   gap: 80px;
-  width: 100%;
 }
 
-/* Text links */
 .dropdown-columns {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   gap: 15px;
 }
 
@@ -158,21 +148,11 @@ header:hover .navbar:hover,
   padding: 0;
 }
 
-.dropdown-columns li {
-  margin-bottom: 10px;
-}
-
 .dropdown-columns a {
   color: black;
   font-size: 14px;
-  text-decoration: none;
 }
 
-.dropdown-columns a:hover {
-  text-decoration: underline;
-}
-
-/* Dropdown images */
 .dropdown-images {
   display: flex;
   gap: 20px;
@@ -183,18 +163,22 @@ header:hover .navbar:hover,
   width: 50%;
   height: 600px;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.dropdown-images img:hover {
-  transform: scale(1.03);
+/* ================= SCROLL BEHAVIOR ================= */
+/* ONLY banner collapses – navbar height stays same */
+#site-header.is-scrolled .top-banner {
+  height: 0;
+  padding: 0;
+  opacity: 0;
+  border: none;
 }
-
-
 </style>
 
-<header class="fixed top-0 left-0 w-full z-50">
-  <div class="top-banner" style="background-color: {{ section.settings.banner_bg_color }};">
+<header id="site-header" class="fixed top-0 left-0 w-full z-50">
+
+  <!-- TOP BANNER -->
+  <div class="top-banner">
     {{ section.settings.banner_text }}
     {% if section.settings.banner_link != blank %}
       <a href="{{ section.settings.banner_link }}" style="color: {{ section.settings.banner_link_color }};">
@@ -203,10 +187,11 @@ header:hover .navbar:hover,
     {% endif %}
   </div>
 
+  <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <div class="navbar-inner">
-      
-      <!-- LEFT NAV -->
+
+      <!-- LEFT -->
       <nav class="nav-left">
         {% for link in linklists[section.settings.left-navbar].links %}
           <div class="nav-item">
@@ -219,11 +204,9 @@ header:hover .navbar:hover,
                     {% for child in link.links %}
                       <ul>
                         <li><strong>{{ child.title }}</strong></li>
-                        {% if child.links != blank %}
-                          {% for sub in child.links %}
-                            <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
-                          {% endfor %}
-                        {% endif %}
+                        {% for sub in child.links %}
+                          <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
+                        {% endfor %}
                       </ul>
                     {% endfor %}
                   </div>
@@ -231,11 +214,11 @@ header:hover .navbar:hover,
                   <div class="dropdown-images">
                     {% for block in section.blocks %}
                       {% if block.settings.menu_title == link.title %}
-                        {% if block.settings.image_1 != blank %}
-                          <img src="{{ block.settings.image_1 | image_url }}" alt="{{ link.title }} Image 1">
+                        {% if block.settings.image_1 %}
+                          <img src="{{ block.settings.image_1 | image_url }}">
                         {% endif %}
-                        {% if block.settings.image_2 != blank %}
-                          <img src="{{ block.settings.image_2 | image_url }}" alt="{{ link.title }} Image 2">
+                        {% if block.settings.image_2 %}
+                          <img src="{{ block.settings.image_2 | image_url }}">
                         {% endif %}
                       {% endif %}
                     {% endfor %}
@@ -247,33 +230,24 @@ header:hover .navbar:hover,
         {% endfor %}
       </nav>
 
-      <!-- CENTER LOGO -->
+      <!-- CENTER -->
       <div class="nav-center">
-        <a href="{{ routes.root_url }}" class="font-cinzel font-bold tracking-widest">{{ shop.name }}</a>
+        <a href="{{ routes.root_url }}">{{ shop.name }}</a>
       </div>
 
-      <!-- RIGHT NAV -->
+      <!-- RIGHT -->
       <nav class="nav-right">
         {% for link in linklists[section.settings.right-navbar].links %}
-
           {% case link.title %}
-
             {% when "CART" %}
-              <a href="#" class="open-cart-drawer cart-icon">{% render 'icon-shopping-bag' %}</a>
-
+              <a href="#" class="open-cart-drawer">{% render 'icon-shopping-bag' %}</a>
             {% when "SEARCH" %}
-              <a href="/search" class="nav-icon search-icon">{% render 'icon-search' %}</a>
-
+              <a href="/search">{% render 'icon-search' %}</a>
             {% when "PROFILE" %}
-              <a href="/account" class="nav-icon profile-icon">{% render 'icon-profile' %}</a>
-
+              <a href="/account">{% render 'icon-profile' %}</a>
             {% else %}
-              <div class="nav-item">
-                <a href="{{ link.url }}">{{ link.title }}</a>
-              </div>
-
+              <a href="{{ link.url }}">{{ link.title }}</a>
           {% endcase %}
-
         {% endfor %}
       </nav>
 
@@ -283,173 +257,49 @@ header:hover .navbar:hover,
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const header = document.getElementById("site-header");
   const navbar = document.getElementById("navbar");
 
-  function toggleNavbarScroll() {
+  function onScroll() {
     if (window.scrollY > 10) {
+      header.classList.add("is-scrolled");
       navbar.classList.add("scrolled");
     } else {
+      header.classList.remove("is-scrolled");
       navbar.classList.remove("scrolled");
     }
   }
 
-  window.addEventListener("scroll", toggleNavbarScroll);
-  toggleNavbarScroll();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-
-  function bindCartDrawerEvents() {
-    const overlay = document.querySelector('.cart-overlay');
-    if (!overlay) return;
-
-    const closeButton = overlay.querySelector('.cart-drawer-close');
-    const drawer = overlay.querySelector('.cart-drawer');
-    const openButtons = document.querySelectorAll('.open-cart-drawer');
-
-    // Open drawer from navbar
-    openButtons.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        overlay.style.display = 'flex';
-        requestAnimationFrame(() => {
-          overlay.classList.add('active');
-        });
-      });
-    });
-
-    // Close with X
-    if (closeButton) {
-      closeButton.addEventListener('click', () => {
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-      });
-    }
-
-    // Close when clicking outside
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) {
-        overlay.classList.remove('active');
-        setTimeout(() => overlay.style.display = 'none', 300);
-      }
-    });
-  }
-
-  // Run now + run again after section hydration
-  bindCartDrawerEvents();
-
-  document.addEventListener('shopify:section:load', bindCartDrawerEvents);
+  window.addEventListener("scroll", onScroll);
+  onScroll();
 });
 </script>
-
 
 {% schema %}
 {
   "name": "Header",
   "settings": [
-    {
-      "type": "text",
-      "id": "banner_text",
-      "label": "Top Banner Text",
-      "default": "ENJOY FREE SHIPPING $90."
-    },
-    {
-      "type": "text",
-      "id": "banner_link_label",
-      "label": "Top Banner Link Label",
-      "default": "SHOP NOW"
-    },
-    {
-      "type": "url",
-      "id": "banner_link",
-      "label": "Top Banner Link"
-    },
-    {
-      "type": "color",
-      "id": "banner_bg_color",
-      "label": "Top Banner Background Color",
-      "default": "#2A3C2D"
-    },
-    {
-      "type": "color",
-      "id": "banner_link_color",
-      "label": "Banner Link Color",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "link_list",
-      "id": "left-navbar",
-      "label": "Left Navbar Menu"
-    },
-    {
-      "type": "link_list",
-      "id": "right-navbar",
-      "label": "Right Navbar Menu"
-    },
-    {
-      "type": "range",
-      "id": "nav_item_spacing",
-      "label": "Navbar Item Spacing (px)",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "nav_font_size",
-      "label": "Navbar Font Size (px)",
-      "min": 10,
-      "max": 24,
-      "step": 1,
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "logo_font_size",
-      "label": "Logo Font Size (px)",
-      "min": 10,
-      "max": 32,
-      "step": 1,
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "navbar_height",
-      "label": "Navbar Height (px)",
-      "min": 5,
-      "max": 30,
-      "step": 1,
-      "default": 15
-    },
+    { "type": "text", "id": "banner_text", "label": "Banner text", "default": "FREE SHIPPING" },
+    { "type": "text", "id": "banner_link_label", "label": "Banner link label", "default": "SHOP NOW" },
+    { "type": "url", "id": "banner_link", "label": "Banner link" },
+    { "type": "color", "id": "banner_bg_color", "label": "Banner background", "default": "#2A3C2D" },
+    { "type": "color", "id": "banner_link_color", "label": "Banner link color", "default": "#FFFFFF" },
+    { "type": "link_list", "id": "left-navbar", "label": "Left menu" },
+    { "type": "link_list", "id": "right-navbar", "label": "Right menu" },
+    { "type": "range", "id": "nav_item_spacing", "label": "Item spacing", "min": 0, "max": 50, "step": 1, "default": 20 },
+    { "type": "range", "id": "nav_font_size", "label": "Font size", "min": 10, "max": 24, "step": 1, "default": 14 },
+    { "type": "range", "id": "logo_font_size", "label": "Logo size", "min": 10, "max": 32, "step": 1, "default": 14 },
+    { "type": "range", "id": "navbar_height", "label": "Navbar padding", "min": 5, "max": 30, "step": 1, "default": 15 }
   ],
   "blocks": [
     {
       "type": "menu_images",
-      "name": "Menu Item Images",
-      "limit": 10,
+      "name": "Menu Images",
       "settings": [
-        {
-          "type": "text",
-          "id": "menu_title",
-          "label": "Navbar Item Title (must match exactly)"
-        },
-        {
-          "type": "image_picker",
-          "id": "image_1",
-          "label": "Dropdown Image 1"
-        },
-        {
-          "type": "image_picker",
-          "id": "image_2",
-          "label": "Dropdown Image 2"
-        }
+        { "type": "text", "id": "menu_title", "label": "Menu title" },
+        { "type": "image_picker", "id": "image_1", "label": "Image 1" },
+        { "type": "image_picker", "id": "image_2", "label": "Image 2" }
       ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "Header"
     }
   ]
 }

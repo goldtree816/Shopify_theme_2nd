@@ -5,7 +5,7 @@ body{
   padding-top:70px;
 }
 
-.journal-container{
+.journal-container{a
   max-width:1400px;
   margin:0 auto;
   padding:40px 20px;
@@ -130,6 +130,69 @@ body{
   gap: 40px;
 }
 
+/* ============================= */
+/* MOBILE ONLY FIX — DO NOT TOUCH DESKTOP */
+/* ============================= */
+
+@media (max-width: 1024px) {
+
+  /* Collapse ALL grids to one column */
+  .featured-grid,
+  .lower-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+  }
+
+  /* Remove side stack asymmetry */
+  .side-stack {
+    grid-template-rows: auto;
+    gap: 32px;
+  }
+
+  /* Make ALL cards visually uniform */
+  .card-featured,
+  .card-horizontal {
+    border: 1px solid #e5e5e5;
+  }
+
+  /* Force same image ratio */
+  .card-featured img,
+  .card-horizontal img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    height: auto;
+    object-fit: cover;
+  }
+
+  /* Normalize text sizes */
+  .card-featured .card-title,
+  .card-horizontal .card-title {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .card-featured .card-excerpt {
+    font-size: 14px;
+    max-width: 100%;
+  }
+}
+
+/* MOBILE SMALL */
+@media (max-width: 768px) {
+
+  .journal-header h1 {
+    font-size: 30px;
+  }
+
+  .journal-container {
+    padding: 24px 16px;
+  }
+
+  .card-featured img,
+  .card-horizontal img {
+    aspect-ratio: 1 / 1;
+  }
+}
 
 </style>
 
