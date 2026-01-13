@@ -1,4 +1,12 @@
-
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -50,7 +58,15 @@
         "slide_QWX6je",
         "slide_Dkypzz"
       ],
-      "settings": {}
+      "settings": {
+        "overlay_opacity": 25,
+        "title_size_desktop": 180,
+        "title_size_mobile": 96,
+        "text_color": "#ffffff",
+        "button_bg": "#a4c0db",
+        "button_text_color": "#0b0b0b",
+        "button_border_color": "#0b0b0b"
+      }
     },
     "press-logos": {
       "type": "press-logos",
@@ -90,14 +106,21 @@
         "logo_F9RtpE",
         "logo_Ya8FJt"
       ],
-      "settings": {}
+      "settings": {
+        "background_color": "#1b4dbb",
+        "logo_height": 44,
+        "logo_gap_min": 48,
+        "logo_gap_max": 120,
+        "scroll_speed": 60
+      }
     },
     "bestsellers": {
       "type": "bestsellers",
       "settings": {
         "section_title": "BESTSELLERS",
         "product_card_spacing": 20,
-        "section_description": "Dermatologists verified and most trusted products by doctors."
+        "section_description": "Dermatologists verified and most trusted products by doctors.",
+        "section_collection": "frontpage"
       }
     },
     "home-info": {
@@ -129,7 +152,8 @@
       "settings": {
         "section_title": "GIFTS, SETS + BUNDLES",
         "product_card_spacing": 20,
-        "section_description": "Curated edits of bestselling clean beauty"
+        "section_description": "Curated edits of bestselling clean beauty",
+        "section_collection": "bestsellers"
       }
     },
     "home-bottom-menu": {
@@ -166,7 +190,6 @@
     }
   },
   "order": [
-
     "hero",
     "press-logos",
     "bestsellers",

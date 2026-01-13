@@ -36,6 +36,11 @@
         "right-navbar": "right-navbar",
         "nav_item_spacing": 20,
         "nav_font_size": 14,
+        "logo_image": "shopify://shop_images/pressLogo4.png",
+        "logo_image_scrolled": "shopify://shop_images/Company_Logo.png",
+        "logo_width": 100,
+        "logo_width_mobile": 110,
+        "logo_height": 44,
         "logo_font_size": 14,
         "navbar_height": 15
       }

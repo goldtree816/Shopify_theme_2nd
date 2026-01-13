@@ -76,12 +76,64 @@ header:hover .navbar:hover,
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  --logo-width: {{ section.settings.logo_width | default: 140 }}px;
+  --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 110 }}px;
+  --logo-height: {{ section.settings.logo_height | default: 44 }}px;
 }
 
 .nav-center a {
   color: white;
   font-size: {{ section.settings.logo_font_size }}px;
   text-decoration: none;
+}
+
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-logo img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: var(--logo-width);
+  max-height: var(--logo-height);
+}
+
+.nav-center .logo-scrolled {
+  display: none;
+}
+
+.nav-center.has-alt-logo .logo-scrolled {
+  display: none;
+}
+
+.navbar.scrolled .nav-center.has-alt-logo .logo-default,
+.navbar:hover .nav-center.has-alt-logo .logo-default {
+  display: none;
+}
+
+.navbar.scrolled .nav-center.has-alt-logo .logo-scrolled,
+.navbar:hover .nav-center.has-alt-logo .logo-scrolled {
+  display: block;
+}
+
+.nav-center .logo-text {
+  font-size: {{ section.settings.logo_font_size }}px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.navbar.scrolled .nav-center .logo-text,
+.navbar:hover .nav-center .logo-text {
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .nav-logo img {
+    max-width: var(--logo-width-mobile);
+  }
 }
 
 .navbar.scrolled .nav-center a,
@@ -231,8 +283,21 @@ header:hover .navbar:hover,
       </nav>
 
       <!-- CENTER -->
-      <div class="nav-center">
-        <a href="{{ routes.root_url }}">{{ shop.name }}</a>
+      <div class="nav-center {% if section.settings.logo_image_scrolled != blank %}has-alt-logo{% endif %}">
+        <a href="{{ routes.root_url }}" class="nav-logo" aria-label="{{ shop.name }}">
+          {% if section.settings.logo_image != blank %}
+            <img class="logo-default" src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ section.settings.logo_image.alt | default: shop.name }}">
+            {% if section.settings.logo_image_scrolled != blank %}
+              <img class="logo-scrolled" src="{{ section.settings.logo_image_scrolled | image_url: width: 400 }}" alt="{{ section.settings.logo_image_scrolled.alt | default: shop.name }}">
+            {% endif %}
+          {% elsif settings.logo != blank %}
+            <img class="logo-default" src="{{ settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+          {% elsif shop.brand.logo != blank %}
+            <img class="logo-default" src="{{ shop.brand.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+          {% else %}
+            <span class="logo-text">{{ shop.name }}</span>
+          {% endif %}
+        </a>
       </div>
 
       <!-- RIGHT -->
@@ -288,7 +353,12 @@ document.addEventListener("DOMContentLoaded", () => {
     { "type": "link_list", "id": "right-navbar", "label": "Right menu" },
     { "type": "range", "id": "nav_item_spacing", "label": "Item spacing", "min": 0, "max": 50, "step": 1, "default": 20 },
     { "type": "range", "id": "nav_font_size", "label": "Font size", "min": 10, "max": 24, "step": 1, "default": 14 },
-    { "type": "range", "id": "logo_font_size", "label": "Logo size", "min": 10, "max": 32, "step": 1, "default": 14 },
+    { "type": "image_picker", "id": "logo_image", "label": "Logo (default)" },
+    { "type": "image_picker", "id": "logo_image_scrolled", "label": "Logo (scrolled/hover)" },
+    { "type": "range", "id": "logo_width", "label": "Logo width", "min": 60, "max": 240, "step": 5, "default": 140 },
+    { "type": "range", "id": "logo_width_mobile", "label": "Logo width (mobile)", "min": 60, "max": 200, "step": 5, "default": 110 },
+    { "type": "range", "id": "logo_height", "label": "Logo max height", "min": 20, "max": 80, "step": 2, "default": 44 },
+    { "type": "range", "id": "logo_font_size", "label": "Logo text size", "min": 10, "max": 32, "step": 1, "default": 14 },
     { "type": "range", "id": "navbar_height", "label": "Navbar padding", "min": 5, "max": 30, "step": 1, "default": 15 }
   ],
   "blocks": [

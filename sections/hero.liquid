@@ -3,21 +3,31 @@
   position: relative;
   width: 100%;
   overflow: hidden;
+  touch-action: pan-y;
+  --hero-title-size: {{ section.settings.title_size_desktop | default: 160 }}px;
+  --hero-title-size-mobile: {{ section.settings.title_size_mobile | default: 84 }}px;
+  --hero-text-color: {{ section.settings.text_color | default: '#ffffff' }};
+  --hero-button-bg: {{ section.settings.button_bg | default: '#a4c0db' }};
+  --hero-button-text: {{ section.settings.button_text_color | default: '#0b0b0b' }};
+  --hero-button-border: {{ section.settings.button_border_color | default: '#0b0b0b' }};
+  --hero-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  --hero-cta-x: {{ section.settings.cta_position_x | default: 8 }}%;
+  --hero-cta-y: {{ section.settings.cta_position_y | default: 60 }}%;
 }
 
 .slides-container {
   display: flex;
   transition: transform 1s ease-in-out;
   will-change: transform;
+  cursor: grab;
 }
 
 .slide {
   flex: 0 0 100%;
   position: relative;
-  height: 90vh;
+  height: clamp(520px, 90vh, 860px);
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  align-items: stretch;
   overflow: hidden;
 }
 
@@ -34,53 +44,135 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.25), rgba(0,0,0,0));
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, calc(var(--hero-overlay-opacity) * 1.1)),
+    rgba(0, 0, 0, 0)
+  );
   z-index: 1;
 }
 
 .slide-content {
   position: relative;
-  z-index: 2;
-  color: white;
-  padding-left: 8%;
-  max-width: 600px;
+  z-index: 3;
+  color: var(--hero-text-color);
+  width: 100%;
+  padding: clamp(24px, 4vw, 48px) clamp(20px, 8vw, 90px);
+}
+
+.hero-cta {
+  position: absolute;
+  top: var(--hero-cta-y);
+  left: var(--hero-cta-x);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 520px;
   text-align: left;
+  color: var(--hero-text-color);
+  z-index: 3;
 }
 
-.slide h2 {
-  font-size: 1.2rem;
-  font-weight: 400;
-  letter-spacing: 2px;
-  margin-bottom: 1rem;
+.hero-subtitle {
+  font-size: clamp(12px, 2.1vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
-.slide h1 {
-  font-size: 4rem;
-  font-weight: 600;
-  letter-spacing: 3px;
-  margin-bottom: 2rem;
+.hero-heading {
+  font-size: clamp(26px, 4.2vw, var(--hero-title-size));
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  max-width: 520px;
+  margin: 0;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
 }
 
-.button-wrapper { display: inline-block; position: relative; z-index: 3; }
+.slider .hero-heading,
+.slider .hero-subtitle {
+  position: static !important;
+  width: auto !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+.button-wrapper {
+  display: inline-flex;
+  position: relative;
+  z-index: 3;
+}
+
+.button-wrapper .btn-primary {
+  background: var(--hero-button-bg);
+  color: var(--hero-button-text);
+  border: 1px solid var(--hero-button-border);
+  padding: 10px 28px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.button-wrapper .btn-primary:hover {
+  background: #ffffff;
+  color: var(--hero-button-border);
+}
 
 /* Dots */
 .slider-dots {
   position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: clamp(16px, 4vw, 36px);
+  right: clamp(16px, 6vw, 72px);
   display: flex;
   gap: 10px;
   z-index: 4;
 }
 
 .slider-dots span {
-  width: 10px; height: 10px; border-radius: 50%;
-  background-color: rgba(255,255,255,0.5);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.6);
   cursor: pointer;
-  transition: background .3s ease;
+  transition: background .3s ease, transform .3s ease;
 }
-.slider-dots span.active { background-color: white; }
+
+.slider-dots span.active {
+  background-color: #ffffff;
+  transform: scale(1.3);
+}
+
+@media (max-width: 900px) {
+  .hero-cta {
+    left: clamp(16px, 6vw, 40px);
+    max-width: 360px;
+  }
+
+  .hero-heading {
+    font-size: clamp(24px, 7vw, var(--hero-title-size-mobile));
+  }
+}
+
+@media (max-width: 640px) {
+  .slide {
+    height: 70vh;
+  }
+
+  .hero-cta {
+    top: 62%;
+  }
+
+  .button-wrapper .btn-primary {
+    width: auto;
+  }
+}
 </style>
 
 <div class="slider">
@@ -91,18 +183,19 @@
           <img src="{{ block.settings.image | image_url: width: 2000 }}" alt="{{ block.settings.title }}">
         {% endif %}
         <div class="slide-content">
-          {% if block.settings.subtitle != blank %}
-            <h2>{{ block.settings.subtitle }}</h2>
-          {% endif %}
-          {% if block.settings.title != blank %}
-            <h1>{{ block.settings.title }}</h1>
-          {% endif %}
-          <div class="button-wrapper">
-            {% render 'button',
-              text: block.settings.button_text,
-              link: block.settings.button_link,
-              class:'bg-[#a4c0db] hover:bg-white text-[#a4c0db]'
-            %}
+          <div class="hero-cta">
+            {% if block.settings.subtitle != blank %}
+              <div class="hero-subtitle">{{ block.settings.subtitle }}</div>
+            {% endif %}
+            {% if block.settings.title != blank %}
+              <div class="hero-heading">{{ block.settings.title }}</div>
+            {% endif %}
+            <div class="button-wrapper">
+              {% render 'button',
+                text: block.settings.button_text,
+                link: block.settings.button_link
+              %}
+            </div>
           </div>
         </div>
       </div>
@@ -121,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const track = document.getElementById("slides");
   const slides = Array.from(track.children);
   const dots = Array.from(document.querySelectorAll(".slider-dots span"));
+  const slider = track.closest(".slider");
   const total = slides.length;
   if (total <= 1) return;
 
@@ -133,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const slideWidth = 100;
 
   function moveToSlide(i) {
+    track.style.transition = "transform 0.8s ease-in-out";
     track.style.transform = `translateX(-${i * slideWidth}%)`;
     dots.forEach((d, k) => d.classList.toggle("active", k === (i % total)));
   }
@@ -149,11 +244,58 @@ document.addEventListener("DOMContentLoaded", () => {
       index = 0;
       moveToSlide(index);
       void track.offsetWidth; // reflow
-      track.style.transition = "transform 1s ease-in-out";
+      track.style.transition = "transform 0.8s ease-in-out";
     }
   });
 
   let timer = setInterval(nextSlide, intervalTime);
+
+  let isDragging = false;
+  let startX = 0;
+  let deltaX = 0;
+
+  function setDragTransform(delta) {
+    const width = slider ? slider.offsetWidth : window.innerWidth;
+    const deltaPercent = (delta / width) * 100;
+    track.style.transition = "none";
+    track.style.transform = `translateX(calc(-${index * slideWidth}% + ${deltaPercent}%))`;
+  }
+
+  function onPointerDown(event) {
+    isDragging = true;
+    startX = event.clientX;
+    deltaX = 0;
+    clearInterval(timer);
+    track.style.cursor = "grabbing";
+    track.setPointerCapture?.(event.pointerId);
+  }
+
+  function onPointerMove(event) {
+    if (!isDragging) return;
+    deltaX = event.clientX - startX;
+    setDragTransform(deltaX);
+  }
+
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.cursor = "";
+    const width = slider ? slider.offsetWidth : window.innerWidth;
+    const threshold = width * 0.15;
+    if (deltaX < -threshold) {
+      index += 1;
+    } else if (deltaX > threshold) {
+      index -= 1;
+      if (index < 0) index = total - 1;
+    }
+    moveToSlide(index);
+    timer = setInterval(nextSlide, intervalTime);
+  }
+
+  track.addEventListener("pointerdown", onPointerDown);
+  track.addEventListener("pointermove", onPointerMove);
+  track.addEventListener("pointerup", onPointerUp);
+  track.addEventListener("pointerleave", onPointerUp);
 
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
@@ -169,7 +311,77 @@ document.addEventListener("DOMContentLoaded", () => {
 {% schema %}
 {
   "name": "Hero Slideshow",
-  "settings": [],
+  "settings": [
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Title size (desktop)",
+      "min": 120,
+      "max": 240,
+      "step": 4,
+      "default": 180
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 56,
+      "max": 140,
+      "step": 2,
+      "default": 96
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button background",
+      "default": "#a4c0db"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button border color",
+      "default": "#0b0b0b"
+    },
+    {
+      "type": "range",
+      "id": "cta_position_x",
+      "label": "Text position X (%)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "cta_position_y",
+      "label": "Text position Y (%)",
+      "min": 35,
+      "max": 85,
+      "step": 1,
+      "default": 60
+    }
+  ],
   "blocks": [
     {
       "type": "slide",

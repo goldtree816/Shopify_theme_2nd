@@ -1,10 +1,16 @@
 <section class="press-logos">
   <div class="press-logos-container">
-    <div class="press-logos-wrapper">
-      <div class="press-logos-track" id="pressLogosTrack">
+    <div
+      class="press-logos-track"
+      data-press-track
+      data-speed="{{ section.settings.scroll_speed | default: 60 }}"
+      aria-label="Press logos">
+      <div class="press-logos-group" data-press-group>
         {% for block in section.blocks %}
           {% if block.settings.logo_image != blank %}
-            <span><img src="{{ block.settings.logo_image | image_url: width: 200 }}" alt="{{ block.settings.alt_text }}"></span>
+            <span class="press-logo" {{ block.shopify_attributes }}>
+              <img src="{{ block.settings.logo_image | image_url: width: 240 }}" alt="{{ block.settings.alt_text }}">
+            </span>
           {% endif %}
         {% endfor %}
       </div>
@@ -14,8 +20,11 @@
 
 <style>
 .press-logos {
-  background: blue;
-  padding: 20px 0;
+  background: {{ section.settings.background_color | default: '#1b4dbb' }};
+  --press-gap-min: {{ section.settings.logo_gap_min | default: 48 }}px;
+  --press-gap-max: {{ section.settings.logo_gap_max | default: 120 }}px;
+  --press-gap: clamp(var(--press-gap-min), 6vw, var(--press-gap-max));
+  padding: clamp(14px, 2.4vw, 22px) 0;
   overflow: hidden;
   position: relative;
 }
@@ -23,84 +32,177 @@
 .press-logos-container {
   width: 100%;
   overflow: hidden;
-  position: relative;
-}
-
-.press-logos-wrapper {
-  display: flex;
-  width: max-content;
 }
 
 .press-logos-track {
   display: flex;
-  justify-content: space-evenly;
   align-items: center;
-  gap: clamp(40px, 8vw, 100px);
-  flex-wrap: nowrap;
+  width: max-content;
   will-change: transform;
+  cursor: grab;
+  user-select: none;
+}
+
+.press-logos-group {
+  display: flex;
+  align-items: center;
+  gap: var(--press-gap);
+  padding-right: var(--press-gap);
+  flex-shrink: 0;
+}
+
+.press-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .press-logos img {
-  max-height: 48px;
+  max-height: {{ section.settings.logo_height | default: 44 }}px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
+  filter: brightness(1.05);
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const track = document.getElementById('pressLogosTrack');
+  const track = document.querySelector('[data-press-track]');
   if (!track) return;
+  const container = track.parentElement;
+  const speed = Number(track.dataset.speed) || 60;
+  const group = track.querySelector('[data-press-group]');
+  if (!group) return;
+  let offset = 0;
+  let lastTime = 0;
+  let groupWidth = 0;
+  let isPaused = false;
+  let isDragging = false;
+  let startX = 0;
+  let startOffset = 0;
 
-  const wrapper = track.parentNode;
-
-  // Remove any old clones if hot reloads occur
-  wrapper.querySelectorAll('.press-logos-track.clone').forEach(c => c.remove());
-
-  // Create clone for infinite effect
-  const clone = track.cloneNode(true);
-  clone.classList.add('clone');
-  wrapper.appendChild(clone);
-
-  let position = 0;
-  let trackWidth = track.scrollWidth;
-  const speed = 0.5;
-
-  // Function to recalc width dynamically
-  const recalcWidth = () => {
-    trackWidth = track.scrollWidth;
-    clone.style.transform = `translateX(${trackWidth}px)`;
+  const updateMetrics = () => {
+    track.querySelectorAll('[data-press-clone="true"]').forEach((node) => node.remove());
+    groupWidth = group.scrollWidth;
+    const containerWidth = container.offsetWidth;
+    if (groupWidth <= 0) return;
+    const clonesNeeded = Math.ceil((containerWidth * 2) / groupWidth);
+    for (let i = 0; i < clonesNeeded; i += 1) {
+      const clone = group.cloneNode(true);
+      clone.setAttribute('data-press-clone', 'true');
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    }
   };
 
-  // Resize observer to handle logo count or width changes
-  const observer = new ResizeObserver(recalcWidth);
-  observer.observe(track);
+  const wrapOffset = () => {
+    if (groupWidth <= 0) return;
+    if (offset <= -groupWidth) offset += groupWidth;
+    if (offset >= 0) offset -= groupWidth;
+  };
 
-  // Initialize once layout is stable
-  window.addEventListener('load', recalcWidth);
+  const render = () => {
+    track.style.transform = `translateX(${offset}px)`;
+  };
 
-  function animate() {
-    position -= speed;
-    if (position <= -trackWidth) position = 0;
+  const step = (time) => {
+    if (!lastTime) lastTime = time;
+    const delta = (time - lastTime) / 1000;
+    lastTime = time;
+    if (!isPaused && !isDragging) {
+      offset -= speed * delta;
+      wrapOffset();
+      render();
+    }
+    requestAnimationFrame(step);
+  };
 
-    // Continuous side-by-side movement
-    track.style.transform = `translateX(${position}px)`;
-    clone.style.transform = `translateX(${position + trackWidth}px)`;
+  const onPointerDown = (event) => {
+    isDragging = true;
+    isPaused = true;
+    startX = event.clientX;
+    startOffset = offset;
+    track.style.cursor = 'grabbing';
+    track.setPointerCapture?.(event.pointerId);
+  };
 
-    requestAnimationFrame(animate);
-  }
+  const onPointerMove = (event) => {
+    if (!isDragging) return;
+    offset = startOffset + (event.clientX - startX);
+    wrapOffset();
+    render();
+  };
 
-  animate();
+  const onPointerUp = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    isPaused = false;
+    track.style.cursor = 'grab';
+  };
+
+  track.addEventListener('pointerdown', onPointerDown);
+  track.addEventListener('pointermove', onPointerMove);
+  track.addEventListener('pointerup', onPointerUp);
+  track.addEventListener('pointerleave', onPointerUp);
+  container.addEventListener('mouseenter', () => { isPaused = true; });
+  container.addEventListener('mouseleave', () => { isPaused = false; });
+
+  updateMetrics();
+  window.addEventListener('load', updateMetrics);
+  window.addEventListener('resize', updateMetrics);
+  requestAnimationFrame(step);
 });
 </script>
-
-
 
 {% schema %}
 {
   "name": "Press Logos",
-  "settings": [],
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#1b4dbb"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 28,
+      "max": 70,
+      "step": 2,
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "logo_gap_min",
+      "label": "Logo gap min",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "logo_gap_max",
+      "label": "Logo gap max",
+      "min": 60,
+      "max": 200,
+      "step": 4,
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed (px per second)",
+      "min": 20,
+      "max": 140,
+      "step": 5,
+      "default": 60
+    }
+  ],
   "blocks": [
     {
       "type": "logo",
@@ -120,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     }
   ],
-  "max_blocks": 50,
+  "max_blocks": 10,
   "presets": [
     {
       "name": "Press Logos",
