@@ -12,20 +12,70 @@ body {
   position: relative;
   width: 100vw;
   text-align: center;
-  font-size: 14px;
-  font-weight: bold;
-  color: white;
-  padding: 5px 0;
+  font-size: var(--banner-text-size);
+  font-weight: 600;
+  color: var(--banner-text-color);
+  min-height: var(--banner-height);
+  padding: 4px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.2);
   background-color: {{ section.settings.banner_bg_color }};
   transition: height 0.25s ease, padding 0.25s ease, opacity 0.25s ease;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  --banner-height: {{ section.settings.banner_height | default: 36 }}px;
+  --banner-height-mobile: {{ section.settings.banner_height_mobile | default: 32 }}px;
+  --banner-text-size: {{ section.settings.banner_text_size | default: 13 }}px;
+  --banner-text-size-mobile: {{ section.settings.banner_text_size_mobile | default: 12 }}px;
+  --banner-text-color: {{ section.settings.banner_text_color | default: '#ffffff' }};
+  --banner-transition: {{ section.settings.banner_transition_ms | default: 600 }}ms;
 }
 
 header:hover .top-banner {
-  background-color: #a3bfdb;
-  color: blue;
+  background-color: {{ section.settings.banner_hover_bg_color | default: '#a3bfdb' }};
+  color: {{ section.settings.banner_hover_text_color | default: '#1d3d7a' }};
   border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+header:hover .top-banner a {
+  color: {{ section.settings.banner_hover_link_color | default: '#1d3d7a' }};
+}
+
+.top-banner__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.top-banner__track {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  transition: transform var(--banner-transition) cubic-bezier(0.2, 0.7, 0, 1);
+  will-change: transform;
+}
+
+.top-banner__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: var(--banner-height);
+  line-height: 1.3;
+  padding: 2px 0;
+}
+
+.top-banner__text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.top-banner__link {
+  color: {{ section.settings.banner_link_color }};
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
 }
 
 /* ================= NAVBAR ================= */
@@ -136,6 +186,13 @@ header:hover .navbar:hover,
   }
 }
 
+@media (max-width: 640px) {
+  .top-banner {
+    min-height: var(--banner-height-mobile);
+    font-size: var(--banner-text-size-mobile);
+  }
+}
+
 .navbar.scrolled .nav-center a,
 .navbar:hover .nav-center a {
   color: black;
@@ -221,6 +278,7 @@ header:hover .navbar:hover,
 /* ONLY banner collapses – navbar height stays same */
 #site-header.is-scrolled .top-banner {
   height: 0;
+  min-height: 0;
   padding: 0;
   opacity: 0;
   border: none;
@@ -229,15 +287,55 @@ header:hover .navbar:hover,
 
 <header id="site-header" class="fixed top-0 left-0 w-full z-50">
 
-  <!-- TOP BANNER -->
-  <div class="top-banner">
-    {{ section.settings.banner_text }}
-    {% if section.settings.banner_link != blank %}
-      <a href="{{ section.settings.banner_link }}" style="color: {{ section.settings.banner_link_color }};">
-        <u>{{ section.settings.banner_link_label }}</u>
-      </a>
-    {% endif %}
-  </div>
+  {% assign banner_blocks = section.blocks | where: 'type', 'banner_item' %}
+  {% if section.settings.banner_enable %}
+    <!-- TOP BANNER -->
+    <div
+      class="top-banner"
+      data-autoplay="{{ section.settings.banner_autoplay }}"
+      data-interval="{{ section.settings.banner_interval }}"
+      data-transition="{{ section.settings.banner_transition_ms }}"
+      data-pause-on-hover="{{ section.settings.banner_pause_on_hover }}"
+    >
+      <div class="top-banner__viewport">
+        <div class="top-banner__track">
+          {% if banner_blocks.size > 0 %}
+            {% for block in banner_blocks %}
+              <div class="top-banner__item" {{ block.shopify_attributes }}>
+                {% if block.settings.text != blank %}
+                  <span class="top-banner__text">{{ block.settings.text }}</span>
+                {% endif %}
+                {% if block.settings.link_label != blank %}
+                  {% if block.settings.link != blank %}
+                    <a class="top-banner__link" href="{{ block.settings.link }}">
+                      {{ block.settings.link_label }}
+                    </a>
+                  {% else %}
+                    <span class="top-banner__link">{{ block.settings.link_label }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="top-banner__item">
+              {% if section.settings.banner_text != blank %}
+                <span class="top-banner__text">{{ section.settings.banner_text }}</span>
+              {% endif %}
+              {% if section.settings.banner_link_label != blank %}
+                {% if section.settings.banner_link != blank %}
+                  <a class="top-banner__link" href="{{ section.settings.banner_link }}">
+                    {{ section.settings.banner_link_label }}
+                  </a>
+                {% else %}
+                  <span class="top-banner__link">{{ section.settings.banner_link_label }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
   <!-- NAVBAR -->
   <div class="navbar" id="navbar">
@@ -322,6 +420,77 @@ header:hover .navbar:hover,
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const banner = document.querySelector(".top-banner");
+  if (banner) {
+    const track = banner.querySelector(".top-banner__track");
+    if (track) {
+      const items = Array.from(track.children);
+      const count = items.length;
+      const autoplay = banner.dataset.autoplay === "true";
+      const pauseOnHover = banner.dataset.pauseOnHover === "true";
+      const interval = Number(banner.dataset.interval) || 4000;
+      const transition = Number(banner.dataset.transition) || 600;
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (count > 1 && autoplay && !prefersReducedMotion) {
+        const firstClone = items[0].cloneNode(true);
+        firstClone.setAttribute("aria-hidden", "true");
+        track.appendChild(firstClone);
+
+        let index = 0;
+        let timer = null;
+        let itemHeight = banner.clientHeight;
+
+        const updateHeight = () => {
+          itemHeight = banner.clientHeight;
+          track.style.transform = `translateY(-${index * itemHeight}px)`;
+        };
+
+        const moveTo = (i) => {
+          track.style.transition = `transform ${transition}ms cubic-bezier(0.2, 0.7, 0, 1)`;
+          track.style.transform = `translateY(-${i * itemHeight}px)`;
+        };
+
+        const next = () => {
+          index += 1;
+          moveTo(index);
+        };
+
+        track.addEventListener("transitionend", () => {
+          if (index === count) {
+            track.style.transition = "none";
+            index = 0;
+            track.style.transform = "translateY(0)";
+            void track.offsetHeight;
+          }
+        });
+
+        const stop = () => {
+          if (timer) {
+            clearInterval(timer);
+            timer = null;
+          }
+        };
+
+        const start = () => {
+          if (timer) return;
+          timer = setInterval(next, interval);
+        };
+
+        updateHeight();
+        window.addEventListener("resize", updateHeight);
+        start();
+
+        if (pauseOnHover) {
+          banner.addEventListener("mouseenter", stop);
+          banner.addEventListener("mouseleave", start);
+          banner.addEventListener("focusin", stop);
+          banner.addEventListener("focusout", start);
+        }
+      }
+    }
+  }
+
   const header = document.getElementById("site-header");
   const navbar = document.getElementById("navbar");
 
@@ -344,11 +513,24 @@ document.addEventListener("DOMContentLoaded", () => {
 {
   "name": "Header",
   "settings": [
+    { "type": "checkbox", "id": "banner_enable", "label": "Enable top banner", "default": true },
     { "type": "text", "id": "banner_text", "label": "Banner text", "default": "FREE SHIPPING" },
     { "type": "text", "id": "banner_link_label", "label": "Banner link label", "default": "SHOP NOW" },
     { "type": "url", "id": "banner_link", "label": "Banner link" },
     { "type": "color", "id": "banner_bg_color", "label": "Banner background", "default": "#2A3C2D" },
+    { "type": "color", "id": "banner_text_color", "label": "Banner text color", "default": "#FFFFFF" },
     { "type": "color", "id": "banner_link_color", "label": "Banner link color", "default": "#FFFFFF" },
+    { "type": "color", "id": "banner_hover_bg_color", "label": "Banner hover background", "default": "#A3BFDB" },
+    { "type": "color", "id": "banner_hover_text_color", "label": "Banner hover text color", "default": "#1D3D7A" },
+    { "type": "color", "id": "banner_hover_link_color", "label": "Banner hover link color", "default": "#1D3D7A" },
+    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 24, "max": 60, "step": 2, "default": 36 },
+    { "type": "range", "id": "banner_height_mobile", "label": "Banner height (mobile)", "min": 24, "max": 56, "step": 2, "default": 32 },
+    { "type": "range", "id": "banner_text_size", "label": "Banner text size", "min": 10, "max": 20, "step": 1, "default": 13 },
+    { "type": "range", "id": "banner_text_size_mobile", "label": "Banner text size (mobile)", "min": 10, "max": 18, "step": 1, "default": 12 },
+    { "type": "checkbox", "id": "banner_autoplay", "label": "Banner autoplay", "default": true },
+    { "type": "range", "id": "banner_interval", "label": "Banner rotation interval (ms)", "min": 2000, "max": 8000, "step": 500, "default": 4000 },
+    { "type": "range", "id": "banner_transition_ms", "label": "Banner transition duration (ms)", "min": 300, "max": 1200, "step": 50, "default": 600 },
+    { "type": "checkbox", "id": "banner_pause_on_hover", "label": "Pause rotation on hover", "default": true },
     { "type": "link_list", "id": "left-navbar", "label": "Left menu" },
     { "type": "link_list", "id": "right-navbar", "label": "Right menu" },
     { "type": "range", "id": "nav_item_spacing", "label": "Item spacing", "min": 0, "max": 50, "step": 1, "default": 20 },
@@ -362,6 +544,15 @@ document.addEventListener("DOMContentLoaded", () => {
     { "type": "range", "id": "navbar_height", "label": "Navbar padding", "min": 5, "max": 30, "step": 1, "default": 15 }
   ],
   "blocks": [
+    {
+      "type": "banner_item",
+      "name": "Banner item",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on orders over $100" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop now" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    },
     {
       "type": "menu_images",
       "name": "Menu Images",
