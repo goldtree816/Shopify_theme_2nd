@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 /* ================= TOP BANNER ================= */
@@ -35,7 +35,7 @@ body {
 header:hover .top-banner {
   background-color: {{ section.settings.banner_hover_bg_color | default: '#a3bfdb' }};
   color: {{ section.settings.banner_hover_text_color | default: '#1d3d7a' }};
-  border-bottom: 1px solid rgba(0,0,0,0.2);
+  border-bottom: 1px solid var(--color-border);
 }
 
 header:hover .top-banner a {
@@ -100,16 +100,16 @@ header:hover .top-banner a {
 /* Hover / scroll background */
 header:hover .navbar:hover,
 .navbar.scrolled {
-  background-color: white;
+  background-color: var(--color-background);
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .navbar.scrolled a {
-  color: black;
+  color: var(--color-link);
 }
 
 .navbar:hover a {
-  color: black;
+  color: var(--color-link);
 }
 
 /* ================= NAV GROUPS ================= */
@@ -177,7 +177,7 @@ header:hover .navbar:hover,
 
 .navbar.scrolled .nav-center .logo-text,
 .navbar:hover .nav-center .logo-text {
-  color: black;
+  color: var(--color-foreground);
 }
 
 @media (max-width: 768px) {
@@ -195,7 +195,7 @@ header:hover .navbar:hover,
 
 .navbar.scrolled .nav-center a,
 .navbar:hover .nav-center a {
-  color: black;
+  color: var(--color-foreground);
 }
 
 /* Links */
@@ -215,6 +215,53 @@ header:hover .navbar:hover,
   height: 26px;
 }
 
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.nav-toggle-bars {
+  width: 22px;
+  height: 14px;
+  position: relative;
+  display: inline-block;
+}
+
+.nav-toggle-bars span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+.nav-toggle-bars span:nth-child(1) {
+  top: 0;
+}
+
+.nav-toggle-bars span:nth-child(2) {
+  top: 6px;
+}
+
+.nav-toggle-bars span:nth-child(3) {
+  bottom: 0;
+}
+
+.nav-left-links {
+  display: flex;
+  align-items: center;
+  gap: {{ section.settings.nav_item_spacing }}px;
+}
+
 /* ================= DROPDOWN ================= */
 .nav-item {
   position: relative;
@@ -225,7 +272,7 @@ header:hover .navbar:hover,
   left: 0;
   width: 100vw;
   padding: 30px 120px;
-  background: white;
+  background: var(--color-background);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-20px);
@@ -258,7 +305,7 @@ header:hover .navbar:hover,
 }
 
 .dropdown-columns a {
-  color: black;
+  color: var(--color-link);
   font-size: 14px;
 }
 
@@ -282,6 +329,244 @@ header:hover .navbar:hover,
   padding: 0;
   opacity: 0;
   border: none;
+}
+
+/* ================= MOBILE MENU ================= */
+.mobile-menu-panel {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  position: relative;
+}
+
+.mobile-menu-top {
+  display: grid;
+  grid-template-columns: 32px 1fr 72px;
+  align-items: center;
+  padding: 18px 18px 8px;
+}
+
+.mobile-menu-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mobile-menu-logo {
+  display: flex;
+  justify-content: center;
+  --logo-width: {{ section.settings.logo_width_mobile | default: 110 }}px;
+  --logo-height: {{ section.settings.logo_height | default: 44 }}px;
+}
+
+.mobile-menu-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.mobile-menu-icons a {
+  color: var(--color-link);
+}
+
+.mobile-menu-banner {
+  width: 100%;
+}
+
+.mobile-menu-views {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.mobile-menu-view {
+  position: absolute;
+  inset: 0;
+  padding: 12px 22px 20px;
+  overflow-y: auto;
+  background: var(--color-background);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-menu-view--root {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.mobile-menu-view--submenu {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.mobile-menu-view.is-active {
+  transform: translateX(0);
+  opacity: 1;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.mobile-menu-panel[data-active-submenu]:not([data-active-submenu="root"]) .mobile-menu-view--root {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.mobile-menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobile-menu-item {
+  margin: 0;
+}
+
+.mobile-menu-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--color-link);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.mobile-menu-link:focus {
+  outline: none;
+}
+
+.mobile-menu-label {
+  display: inline-block;
+}
+
+.mobile-menu-label.is-new {
+  background: var(--color-accent-soft);
+  color: var(--color-link-hover);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.mobile-menu-chevron {
+  font-size: 16px;
+  color: var(--color-muted);
+  margin-left: auto;
+}
+
+.mobile-submenu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-muted);
+}
+
+.mobile-submenu-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.mobile-submenu-title {
+  color: var(--color-foreground);
+  font-weight: 600;
+}
+
+.mobile-submenu-list {
+  list-style: none;
+  padding: 6px 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-submenu-item a {
+  text-decoration: none;
+  color: var(--color-foreground);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
+
+.mobile-menu-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.mobile-menu-footer a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 12px 16px;
+  }
+
+  .nav-left-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-right .nav-link--text,
+  .nav-right .nav-link--account {
+    display: none;
+  }
+
+  .drawer.mobile-menu-drawer {
+    right: -100%;
+    width: 100%;
+  }
+
+  .drawer.mobile-menu-drawer.open {
+    right: 0;
+  }
+
+  .drawer.mobile-menu-drawer .drawer-header {
+    display: none;
+  }
+
+  .drawer.mobile-menu-drawer .drawer-content {
+    padding: 0;
+  }
 }
 </style>
 
@@ -337,65 +622,85 @@ header:hover .navbar:hover,
     </div>
   {% endif %}
 
+  {% capture header_logo %}
+    <a href="{{ routes.root_url }}" class="nav-logo" aria-label="{{ shop.name }}">
+      {% if section.settings.logo_image != blank %}
+        <img class="logo-default" src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ section.settings.logo_image.alt | default: shop.name }}">
+        {% if section.settings.logo_image_scrolled != blank %}
+          <img class="logo-scrolled" src="{{ section.settings.logo_image_scrolled | image_url: width: 400 }}" alt="{{ section.settings.logo_image_scrolled.alt | default: shop.name }}">
+        {% endif %}
+      {% elsif settings.logo != blank %}
+        <img class="logo-default" src="{{ settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+      {% elsif shop.brand.logo != blank %}
+        <img class="logo-default" src="{{ shop.brand.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
+      {% else %}
+        <span class="logo-text">{{ shop.name }}</span>
+      {% endif %}
+    </a>
+  {% endcapture %}
+
   <!-- NAVBAR -->
   <div class="navbar" id="navbar">
     <div class="navbar-inner">
 
       <!-- LEFT -->
       <nav class="nav-left">
-        {% for link in linklists[section.settings.left-navbar].links %}
-          <div class="nav-item">
-            <a href="{{ link.url }}">{{ link.title }}</a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-label="Open menu"
+          data-drawer-open="#mobile-menu"
+          data-drawer-class="mobile-menu-drawer"
+        >
+          <span class="nav-toggle-bars" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
 
-            {% if link.links != blank %}
-              <div class="dropdown-menu">
-                <div class="dropdown-content">
-                  <div class="dropdown-columns">
-                    {% for child in link.links %}
-                      <ul>
-                        <li><strong>{{ child.title }}</strong></li>
-                        {% for sub in child.links %}
-                          <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
-                        {% endfor %}
-                      </ul>
-                    {% endfor %}
-                  </div>
+        <div class="nav-left-links">
+          {% for link in linklists[section.settings.left-navbar].links %}
+            <div class="nav-item">
+              <a href="{{ link.url }}">{{ link.title }}</a>
 
-                  <div class="dropdown-images">
-                    {% for block in section.blocks %}
-                      {% if block.settings.menu_title == link.title %}
-                        {% if block.settings.image_1 %}
-                          <img src="{{ block.settings.image_1 | image_url }}">
+              {% if link.links != blank %}
+                <div class="dropdown-menu">
+                  <div class="dropdown-content">
+                    <div class="dropdown-columns">
+                      {% for child in link.links %}
+                        <ul>
+                          <li><strong>{{ child.title }}</strong></li>
+                          {% for sub in child.links %}
+                            <li><a href="{{ sub.url }}">{{ sub.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      {% endfor %}
+                    </div>
+
+                    <div class="dropdown-images">
+                      {% for block in section.blocks %}
+                        {% if block.settings.menu_title == link.title %}
+                          {% if block.settings.image_1 %}
+                            <img src="{{ block.settings.image_1 | image_url }}">
+                          {% endif %}
+                          {% if block.settings.image_2 %}
+                            <img src="{{ block.settings.image_2 | image_url }}">
+                          {% endif %}
                         {% endif %}
-                        {% if block.settings.image_2 %}
-                          <img src="{{ block.settings.image_2 | image_url }}">
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
-              </div>
-            {% endif %}
-          </div>
-        {% endfor %}
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
       </nav>
 
       <!-- CENTER -->
       <div class="nav-center {% if section.settings.logo_image_scrolled != blank %}has-alt-logo{% endif %}">
-        <a href="{{ routes.root_url }}" class="nav-logo" aria-label="{{ shop.name }}">
-          {% if section.settings.logo_image != blank %}
-            <img class="logo-default" src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ section.settings.logo_image.alt | default: shop.name }}">
-            {% if section.settings.logo_image_scrolled != blank %}
-              <img class="logo-scrolled" src="{{ section.settings.logo_image_scrolled | image_url: width: 400 }}" alt="{{ section.settings.logo_image_scrolled.alt | default: shop.name }}">
-            {% endif %}
-          {% elsif settings.logo != blank %}
-            <img class="logo-default" src="{{ settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
-          {% elsif shop.brand.logo != blank %}
-            <img class="logo-default" src="{{ shop.brand.logo | image_url: width: 400 }}" alt="{{ shop.name }}">
-          {% else %}
-            <span class="logo-text">{{ shop.name }}</span>
-          {% endif %}
-        </a>
+        {{ header_logo }}
       </div>
 
       <!-- RIGHT -->
@@ -403,17 +708,138 @@ header:hover .navbar:hover,
         {% for link in linklists[section.settings.right-navbar].links %}
           {% case link.title %}
             {% when "CART" %}
-              <a href="#" class="open-cart-drawer">{% render 'icon-shopping-bag' %}</a>
+              <a href="#" class="nav-link nav-link--icon nav-link--cart open-cart-drawer">{% render 'icon-shopping-bag' %}</a>
             {% when "SEARCH" %}
-              <a href="/search">{% render 'icon-search' %}</a>
+              <a href="/search" class="nav-link nav-link--icon nav-link--search search-icon">{% render 'icon-search' %}</a>
             {% when "PROFILE" %}
-              <a href="/account">{% render 'icon-profile' %}</a>
+              <a href="/account" class="nav-link nav-link--icon nav-link--account">{% render 'icon-profile' %}</a>
             {% else %}
-              <a href="{{ link.url }}">{{ link.title }}</a>
+              <a href="{{ link.url }}" class="nav-link nav-link--text">{{ link.title }}</a>
           {% endcase %}
         {% endfor %}
       </nav>
 
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" hidden>
+    <div class="mobile-menu-panel" data-active-submenu="root">
+      {% if section.settings.banner_enable %}
+        {% assign menu_banner_block = banner_blocks[0] %}
+        <div class="top-banner mobile-menu-banner">
+          <div class="top-banner__item">
+            {% if menu_banner_block != blank %}
+              {% if menu_banner_block.settings.text != blank %}
+                <span class="top-banner__text">{{ menu_banner_block.settings.text }}</span>
+              {% endif %}
+              {% if menu_banner_block.settings.link_label != blank %}
+                {% if menu_banner_block.settings.link != blank %}
+                  <a class="top-banner__link" href="{{ menu_banner_block.settings.link }}">
+                    {{ menu_banner_block.settings.link_label }}
+                  </a>
+                {% else %}
+                  <span class="top-banner__link">{{ menu_banner_block.settings.link_label }}</span>
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if section.settings.banner_text != blank %}
+                <span class="top-banner__text">{{ section.settings.banner_text }}</span>
+              {% endif %}
+              {% if section.settings.banner_link_label != blank %}
+                {% if section.settings.banner_link != blank %}
+                  <a class="top-banner__link" href="{{ section.settings.banner_link }}">
+                    {{ section.settings.banner_link_label }}
+                  </a>
+                {% else %}
+                  <span class="top-banner__link">{{ section.settings.banner_link_label }}</span>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="mobile-menu-top">
+        <button class="mobile-menu-close" type="button" aria-label="Close menu" data-drawer-close>x</button>
+        <div class="mobile-menu-logo">
+          {{ header_logo }}
+        </div>
+        <div class="mobile-menu-icons">
+          <a href="/search" class="search-icon" aria-label="Search">{% render 'icon-search' %}</a>
+          <a href="#" class="open-cart-drawer" aria-label="Cart">{% render 'icon-shopping-bag' %}</a>
+        </div>
+      </div>
+
+      <div class="mobile-menu-views">
+        <div class="mobile-menu-view mobile-menu-view--root is-active" data-submenu-panel="root">
+          <nav class="mobile-menu-nav" aria-label="Mobile">
+            <ul class="mobile-menu-list">
+              {% for link in linklists[section.settings.left-navbar].links %}
+                {% assign link_title_up = link.title | upcase %}
+                {% assign link_handle = link.title | handleize %}
+                <li class="mobile-menu-item">
+                  {% if link.links != blank %}
+                    <button
+                      class="mobile-menu-link mobile-menu-link--trigger"
+                      type="button"
+                      data-submenu-open="{{ link_handle }}"
+                      aria-label="{{ link.title }}"
+                    >
+                      <span class="mobile-menu-label{% if link_title_up == 'NEW IN' %} is-new{% endif %}">
+                        {{ link.title }}
+                      </span>
+                      <span class="mobile-menu-chevron" aria-hidden="true">&gt;</span>
+                    </button>
+                  {% else %}
+                    <a href="{{ link.url }}" class="mobile-menu-link">
+                      <span class="mobile-menu-label{% if link_title_up == 'NEW IN' %} is-new{% endif %}">
+                        {{ link.title }}
+                      </span>
+                    </a>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        </div>
+
+        {% for link in linklists[section.settings.left-navbar].links %}
+          {% if link.links != blank %}
+            {% assign link_handle = link.title | handleize %}
+            <div class="mobile-menu-view mobile-menu-view--submenu" data-submenu-panel="{{ link_handle }}">
+              <div class="mobile-submenu-header">
+                <button class="mobile-submenu-back" type="button" data-submenu-back>
+                  <span class="mobile-submenu-arrow" aria-hidden="true">&lt;</span>
+                  Back
+                </button>
+                <span class="mobile-submenu-title">{{ link.title }}</span>
+              </div>
+              <ul class="mobile-submenu-list">
+                {% for child in link.links %}
+                  {% if child.links != blank %}
+                    {% for sub in child.links %}
+                      <li class="mobile-submenu-item">
+                        <a href="{{ sub.url }}">{{ sub.title }}</a>
+                      </li>
+                    {% endfor %}
+                  {% else %}
+                    <li class="mobile-submenu-item">
+                      <a href="{{ child.url }}">{{ child.title }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="mobile-menu-footer">
+        <span class="mobile-menu-locale">
+          {{ localization.country.iso_code | default: 'AT' }} / {{ cart.currency.iso_code | default: 'EUR' }}
+        </span>
+        <a href="/account">Account</a>
+      </div>
     </div>
   </div>
 </header>
@@ -506,6 +932,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("scroll", onScroll);
   onScroll();
+
+  const setActiveSubmenu = (panel, key) => {
+    const views = panel.querySelectorAll("[data-submenu-panel]");
+    views.forEach((view) => {
+      view.classList.toggle("is-active", view.dataset.submenuPanel === key);
+    });
+    panel.dataset.activeSubmenu = key;
+  };
+
+  document.addEventListener("click", (event) => {
+    const openTrigger = event.target.closest("[data-submenu-open]");
+    if (openTrigger) {
+      const panel = openTrigger.closest(".mobile-menu-panel");
+      if (!panel) return;
+      const targetKey = openTrigger.dataset.submenuOpen;
+      if (!targetKey) return;
+      setActiveSubmenu(panel, targetKey);
+      return;
+    }
+
+    const backTrigger = event.target.closest("[data-submenu-back]");
+    if (backTrigger) {
+      const panel = backTrigger.closest(".mobile-menu-panel");
+      if (!panel) return;
+      setActiveSubmenu(panel, "root");
+    }
+  });
 });
 </script>
 

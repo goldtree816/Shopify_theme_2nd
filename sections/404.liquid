@@ -6,35 +6,35 @@
   flex-direction: column;
   text-align: center;
   min-height: 80vh;
-  background-color: #f7f9fc;
+  background-color: var(--color-surface);
   background-size: cover;
   background-position: center;
 }
 
 .error-404 h1 {
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
   font-size: 28px;
   font-weight: 500;
-  color: #111;
+  color: var(--color-foreground);
   margin-bottom: 30px;
   letter-spacing: 1px;
 }
 
 body:not(.template-index) .navbar {
-  background-color: white;
+  background-color: var(--color-background);
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 body:not(.template-index) .top-banner {
-  background-color: lightblue;
-  color:pink;
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 body:not(.template-index) .navbar a {
-  color:black;
+  color: var(--color-link);
 }
 </style>
 

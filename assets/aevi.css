@@ -13,14 +13,16 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .contact-page {
   max-width: 1200px;
   margin: 100px auto;
   padding: 0 20px;
-  font-family: Manrope, sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 .contact-grid {
@@ -42,7 +44,7 @@ body {
 }
 
 .contact-info a {
-  color: #000;
+  color: var(--color-link);
   text-decoration: underline;
 }
 
@@ -56,7 +58,7 @@ body {
 }
 
 .contact-form-wrapper {
-  border: 1px solid #9db8dc;
+  border: 1px solid var(--color-accent);
   padding: 40px;
 }
 
@@ -69,7 +71,7 @@ body {
 .field textarea {
   width: 100%;
   border: none;
-  border-bottom: 1px solid #1f3c88;
+  border-bottom: 1px solid var(--color-accent-contrast);
   padding: 10px 0;
   font-size: 14px;
   background: transparent;
@@ -80,7 +82,7 @@ body {
   top: 10px;
   left: 0;
   font-size: 13px;
-  color: #666;
+  color: var(--color-muted);
 }
 
 .textarea label {
@@ -97,18 +99,19 @@ body {
 
 .send-btn {
   margin-top: 30px;
-  background: #a8c4e1;
+  background: var(--color-button-bg);
   border: none;
   padding: 10px 40px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
+  color: var(--color-button-text);
 }
 
 .success {
   margin-top: 20px;
   font-size: 13px;
-  color: green;
+  color: var(--color-success);
 }
 
 @media (max-width: 900px) {
@@ -127,14 +130,14 @@ body {
 /* Sidebar */
 .aevi-account-sidebar {
   width: 260px;
-  border: 1px solid #cfd4da;
+  border: 1px solid var(--color-border);
   padding: 25px;
 }
 
 .aevi-account-sidebar a {
   display: block;
   margin-bottom: 12px;
-  color: black;
+  color: var(--color-foreground);
 }
 
 .aevi-account-sidebar a.active {
@@ -144,7 +147,7 @@ body {
 /* Content */
 .aevi-account-content {
   flex: 1;
-  border: 1px solid #cfd4da;
+  border: 1px solid var(--color-border);
   padding: 25px;
 }
 
@@ -162,7 +165,7 @@ body {
 
 /* Address Card */
 .aevi-address-card {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 20px;
   margin-bottom: 25px;
 }
@@ -174,8 +177,8 @@ body {
   top: 0;
   width: 440px;
   height: 100%;
-  background: white;
-  border-left: 1px solid #ddd;
+  background: var(--color-background);
+  border-left: 1px solid var(--color-border);
   padding: 40px;
   overflow-y: auto;
   display: none;
@@ -197,8 +200,9 @@ body {
 }
 
 .aevi-save {
-  background: #d5e2ef;
-  border: 1px solid #95aabf;
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-button-border);
+  color: var(--color-button-text);
 }
 
 
@@ -208,7 +212,7 @@ body {
   max-width: 420px;
   margin: 140px auto;
   text-align: center;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 .aevi-title {
@@ -219,7 +223,7 @@ body {
 
 .aevi-subtitle {
   font-size: 14px;
-  color: #777;
+  color: var(--color-muted);
   margin-bottom: 40px;
 }
 
@@ -233,7 +237,7 @@ body {
 .aevi-auth-wrapper input {
   width: 100%;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--color-border);
   padding: 14px 6px;
   margin-bottom: 30px;
   font-size: 15px;
@@ -243,8 +247,9 @@ body {
   width: 100%;
   padding: 14px 0;
   border-radius: 30px;
-  background: #d5e2ef;
-  border: 1px solid #95aabf;
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-button-border);
+  color: var(--color-button-text);
   cursor: pointer;
   margin-top: 10px;
 }
@@ -259,7 +264,7 @@ body {
 .aevi-account-wrapper {
   max-width: 1200px;
   margin: 140px auto;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 .aevi-welcome {
@@ -274,19 +279,19 @@ body {
 
 .aevi-account-sidebar {
   width: 260px;
-  border: 1px solid #cfd4da;
+  border: 1px solid var(--color-border);
   padding: 25px;
 }
 
 .aevi-account-sidebar a {
   display: block;
   margin-bottom: 12px;
-  color: black;
+  color: var(--color-foreground);
 }
 
 .aevi-account-content {
   flex: 1;
-  border: 1px solid #cfd4da;
+  border: 1px solid var(--color-border);
   padding: 25px;
 }
 
@@ -297,23 +302,23 @@ body {
 
 
 .btn-primary {
-  background-color: #a3bfdb;
-  border: 1px solid black;
+  background-color: var(--color-button-bg);
+  border: 1px solid var(--color-button-border);
   font-weight: 100;
   text-align: center;
   font-size: 1.1rem;
   width: 13rem;
   height: 2.3rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  color: rgb(0, 0, 0);
+  font-family: var(--font-primary--family);
+  color: var(--color-button-text);
   border-radius: 50px;
   transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
   
-  background-color: #dce3ea;
-  color: rgb(6, 6, 6);
+  background-color: var(--color-button-hover-bg);
+  color: var(--color-button-hover-text);
 }
 
 .slider {
@@ -351,12 +356,12 @@ figure {
   position: absolute;
   font-size: 4em;
   width: 40%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-primary--family);
   color: white;
 }
 
 .slide h2 {
-  font-family: 'Vincenza Display';
+  font-family: var(--font-primary--family);
   line-height: 1.1;
   font-weight: 600;
   margin-top: 10rem;
@@ -364,7 +369,6 @@ figure {
   position: absolute;
   font-size: 9em;
   width: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: white;
 }
 
@@ -380,7 +384,9 @@ figure {
 
 body {
   margin: 0;
-  font-family: 'Work Sans', sans-serif;
+  font-family: var(--font-primary--family);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   
 }
 
@@ -390,14 +396,14 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  background: white;
+  background: var(--color-background);
   z-index: 50;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .site-header nav a {
   text-decoration: none;
-  color: #222;
+  color: var(--color-link);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 1px;
@@ -454,8 +460,8 @@ body {
 }
 
 .hero a:hover {
-  background: white;
-  color: blue;
+  background: var(--color-background);
+  color: var(--color-link-hover);
 }
 
 
@@ -486,5 +492,380 @@ body {
 
   100% {
     transform: translateX(-75%);
+  }
+}
+
+/* Product page */
+.aevi-product {
+  padding: var(--section-padding-top) var(--section-padding-inline) var(--section-padding-bottom);
+}
+
+.aevi-product .breadcrumb {
+  font-size: 10px;
+  letter-spacing: -0.1px;
+  color: var(--color-muted);
+  margin-bottom: 20px;
+}
+
+.aevi-product .breadcrumb a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.aevi-product .breadcrumb .current {
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.aevi-product .product-container {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.aevi-product .product-gallery {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex: 1.2;
+}
+
+.aevi-product .thumbnail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100px;
+}
+
+.aevi-product .thumbnail-list img {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, border 0.2s ease;
+}
+
+.aevi-product .thumbnail-list img:hover,
+.aevi-product .thumbnail-list img.active-thumb {
+  opacity: 1;
+}
+
+.aevi-product .main-image {
+  width: min(520px, 70vw);
+  height: min(760px, 110vw);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.aevi-product .main-image-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+.aevi-product .main-image-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.aevi-product .main-slide {
+  min-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scroll-snap-align: start;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease, transform-origin 0.2s ease;
+}
+
+.aevi-product .main-image:hover .main-slide.active-slide {
+  transform: scale(2);
+}
+
+.aevi-product .badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-contrast);
+  font-size: 12px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  z-index: 10;
+}
+
+.aevi-product .badge + .badge {
+  top: 42px;
+}
+
+.aevi-product .product-info {
+  flex: 1;
+  max-width: 520px;
+}
+
+.aevi-product .product-title {
+  text-transform: uppercase;
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.aevi-product .stock-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.aevi-product .stock-indicator {
+  font-size: 11px;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aevi-product .stock-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.aevi-product .stock-dot.in-stock {
+  background-color: var(--color-success);
+}
+
+.aevi-product .stock-dot.out-of-stock {
+  background-color: var(--color-error);
+}
+
+.aevi-product .product-reviews {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-bottom: 10px;
+}
+
+.aevi-product .product-price {
+  padding-top: 16px;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.aevi-product .product-tags {
+  margin-bottom: 18px;
+}
+
+.aevi-product .product-tags span {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-contrast);
+  font-size: 12px;
+  padding: 4px 10px;
+  margin-right: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.aevi-product .product-description {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 16px 0 24px;
+  color: var(--color-foreground);
+}
+
+.aevi-product .product-skin-types {
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.aevi-product .product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aevi-product .product-variant-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aevi-product .product-variant-select {
+  width: 220px;
+  border: 1px solid var(--color-border);
+  padding: 8px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+}
+
+.aevi-product .aevi-product__cta {
+  width: 100%;
+  border-radius: 999px;
+  padding: 12px 18px;
+  background: var(--color-button-bg);
+  border: 1px solid var(--color-accent-border);
+  color: var(--color-button-text);
+  letter-spacing: 0.12em;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.aevi-product .buy-with {
+  margin-top: 32px;
+}
+
+.aevi-product .buy-with h4 {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.aevi-product .buy-with-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.aevi-product .buy-with-card {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 10px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.aevi-product .buy-with-card img {
+  width: 60px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--color-surface);
+}
+
+.aevi-product .buy-with-info {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.aevi-product .buy-with-info span {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-muted);
+}
+
+.aevi-product .product-accordion {
+  margin-top: 32px;
+  border-top: 1px solid var(--color-border);
+}
+
+.aevi-product .product-accordion details {
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 0;
+}
+
+.aevi-product .product-accordion summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-foreground);
+  list-style: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aevi-product .product-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.aevi-product .product-accordion summary::after {
+  content: "+";
+  font-size: 18px;
+  transition: transform 0.2s ease;
+  color: var(--color-muted);
+}
+
+.aevi-product .product-accordion details[open] summary::after {
+  content: "-";
+  transform: rotate(180deg);
+}
+
+.aevi-product .product-accordion .accordion-content {
+  font-size: 14px;
+  color: var(--color-muted);
+  line-height: 1.6;
+  padding-top: 12px;
+}
+
+/* Reviews section wrapper */
+.aevi-product-reviews {
+  padding: var(--section-padding-top) var(--section-padding-inline) var(--section-padding-bottom);
+}
+
+.aevi-product-reviews__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.aevi-product-reviews__heading {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.aevi-product-reviews__empty {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.aevi-product-reviews .jdgm-widget,
+.aevi-product-reviews .jdgm-review-widget,
+.aevi-product-reviews .jdgm-review-widget--with-header {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .aevi-product {
+    padding: 40px 20px 60px;
+  }
+
+  .aevi-product .product-container {
+    flex-direction: column;
+  }
+
+  .aevi-product .product-gallery {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .aevi-product .thumbnail-list {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .aevi-product .main-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+
+  .aevi-product .product-info {
+    max-width: 100%;
   }
 }

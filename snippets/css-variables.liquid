@@ -9,10 +9,28 @@
     --font-primary--family: {{ settings.type_primary_font.family }}, {{ settings.type_primary_font.fallback_families }};
     --font-primary--style: {{ settings.type_primary_font.style }};
     --font-primary--weight: {{ settings.type_primary_font.weight }};
-    --page-width: {{ settings.max_page_width }};
-    --page-margin: {{ settings.min_page_margin }}px;
+    --font-sans: var(--font-primary--family);
+    --default-font-family: var(--font-primary--family);
     --color-background: {{ settings.background_color }};
     --color-foreground: {{ settings.foreground_color }};
+    --color-muted: {{ settings.muted_text_color }};
+    --color-border: {{ settings.border_color }};
+    --color-surface: {{ settings.surface_color }};
+    --color-accent: {{ settings.accent_color }};
+    --color-accent-soft: {{ settings.accent_soft_color }};
+    --color-accent-contrast: {{ settings.accent_contrast_color }};
+    --color-accent-border: {{ settings.accent_border_color }};
+    --color-link: {{ settings.link_color }};
+    --color-link-hover: {{ settings.link_hover_color }};
+    --color-button-bg: {{ settings.button_bg_color }};
+    --color-button-text: {{ settings.button_text_color }};
+    --color-button-border: {{ settings.button_border_color }};
+    --color-button-hover-bg: {{ settings.button_hover_bg_color }};
+    --color-button-hover-text: {{ settings.button_hover_text_color }};
+    --color-success: {{ settings.success_color }};
+    --color-error: {{ settings.error_color }};
+    --page-width: {{ settings.max_page_width }};
+    --page-margin: {{ settings.min_page_margin }}px;
     --style-border-radius-inputs: {{ settings.input_corner_radius }}px;
   }
 {% endstyle %}

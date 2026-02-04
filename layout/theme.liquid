@@ -6,13 +6,6 @@
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
-    {% # Load Google Fonts %}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-
     {% # Load and preload the critical CSS %}
     {{ 'aevi.css' | asset_url | stylesheet_tag: preload: true }}
 
@@ -31,7 +24,7 @@
   z-index: 9999;
   display: none;
   justify-content: flex-end;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 /* Drawer container */
@@ -41,7 +34,7 @@
   overflow-y:auto;
   max-width: 450px;
   height: 100%;
-  background: #fff;
+  background: var(--color-background);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -57,7 +50,7 @@
 .cart-drawer-header {
   margin-top:50px;
   padding:auto;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -82,8 +75,8 @@
 }
 
 .cart-free-shipping { margin-bottom: 24px; font-size: 12px; }
-.cart-free-shipping-bar { height: 4px; border-radius: 999px; background: #e6e6e6; overflow: hidden; margin-top: 8px; }
-.cart-free-shipping-fill { height: 100%; background: #9eb8d7; width: 0; }
+.cart-free-shipping-bar { height: 4px; border-radius: 999px; background: var(--color-border); overflow: hidden; margin-top: 8px; }
+.cart-free-shipping-fill { height: 100%; background: var(--color-accent); width: 0; }
 .cart-items { margin-bottom: 24px; }
 
 .cart-item {
@@ -119,15 +112,15 @@
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.15);
-  background: #fff;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
   cursor: pointer;
 }
 
 .cart-item-qty input {
   width: 34px;
   text-align: center;
-  border: 1px solid rgba(0,0,0,0.15);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 12px;
@@ -137,19 +130,19 @@
 
 .cart-upsell-title { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; margin: 8px 0 12px; }
 .cart-upsell-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
-.cart-upsell-card { border: 1px solid rgba(0,0,0,0.05); padding: 8px; font-size: 11px; }
+.cart-upsell-card { border: 1px solid var(--color-border); padding: 8px; font-size: 11px; }
 .cart-upsell-card img { width: 100%; aspect-ratio: 3/5; object-fit: cover; margin-bottom: 4px; }
 .cart-upsell-card-price { font-size: 11px; opacity: .7; }
 
-.cart-footer { border-top: 1px solid rgba(0,0,0,0.08); padding: 16px 24px 20px; font-size: 13px; }
+.cart-footer { border-top: 1px solid var(--color-border); padding: 16px 24px 20px; font-size: 13px; }
 .cart-footer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.cart-checkout-button { width: 100%; padding: 12px 16px; border-radius: 999px; border: none; background: #aec3df; cursor: pointer; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
+.cart-checkout-button { width: 100%; padding: 12px 16px; border-radius: 999px; border: none; background: var(--color-button-bg); color: var(--color-button-text); cursor: pointer; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
 .cart-shipping-note { font-size: 11px; opacity: .7; margin-bottom: 10px; }
 
 .cart-coupon { margin-top: 10px; }
 .cart-coupon-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
-.cart-coupon-input { border-radius: 999px; border: 1px solid rgba(0,0,0,0.2); padding: 8px 12px; font-size: 12px; }
-.cart-coupon-button { border-radius: 999px; border: 1px solid rgba(0,0,0,0.2); padding: 8px 16px; background: transparent; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
+.cart-coupon-input { border-radius: 999px; border: 1px solid var(--color-border); padding: 8px 12px; font-size: 12px; }
+.cart-coupon-button { border-radius: 999px; border: 1px solid var(--color-border); padding: 8px 16px; background: transparent; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
 </style>
 
 <!-- DRAWER HTML START -->

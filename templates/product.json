@@ -12,9 +12,14 @@
     "main": {
       "type": "product",
       "settings": {}
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {}
     }
   },
   "order": [
-    "main"
+    "main",
+    "reviews"
   ]
 }

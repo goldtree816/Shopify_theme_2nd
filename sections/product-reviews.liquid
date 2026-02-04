@@ -1,0 +1,79 @@
+<section
+  class="aevi-product-reviews"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --section-padding-inline: {{ section.settings.padding_inline }}px;
+  "
+>
+  <div class="aevi-product-reviews__inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="aevi-product-reviews__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when '@app' %}
+            <div class="aevi-product-reviews__app" {{ block.shopify_attributes }}>
+              {% render block %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    {% else %}
+      <p class="aevi-product-reviews__empty">Add the Judge.me app block here.</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Reviews"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "label": "Padding left/right",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Reviews",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

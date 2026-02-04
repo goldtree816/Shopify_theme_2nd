@@ -1,31 +1,31 @@
 <style>
 
 body{
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
   padding-top:70px;
 }
 
 body:not(.template-index) .navbar {
-  background-color: white;
+  background-color: var(--color-background);
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 body:not(.template-index) .top-banner {
-  background-color: lightblue;
-  color:pink;
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
   position: relative;
 }
 
 body:not(.template-index) .navbar a{
-  color:black;
+  color: var(--color-link);
 }
 
 .article-wrapper {
   max-width: 1440px;
   margin: 0 auto;
   padding: 60px 40px 100px;
-  font-family: "Manrope", sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 /* back link */
@@ -34,7 +34,7 @@ body:not(.template-index) .navbar a{
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: #666;
+  color: var(--color-muted);
   display: inline-flex;
   align-items: center;
   margin-bottom: 30px;
@@ -42,7 +42,7 @@ body:not(.template-index) .navbar a{
 }
 
 .article-back:hover {
-  color: #000;
+  color: var(--color-foreground);
 }
 
 /* hero two column */
@@ -65,14 +65,14 @@ body:not(.template-index) .navbar a{
 .article-date {
   font-size: 14px;
   margin-bottom: 18px;
-  color: #777;
+  color: var(--color-muted);
 }
 
 .article-tags {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: .12em;
-  color: #777;
+  color: var(--color-muted);
 }
 
 .article-tags a {
@@ -95,7 +95,7 @@ body:not(.template-index) .navbar a{
   margin: 60px auto 0;
   font-size: 16px;
   line-height: 1.8;
-  color: #222;
+  color: var(--color-foreground);
 }
 
 .article-body p { margin-bottom: 18px; }
@@ -125,7 +125,7 @@ body:not(.template-index) .navbar a{
 
 .article-caption {
   font-size: 14px;
-  color: #666;
+  color: var(--color-muted);
   margin-top: 8px;
 }
 
@@ -138,7 +138,7 @@ body:not(.template-index) .navbar a{
 
 .comment-item {
   padding: 20px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.08);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .comment-author {
@@ -148,7 +148,7 @@ body:not(.template-index) .navbar a{
 
 .comment-date {
   font-size: 13px;
-  color: #777;
+  color: var(--color-muted);
   margin-bottom: 10px;
 }
 
@@ -169,14 +169,14 @@ body:not(.template-index) .navbar a{
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-border);
   border-radius: 3px;
 }
 
 .article-comment-form button {
   padding: 12px 20px;
-  background:black;
-  color:white;
+  background: var(--color-button-bg);
+  color: var(--color-button-text);
   border:none;
   cursor:pointer;
 }

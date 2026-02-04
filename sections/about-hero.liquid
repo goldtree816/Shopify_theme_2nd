@@ -20,24 +20,24 @@
 
 <style>
 body{
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
   padding-top:70px;
 }
 
 body:not(.template-index) .navbar {
-  background-color: white;
+  background-color: var(--color-background);
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 body:not(.template-index) .top-banner {
-  background-color: lightblue;
-  color:pink;
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
   position: relative;
 }
 
 body:not(.template-index) .navbar a{
-  color:black;
+  color: var(--color-link);
 }
 
 .about-hero {

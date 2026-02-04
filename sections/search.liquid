@@ -1,23 +1,23 @@
 <style>
 body{
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
   padding-top:70px;`
 }
 
 body:not(.template-index) .navbar {
-  background-color: white;
+  background-color: var(--color-background);
   position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid var(--color-border);
 }
 
 body:not(.template-index) .top-banner {
-  background-color: lightblue;
-  color:pink;
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
   position: relative;
 }
 
 body:not(.template-index) .navbar a{
-  color:black;
+  color: var(--color-link);
 }
 /* Container */
 .search-container {
@@ -25,7 +25,7 @@ body:not(.template-index) .navbar a{
   max-width: 1400px;
   margin: 0 auto;
   padding: 60px;
-  font-family: 'Manrope', sans-serif;
+  font-family: var(--font-primary--family);
 }
 
 /* Heading */
@@ -54,8 +54,8 @@ body:not(.template-index) .navbar a{
   position: absolute;
   top: 10px;
   left: 10px;
-  background: #dbe4f8;
-  color: #1d2f50;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-contrast);
   padding: 5px 12px;
   font-size: 11px;
   font-weight: 600;
@@ -66,13 +66,13 @@ body:not(.template-index) .navbar a{
 }
 
 .badge.sale {
-  background: #e4efff;
-  color: #003b8e;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
 .badge.oos {
-  background: #f1f1f1;
-  color: #5a5a5a;
+  background: var(--color-surface);
+  color: var(--color-muted);
 }
 </style>
 

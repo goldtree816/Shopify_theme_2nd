@@ -4,12 +4,20 @@ footer {
   background-color: var(--footer-bg);
   color: var(--footer-text);
   padding: var(--footer-pad-y) var(--footer-pad-x);
-  font-family: ui-sans-serif, system-ui, -apple-system;
-  --footer-bg: {{ section.settings.footer_bg | default: '#d8dde2' }};
-  --footer-text: {{ section.settings.footer_text | default: '#222222' }};
-  --footer-muted: {{ section.settings.footer_muted | default: '#4b4f54' }};
-  --footer-link: {{ section.settings.footer_link | default: '#222222' }};
-  --footer-link-hover: {{ section.settings.footer_link_hover | default: '#1d3d7a' }};
+  font-family: var(--font-primary--family);
+  {% if section.settings.use_theme_colors %}
+    --footer-bg: var(--color-surface);
+    --footer-text: var(--color-foreground);
+    --footer-muted: var(--color-muted);
+    --footer-link: var(--color-link);
+    --footer-link-hover: var(--color-link-hover);
+  {% else %}
+    --footer-bg: {{ section.settings.footer_bg }};
+    --footer-text: {{ section.settings.footer_text }};
+    --footer-muted: {{ section.settings.footer_muted }};
+    --footer-link: {{ section.settings.footer_link }};
+    --footer-link-hover: {{ section.settings.footer_link_hover }};
+  {% endif %}
   --footer-pad-y: {{ section.settings.footer_pad_y | default: 84 }}px;
   --footer-pad-x: {{ section.settings.footer_pad_x | default: 100 }}px;
   --footer-max: {{ section.settings.footer_max_width | default: 1320 }}px;
@@ -277,6 +285,7 @@ footer {
     { "type": "checkbox", "id": "show_newsletter", "label": "Show newsletter", "default": true },
     { "type": "checkbox", "id": "show_payments", "label": "Show payment icons", "default": true },
     { "type": "checkbox", "id": "show_copyright", "label": "Show copyright", "default": true },
+    { "type": "checkbox", "id": "use_theme_colors", "label": "Use theme colors", "default": true },
     { "type": "image_picker", "id": "logo", "label": "Logo" },
     { "type": "range", "id": "logo_width", "label": "Logo width (px)", "min": 32, "max": 120, "step": 2, "default": 56 },
     { "type": "text", "id": "copyright_text", "label": "Copyright Text" },

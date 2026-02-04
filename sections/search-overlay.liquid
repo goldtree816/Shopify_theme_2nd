@@ -2,18 +2,19 @@
   <div class="search-inner">
 
     <!-- Search bar -->
-    <div class="search-bar">
-      <form action="/search" method="get" class="search-bar">
-  <input
-    type="text"
-    name="q"
-    placeholder="Search"
-    class="search-input"
-  >
-  <button type="button" class="search-close">✕</button>
-</form>
-
-    </div>
+    <form action="/search" method="get" class="search-bar">
+      <span class="search-input-icon" aria-hidden="true">
+        {% render 'icon-search' %}
+      </span>
+      <input
+        id="search-input"
+        type="text"
+        name="q"
+        placeholder="Search"
+        class="search-input"
+      >
+      <button type="button" class="search-close" aria-label="Close search">x</button>
+    </form>
 
     <div class="search-content">
 
@@ -81,37 +82,45 @@
 
 .search-overlay.active {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   opacity: 1;
 }
 
 /* Floating white search box */
 .search-inner {
-  width: 100%;
-  background: #fff;
-  padding: 80px 50px;
-  border-radius: 12px;
+  width: min(880px, 80vw);
+  background: var(--color-background);
+  padding: 72px 52px;
+  border-radius: 0;
   box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  font-family: 'Manrope', sans-serif;
-  max-height: 95vh;
+  font-family: var(--font-primary--family);
+  max-height: 100vh;
   overflow-y: auto;
 }
 
 
 /* Search top bar */
 .search-bar {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 18px 1fr 28px;
+  gap: 12px;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-input-icon svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-foreground);
 }
 
 .search-input {
   width: 100%;
-  font-size: 20px;
-  padding: 10px 15px;
+  font-size: 18px;
+  padding: 6px 0;
   border: none;
-  border-bottom: 1px solid #ccc;
 }
 
 .search-input:focus {
@@ -119,11 +128,12 @@
 }
 
 .search-close {
-  font-size: 25px;
+  font-size: 20px;
   background: none;
   border: none;
   cursor: pointer;
-  margin-left: 20px;
+  color: var(--color-foreground);
+  line-height: 1;
 }
 
 /* Layout grid like AEVI */
@@ -149,12 +159,13 @@
 }
 
 .recommended-searches a {
-  color: #000;
+  color: var(--color-link);
   font-size: 14px;
   text-decoration: none;
 }
 
 .recommended-searches a:hover {
+  color: var(--color-link-hover);
   text-decoration: underline;
 }
 
@@ -165,78 +176,118 @@
   width: 100%
 }
 
+@media (max-width: 1024px) {
+  .search-inner {
+    width: 86vw;
+    padding: 56px 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-inner {
+    width: 88vw;
+    padding: 36px 20px;
+  }
+
+  .search-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .search-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+}
+
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('search-overlay');
+  if (!overlay) return;
+
   const searchButtons = document.querySelectorAll('.search-icon');
-  const closeBtn = document.querySelector('.search-close');
+  const closeBtn = overlay.querySelector('.search-close');
+  const searchInput = overlay.querySelector('#search-input');
+  const suggestionItems = overlay.querySelectorAll('#search-suggestions .suggestion-item');
+  const productsWrapper = overlay.querySelector('.recommended-products-wrapper');
+  const initialProductsMarkup = productsWrapper ? productsWrapper.innerHTML : '';
+
+  const openOverlay = () => {
+    overlay.classList.add('active');
+    if (searchInput) {
+      searchInput.focus();
+    }
+  };
+
+  const closeOverlay = () => {
+    overlay.classList.remove('active');
+  };
 
   searchButtons.forEach(btn => {
     btn.addEventListener('click', e => {
       e.preventDefault();
-      overlay.classList.add('active');
+      openOverlay();
     });
   });
 
-  closeBtn.addEventListener('click', () => {
-    overlay.classList.remove('active');
-  });
-});
-
-// Dynamic suggestions
-document.querySelector('.search-input').addEventListener('input', function() {
-  const query = this.value.toLowerCase();
-  const items = document.querySelectorAll('#search-suggestions .suggestion-item');
-
-  items.forEach(item => {
-    const text = item.textContent.toLowerCase();
-    item.style.display = text.includes(query) ? 'block' : 'none';
-  });
-});
-
-
-// AJAX product search
-const searchInput = document.getElementById('search-input');
-const productsWrapper = document.querySelector('.recommended-products-wrapper');
-
-searchInput.addEventListener('input', function() {
-  let query = this.value.trim();
-
-  if (query.length < 2) {
-    // Clear results if too short
-    productsWrapper.innerHTML = '';
-    return;
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeOverlay);
   }
 
-  fetch(`/search/suggest.json?q=${query}&resources[type]=product&resources[limit]=6`)
-    .then(res => res.json())
-    .then(data => {
-      const products = data.resources.results.products;
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) {
+      closeOverlay();
+    }
+  });
 
-      if (!products.length) {
-        productsWrapper.innerHTML = `<p>No products found</p>`;
-        return;
-      }
+  if (!searchInput) return;
 
-      // Build product cards
-      let html = '<div class="search-products-grid">';
-      products.forEach(p => {
-        html += `
-          <a href="${p.url}" class="search-product-card">
-            <img src="${p.image}" alt="${p.title}">
-            <p>${p.title}</p>
-            <span>${p.price}</span>
-          </a>
-        `;
-      });
-      html += '</div>';
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.trim().toLowerCase();
 
-      productsWrapper.innerHTML = html;
+    suggestionItems.forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = text.includes(query) ? 'block' : 'none';
     });
-});
 
+    if (!productsWrapper) return;
+
+    if (query.length < 2) {
+      productsWrapper.innerHTML = initialProductsMarkup;
+      return;
+    }
+
+    fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=6`)
+      .then(res => res.json())
+      .then(data => {
+        const products = data.resources.results.products;
+
+        if (!products.length) {
+          productsWrapper.innerHTML = '<p>No products found</p>';
+          return;
+        }
+
+        let html = '<div class="search-products-grid">';
+        products.forEach(p => {
+          html += `
+            <a href="${p.url}" class="search-product-card">
+              <img src="${p.image}" alt="${p.title}">
+              <p>${p.title}</p>
+              <span>${p.price}</span>
+            </a>
+          `;
+        });
+        html += '</div>';
+
+        productsWrapper.innerHTML = html;
+      })
+      .catch(() => {
+        productsWrapper.innerHTML = '<p>No products found</p>';
+      });
+  });
+});
 </script>
 
 {% schema %}

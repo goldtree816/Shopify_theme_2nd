@@ -14,10 +14,10 @@
     "name": "Typography",
     "settings": [
       {
-        "type": "text",
-        "id": "dummy_typography",
-        "label": "Dummy",
-        "default": "Default font"
+        "type": "font_picker",
+        "id": "type_primary_font",
+        "label": "Primary font",
+        "default": "manrope_n4"
       }
     ]
   },
@@ -36,10 +36,112 @@
     "name": "Colors",
     "settings": [
       {
-        "type": "text",
-        "id": "dummy_colors",
-        "label": "Dummy",
-        "default": "Default colors"
+        "type": "color",
+        "id": "background_color",
+        "label": "Background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "foreground_color",
+        "label": "Text",
+        "default": "#111111"
+      },
+      {
+        "type": "color",
+        "id": "muted_text_color",
+        "label": "Muted text",
+        "default": "#666666"
+      },
+      {
+        "type": "color",
+        "id": "border_color",
+        "label": "Borders",
+        "default": "#e5e5e5"
+      },
+      {
+        "type": "color",
+        "id": "surface_color",
+        "label": "Surface",
+        "default": "#f7f9fc"
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Accent",
+        "default": "#a4c0db"
+      },
+      {
+        "type": "color",
+        "id": "accent_soft_color",
+        "label": "Accent soft",
+        "default": "#edf2fa"
+      },
+      {
+        "type": "color",
+        "id": "accent_contrast_color",
+        "label": "Accent contrast",
+        "default": "#1f3c88"
+      },
+      {
+        "type": "color",
+        "id": "accent_border_color",
+        "label": "Accent border",
+        "default": "#6b7a8d"
+      },
+      {
+        "type": "color",
+        "id": "link_color",
+        "label": "Link",
+        "default": "#222222"
+      },
+      {
+        "type": "color",
+        "id": "link_hover_color",
+        "label": "Link hover",
+        "default": "#1d3d7a"
+      },
+      {
+        "type": "color",
+        "id": "button_bg_color",
+        "label": "Button background",
+        "default": "#a3bfdb"
+      },
+      {
+        "type": "color",
+        "id": "button_text_color",
+        "label": "Button text",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "button_border_color",
+        "label": "Button border",
+        "default": "#95aabf"
+      },
+      {
+        "type": "color",
+        "id": "button_hover_bg_color",
+        "label": "Button hover background",
+        "default": "#dce3ea"
+      },
+      {
+        "type": "color",
+        "id": "button_hover_text_color",
+        "label": "Button hover text",
+        "default": "#060606"
+      },
+      {
+        "type": "color",
+        "id": "success_color",
+        "label": "Success",
+        "default": "#3ebd36"
+      },
+      {
+        "type": "color",
+        "id": "error_color",
+        "label": "Error",
+        "default": "#c62828"
       }
     ]
   }

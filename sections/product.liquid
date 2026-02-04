@@ -1,559 +1,452 @@
-<style>
-body{
-  font-family: 'Manrope', sans-serif;
-  padding-top:70px;
-}
-
-body:not(.template-index) .navbar {
-  background-color: white;
-  position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-body:not(.template-index) .top-banner {
-  background-color: lightblue;
-  color:pink;
-  position: relative;
-}
-
-body:not(.template-index) .navbar a{
-  color:black;
-}
-
-.add-to-bag{
-  width:100%;
-  display:block;
-  
-}
-
-.product-section {
-  padding: 60px 100px;
-}
-
-.breadcrumb {
-  font-size: 10px;
-  letter-spacing: -0.1px;
-  color: #777;
-  margin-bottom: 20px;
-}
-
-.breadcrumb a {
-  color: #777;
-  text-decoration: none;
-}
-
-.breadcrumb .current {
-  font-weight: 600;
-  color: #000;
-}
-
-.product-container {
-  display: flex;
-  
-  gap: 20px;
-}
-
-/* Gallery layout */
-.product-gallery {
-  display: flex;
-  align-items: flex-start;
-  gap:5px;
-  width:100%;
-}
-
-.thumbnail-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100px;
-}
-
-.thumbnail-list img {
-  aspect-ratio:3/4;
-  object-fit:cover;
-  cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s ease, border 0.2s ease;
-}
-
-.thumbnail-list img:hover {
-  opacity: 1;
-}
-
-.thumbnail-list img.active-thumb {
-  opacity: 1;
-}
-
-.main-image {
-  
-  width: 500px;
-  height: 800px;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.main-image-inner {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-}
-
-.main-image-inner::-webkit-scrollbar {
-  display: none;
-}
-
-.main-slide {
-  
-  min-width: 100%;
-  height: 100%;
-  object-fit: cover;
-  scroll-snap-align: start;
-  position: relative;
-  z-index: 1;
-  transition: transform 0.2s ease, transform-origin 0.2s ease;
-}
-
-.main-image:hover .main-slide {
-  transform: none;
-}
-
-.main-image:hover .main-slide.active-slide {
-  transform: scale(2);
-}
-
-
-.main-image span {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: #edf2fa;
-  color: blue;
-  font-size: 14px;
-  padding: 4px 10px;
-  text-transform: uppercase;
-  z-index: 10;
-}
-
-.main-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-  position: relative;
-  transition: transform 0.2s ease, transform-origin 0.2s ease;
-}
-
-
-.main-image:hover img {
-  transform: scale(2); /* zoom level */
-}
-
-
-.product-info {
-  flex:0.8;
-  margin-left:20px;
-}
-
-.product-title {
-  text-transform: uppercase;
-  font-size: 28px;
-  font-weight: 400;
-  margin-bottom: 8px;
-}
-
-.product-reviews {
-  font-size: 14px;
-  color: #444;
-  margin-bottom: 10px;
-}
-
-.product-price {
-  padding-top:20px;
-  font-size: 18px;
-  margin-bottom: 10px;
-  padding-bottom:40px;
-}
-
-.product-tags span {
-  margin-top:20px;
-  background: #edf2fa;
-  color: blue;
-  font-size: 14px;
-  padding: 4px 10px;
-  margin-right: 6px;
-  text-transform:uppercase;
-}
-
-.product-description {
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 20px 0;
-}
-
-.btn-add {
-  background-color: #c5d1e2;
-  border: none;
-  padding: 12px 40px;
-  cursor: pointer;
-  font-weight: 600;
-  border-radius: 30px;
-  margin-bottom: 10px;
-}
-
-.btn-shop {
-width:100;
-display:block;
-}
-
-.buy-with {
-  margin-top: 40px;
-}
-
-.buy-with h4 {
-  font-size: 14px;
-  margin-bottom: 12px;
-  font-weight: 600;
-}
-
-.stock-status {
-  font-size: 10px;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content:space-between;
-  margin-bottom: 10px;
-}
-
-.stock-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.stock-dot.in-stock {
-  background-color: #3ebd36; /* green dot */
-}
-
-.stock-dot.out-of-stock {
-  background-color: #c62828; /* red dot */
-}
-
-.stock-status.out {
-  color: #c62828;
-}
-
-
-.recommended {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.recommended img {
-  width: 60px;
-  border-radius: 4px;
-}
-
-.product-accordion {
-  margin-top: 40px;
-  border-top: 1px solid #dcdcdc;
-  font-family: 'Manrope', sans-serif;
-}
-
-.product-accordion details {
-  border-bottom: 1px solid #dcdcdc;
-  padding: 16px 0;
-  cursor: pointer;
-}
-
-.product-accordion summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #222;
-  list-style: none;
-}
-
-.product-accordion summary::-webkit-details-marker {
-  display: none;
-}
-
-.product-accordion summary::after {
-  content: "+";
-  font-size: 18px;
-  transition: transform 0.2s ease;
-  color: #777;
-}
-
-.product-accordion details[open] summary::after {
-  content: "−";
-  transform: rotate(180deg);
-}
-
-.product-accordion .accordion-content {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.6;
-  padding-top: 12px;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
-
-<section class="product-section">
-  <nav class="breadcrumb">
-    <a href="{{ routes.root_url }}">HOME</a>
-    <span>/</span>
-    <span class="current">{{ product.title | upcase }}</span>
-  </nav>
+<section
+  class="product-section aevi-product"
+  data-section-id="{{ section.id }}"
+  style="
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --section-padding-inline: {{ section.settings.padding_inline }}px;
+  "
+>
+  {% if section.settings.show_breadcrumbs %}
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">HOME</a>
+      <span>/</span>
+      <span class="current">{{ product.title | upcase }}</span>
+    </nav>
+  {% endif %}
 
   <div class="product-container">
-
-    <!-- LEFT SIDE Image gallery -->
     <div class="product-gallery">
-      <!-- Thumbnails -->
-      <div class="thumbnail-list">
-        {% for image in product.images %}
-          <img 
-            src="{{ image | img_url: '200x200' }}" 
-            alt="{{ image.alt | escape }}" 
-            class="thumbnail {% if forloop.first %}active-thumb{% endif %}"
-            data-index="{{ forloop.index0 }}"
-          >
-        {% endfor %}
-      </div>
-
-      <!-- Main image -->
-      <div class="main-image">
-        <div class="main-image-inner">
+      {% if section.settings.show_thumbnails %}
+        <div class="thumbnail-list" aria-hidden="true">
           {% for image in product.images %}
             <img
-              src="{{ image | img_url: '800x800' }}"
+              src="{{ image | img_url: '200x200' }}"
               alt="{{ image.alt | escape }}"
-              class="main-slide"
+              class="thumbnail {% if forloop.first %}active-thumb{% endif %}"
+              data-index="{{ forloop.index0 }}"
+            >
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="main-image">
+        <div class="main-image-inner" id="ProductGallery-{{ section.id }}">
+          {% for image in product.images %}
+            <img
+              src="{{ image | img_url: '900x1200' }}"
+              alt="{{ image.alt | escape }}"
+              class="main-slide {% if forloop.first %}active-slide{% endif %}"
               data-index="{{ forloop.index0 }}"
             >
           {% endfor %}
         </div>
 
-        {% if product.compare_at_price > product.price %}
-          <span class="badge badge-sale">Sale</span>
-        {% endif %}
-
-        {% if product.tags contains 'new' %}
-          <span class="badge badge-new">New</span>
-        {% endif %}
-
-        {% if product.tags contains 'bestseller' %}
-          <span class="badge badge-bestseller">Bestseller</span>
+        {% if section.settings.show_badges %}
+          {% if product.compare_at_price > product.price %}
+            <span class="badge badge-sale">Sale</span>
+          {% endif %}
+          {% if product.tags contains 'new' %}
+            <span class="badge badge-new">New</span>
+          {% endif %}
+          {% if product.tags contains 'bestseller' %}
+            <span class="badge badge-bestseller">Bestseller</span>
+          {% endif %}
         {% endif %}
       </div>
+    </div>
 
-
-    <!-- RIGHT SIDE: Product info -->
     <div class="product-info">
       <div class="stock-status">
         <h1 class="product-title">{{ product.title }}</h1>
-        <div>
-            {% assign v = product.selected_or_first_available_variant %}
-            {% if v.available %}
-              <span class="stock-dot in-stock"></span> In stock
-            {% else %}
-              <span class="stock-dot out-of-stock"></span> Out of stock
-            {% endif %}
-            </div>
-          </div>
-        <div class="product-price">{{ product.price | money }}</div>
-
-      <div class="product-tags">
-        {% for tag in product.tags %}
-          <span>{{ tag }}</span>
-        {% endfor %}
+        <div class="stock-indicator">
+          {% assign v = product.selected_or_first_available_variant %}
+          {% if v.available %}
+            <span class="stock-dot in-stock"></span> In stock
+          {% else %}
+            <span class="stock-dot out-of-stock"></span> Out of stock
+          {% endif %}
+        </div>
       </div>
 
+      {% if section.blocks.size > 0 %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              <div class="product-reviews" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+            {% when 'text' %}
+              {% if block.settings.text != blank %}
+                <div class="product-text" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
+                </div>
+              {% endif %}
+            {% when 'custom_liquid' %}
+              {% if block.settings.custom_liquid != blank %}
+                <div class="product-custom-liquid" {{ block.shopify_attributes }}>
+                  {{ block.settings.custom_liquid }}
+                </div>
+              {% endif %}
+          {% endcase %}
+        {% endfor %}
+      {% endif %}
+
+      <div class="product-price">{{ product.price | money }}</div>
+
+      {% if section.settings.show_tags and product.tags.size > 0 %}
+        <div class="product-tags">
+          {% for tag in product.tags %}
+            <span>{{ tag }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
       <div class="product-description">
-        <p>SKIN TYPES: Dry Skin, Normal Skin, Cracked Skin</p>
-        <p>{{ product.description }}</p>
+        {% if section.settings.skin_types_text != blank %}
+          <p class="product-skin-types">
+            <strong>{{ section.settings.skin_types_label }}</strong>
+            {{ section.settings.skin_types_text }}
+          </p>
+        {% endif %}
+        {{ product.description }}
       </div>
 
       <div class="add-to-bag">
-       <form id="addToCartForm">
-        <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-        {% render 'button.liquid', text: "ADD TO BAG", class: 'btn-shop' %}
-      </form>
+        {% assign product_form_id = 'product-form-' | append: section.id %}
+        {% form 'product', product, id: product_form_id, class: 'product-form', novalidate: 'novalidate' %}
+          {% if product.variants.size > 1 %}
+            <label class="product-variant-label" for="variant-select-{{ section.id }}">
+              {{ section.settings.variant_label }}
+            </label>
+            <select id="variant-select-{{ section.id }}" name="id" class="product-variant-select">
+              {% for variant in product.variants %}
+                <option value="{{ variant.id }}" {% if variant == product.selected_or_first_available_variant %}selected{% endif %}>
+                  {{ variant.title }}
+                </option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          {% endif %}
 
+          <input type="hidden" name="quantity" value="1">
+          {% render 'button.liquid', text: section.settings.add_to_cart_label, type: 'submit', class: 'aevi-product__cta' %}
+        {% endform %}
       </div>
 
-
-      <div class="buy-with">
-        <h4>BUY IT WITH:</h4>
-        <div class="recommended">
-          <img src="{{ 'hero-image-2.jpg' | asset_url }}" alt="Nourishing Face Oil">
-          <div>
-            <strong>NOURISHING FACE OIL</strong>
-            <p>€98</p>
+      {% if section.settings.show_buy_with and section.settings.buy_with_products != blank %}
+        <div class="buy-with">
+          <h4>{{ section.settings.buy_with_heading }}</h4>
+          <div class="buy-with-grid">
+            {% for product_item in section.settings.buy_with_products %}
+              <a class="buy-with-card" href="{{ product_item.url }}">
+                {% if product_item.featured_image %}
+                  <img src="{{ product_item.featured_image | img_url: '180x240' }}" alt="{{ product_item.title }}">
+                {% endif %}
+                <div class="buy-with-info">
+                  <strong>{{ product_item.title }}</strong>
+                  <span>{{ product_item.price | money }}</span>
+                </div>
+              </a>
+            {% endfor %}
           </div>
         </div>
-      </div>
-    <div class="product-accordion">
-
-      {% if product.metafields.custom.details %}
-        <details>
-          <summary>DETAILS</summary>
-          <div class="accordion-content">
-            {{ product.metafields.custom.details }}
-          </div>
-        </details>
       {% endif %}
 
-      {% if product.metafields.custom.key_ingredients %}
-        <details>
-          <summary>KEY INGREDIENTS</summary>
-          <div class="accordion-content">
-            {{ product.metafields.custom.key_ingredients }}
-          </div>
-        </details>
+      {% if section.settings.show_accordions %}
+        <div class="product-accordion">
+          {% if product.metafields.custom.details %}
+            <details>
+              <summary>{{ section.settings.details_label }}</summary>
+              <div class="accordion-content">
+                {{ product.metafields.custom.details }}
+              </div>
+            </details>
+          {% endif %}
+
+          {% if product.metafields.custom.key_ingredients %}
+            <details>
+              <summary>{{ section.settings.key_ingredients_label }}</summary>
+              <div class="accordion-content">
+                {{ product.metafields.custom.key_ingredients }}
+              </div>
+            </details>
+          {% endif %}
+
+          {% if product.metafields.custom.how_to_use %}
+            <details>
+              <summary>{{ section.settings.how_to_use_label }}</summary>
+              <div class="accordion-content">
+                {{ product.metafields.custom.how_to_use }}
+              </div>
+            </details>
+          {% endif %}
+
+          {% if product.metafields.custom.product_details %}
+            <details>
+              <summary>{{ section.settings.full_ingredients_label }}</summary>
+              <div class="accordion-content">
+                {{ product.metafields.custom.product_details }}
+              </div>
+            </details>
+          {% endif %}
+
+          {% if product.metafields.custom.sustainable_packaging %}
+            <details>
+              <summary>{{ section.settings.sustainable_packaging_label }}</summary>
+              <div class="accordion-content">
+                {{ product.metafields.custom.sustainable_packaging }}
+              </div>
+            </details>
+          {% endif %}
+        </div>
       {% endif %}
-
-      {% if product.metafields.custom.how_to_use %}
-        <details>
-          <summary>HOW TO USE</summary>
-          <div class="accordion-content">
-            {{ product.metafields.custom.how_to_use }}
-          </div>
-        </details>
-      {% endif %}
-
-      {% if product.metafields.custom.product_details %}
-        <details>
-          <summary>PRODUCT DETAILS</summary>
-          <div class="accordion-content">
-            {{ product.metafields.custom.product_details }}
-          </div>
-        </details>
-      {% endif %}
-
-      {% if product.metafields.custom.sustainable_packaging %}
-        <details>
-          <summary>SUSTAINABLE PACKAGING</summary>
-          <div class="accordion-content">
-            {{ product.metafields.custom.sustainable_packaging }}
-          </div>
-        </details>
-      {% endif %}
-
-    </div>
-
     </div>
   </div>
 </section>
 
 <script>
-
-
- document.getElementById("addToCartForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  fetch('/cart/add.js', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      id: {{ product.variants.first.id }},
-      quantity: 1
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-
-    const overlay = document.querySelector('.cart-overlay');
-
-    // show overlay
-    overlay.style.display = 'flex';
-
-    // allow animation frame
-    setTimeout(() => {
-      overlay.classList.add('active');
-    }, 10);
-
-  })
-  .catch(err => console.error(err));
-});
-
-
 document.addEventListener("DOMContentLoaded", () => {
-  const slider = document.querySelector(".main-image-inner");
-  const slides = document.querySelectorAll(".main-slide");
-  const thumbnails = document.querySelectorAll(".thumbnail");
+  const sectionId = "{{ section.id }}";
+  const sectionEl = document.querySelector(`[data-section-id="${sectionId}"]`);
+  if (!sectionEl) return;
+
+  const slider = sectionEl.querySelector(`#ProductGallery-${sectionId}`);
+  const slides = slider ? slider.querySelectorAll(".main-slide") : [];
+  const thumbnails = sectionEl.querySelectorAll(".thumbnail[data-index]");
 
   function activateSlide(index) {
+    if (!slider || !slides.length) return;
     const width = slider.clientWidth;
-    slider.scrollTo({
-      left: width * index,
-      behavior: "smooth"
-    });
+    slider.scrollTo({ left: width * index, behavior: "smooth" });
 
     slides.forEach(s => s.classList.remove("active-slide"));
     thumbnails.forEach(t => t.classList.remove("active-thumb"));
 
-    slides[index].classList.add("active-slide");
-    thumbnails[index].classList.add("active-thumb");
+    if (slides[index]) {
+      slides[index].classList.add("active-slide");
+    }
+    if (thumbnails[index]) {
+      thumbnails[index].classList.add("active-thumb");
+    }
   }
 
   thumbnails.forEach(thumb => {
     thumb.addEventListener("click", () => {
       const index = Number(thumb.dataset.index);
-      if (Number.isNaN(index)) return;
-      activateSlide(index);
+      if (!Number.isNaN(index)) {
+        activateSlide(index);
+      }
     });
   });
 
-  // zoom follow on active slide only
-  slider.addEventListener("mousemove", e => {
-    const active = document.querySelector(".main-slide.active-slide");
-    if (!active) return;
+  if (slider) {
+    slider.addEventListener("mousemove", e => {
+      const active = slider.querySelector(".main-slide.active-slide");
+      if (!active) return;
 
-    const rect = active.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    active.style.transformOrigin = `${x}% ${y}%`;
-  });
+      const rect = active.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      active.style.transformOrigin = `${x}% ${y}%`;
+    });
 
-  slider.addEventListener("mouseleave", () => {
-    const active = document.querySelector(".main-slide.active-slide");
-    if (!active) return;
-    active.style.transformOrigin = "center center";
-    active.style.transform = "none";
-  });
+    slider.addEventListener("mouseleave", () => {
+      const active = slider.querySelector(".main-slide.active-slide");
+      if (!active) return;
+      active.style.transformOrigin = "center center";
+      active.style.transform = "none";
+    });
+  }
 
-  // set initial active slide
-  if (slides.length) {
-    slides[0].classList.add("active-slide");
+  const form = sectionEl.querySelector(`#product-form-${sectionId}`);
+  if (form) {
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const id = formData.get("id");
+      const quantity = Number(formData.get("quantity") || 1);
+      if (!id) return;
+
+      fetch("/cart/add.js", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: Number(id), quantity: quantity })
+      })
+      .then(res => res.json())
+      .then(() => {
+        document.dispatchEvent(new CustomEvent("cart:updated"));
+      })
+      .catch(err => console.error("Add to cart error:", err));
+    });
   }
 });
 </script>
 
-
-
-
-
 {% schema %}
 {
-  "name": "Product Page Section",
-  "settings": [],
+  "name": "Product Page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_thumbnails",
+      "label": "Show thumbnails",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badges",
+      "label": "Show badges",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show product tags",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accordions",
+      "label": "Show accordions",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "skin_types_label",
+      "label": "Skin types label",
+      "default": "SKIN TYPES:"
+    },
+    {
+      "type": "textarea",
+      "id": "skin_types_text",
+      "label": "Skin types text",
+      "default": "Dry Skin, Normal Skin, Sensitive Skin"
+    },
+    {
+      "type": "text",
+      "id": "variant_label",
+      "label": "Variant label",
+      "default": "Choose an option"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_label",
+      "label": "Add to cart label",
+      "default": "ADD TO BAG"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_with",
+      "label": "Show buy it with",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "buy_with_heading",
+      "label": "Buy it with heading",
+      "default": "BUY IT WITH:"
+    },
+    {
+      "type": "product_list",
+      "id": "buy_with_products",
+      "label": "Buy it with products"
+    },
+    {
+      "type": "text",
+      "id": "details_label",
+      "label": "Details label",
+      "default": "DETAILS"
+    },
+    {
+      "type": "text",
+      "id": "key_ingredients_label",
+      "label": "Key ingredients label",
+      "default": "KEY INGREDIENTS"
+    },
+    {
+      "type": "text",
+      "id": "how_to_use_label",
+      "label": "How to use label",
+      "default": "HOW TO USE"
+    },
+    {
+      "type": "text",
+      "id": "full_ingredients_label",
+      "label": "Full ingredients label",
+      "default": "FULL INGREDIENTS"
+    },
+    {
+      "type": "text",
+      "id": "sustainable_packaging_label",
+      "label": "Sustainable packaging label",
+      "default": "SUSTAINABLE PACKAGING"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "label": "Padding left/right",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "Custom liquid",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom liquid"
+        }
+      ]
+    }
+  ],
   "presets": [
     {
-      "name": "Product Page Section",
+      "name": "Product Page",
       "category": "Product"
     }
   ]

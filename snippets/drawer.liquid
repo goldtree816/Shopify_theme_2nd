@@ -30,7 +30,7 @@
   right: -420px;
   width: 420px;
   height: 100vh;
-  background: #fff;
+  background: var(--color-background);
   transition: right 0.3s ease;
   z-index: 9999;
 }
@@ -54,7 +54,7 @@
   display: flex;
   justify-content: space-between;
   padding: 20px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .drawer-content {
@@ -65,6 +65,8 @@
 </style>
 
 <script>
+let activeDrawerClass = null;
+
 document.addEventListener('click', function (e) {
   const openBtn = e.target.closest('[data-drawer-open]');
   const closeBtn = e.target.closest('[data-drawer-close]');
@@ -76,10 +78,20 @@ document.addEventListener('click', function (e) {
   if (openBtn) {
     const source = document.querySelector(openBtn.dataset.drawerOpen);
     const drawerTitle = openBtn.dataset.drawerTitle || '';
+    const drawerClass = openBtn.dataset.drawerClass;
 
     if (source && content) {
+      if (activeDrawerClass) {
+        drawer.classList.remove(activeDrawerClass);
+        activeDrawerClass = null;
+      }
+
       content.innerHTML = source.innerHTML;
       title.textContent = drawerTitle;
+      if (drawerClass) {
+        drawer.classList.add(drawerClass);
+        activeDrawerClass = drawerClass;
+      }
       drawer.classList.add('open');
       overlay.classList.add('open');
     }
@@ -89,6 +101,10 @@ document.addEventListener('click', function (e) {
     drawer.classList.remove('open');
     overlay.classList.remove('open');
     content.innerHTML = '';
+    if (activeDrawerClass) {
+      drawer.classList.remove(activeDrawerClass);
+      activeDrawerClass = null;
+    }
   }
 });
 
