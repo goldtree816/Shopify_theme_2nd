@@ -1,293 +1,750 @@
-<div id="search-overlay" class="search-overlay">
-  <div class="search-inner">
+<div id="search__page-overlay" class="search__page-overlay" hidden></div>
 
-    <!-- Search bar -->
-    <form action="/search" method="get" class="search-bar">
-      <span class="search-input-icon" aria-hidden="true">
-        {% render 'icon-search' %}
-      </span>
-      <input
-        id="search-input"
-        type="text"
-        name="q"
-        placeholder="Search"
-        class="search-input"
-      >
-      <button type="button" class="search-close" aria-label="Close search">x</button>
-    </form>
+<search-bar
+  id="search-{{ section.id }}"
+  class="search"
+  aria-hidden="true"
+  aria-expanded="false"
+  style="--search-header-offset: 96px;"
+>
+  <div class="search__wrapper">
+    <div class="search__header">
+      <button class="close-button" aria-label="Close search" data-action="close-search" type="button">
+        &times;
+      </button>
 
-    <div class="search-content">
+      <div class="search__input-wrapper">
+        <span class="search__icon" aria-hidden="true">{% render 'icon-search' %}</span>
 
-      <!-- Recommended Searches -->
-      <div class="recommended-searches">
-        <h3>{{ section.settings.search_heading }}</h3>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="search__form" data-search-form>
+          <input
+            class="search__input"
+            type="search"
+            name="q"
+            id="search-input-{{ section.id }}"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            placeholder="Search articles, pages, or products"
+          >
+          <input type="hidden" name="options[prefix]" value="last">
+          <input type="hidden" name="type" value="product,article,page">
+        </form>
 
-        <ul id="search-suggestions">
-        {% for block in section.blocks %}
-            {% if block.type == 'search_term' %}
-            <li class="suggestion-item">{{ block.settings.term }}</li>
-            {% endif %}
-        {% endfor %}
-        </ul>
-
+        <button class="search__clear-button" data-action="clear-input" aria-hidden="true" type="button">
+          CLEAR
+        </button>
       </div>
-
-{% if section.settings.show_products %}
-  <div class="recommended-products-wrapper">
-    {% if section.settings.products_collection != blank %}
-      {% render 'bestsellers-snippet',
-        heading: section.settings.products_subheading,
-        description: section.settings.products_description,
-        gap: section.settings.products_gap,
-        collection: section.settings.products_collection
-      %}
-    {% else %}
-      <p>Select a collection to show products.</p>
-    {% endif %}
-  </div>
-{% endif %}
-
-</div>
-        </div>
     </div>
 
+    <div class="search__dynamic-content" data-scrollable>
+      <div class="search__results" data-results>
+        <div class="search__results-inner-container search__results-inner-container--other">
+          <div class="search__results-column search__results--recent" data-recent-container>
+            <div class="search__result-header search__result-header--recent">
+              <div class="search__result-title search__result-title--recent">
+                {{ section.settings.recent_searches_heading }}
+              </div>
+            </div>
+            <ul class="search__results-list search__results-list--recent" data-recent-searches></ul>
+          </div>
+
+          <div class="search__results-column search__results--suggested">
+            <div class="search__result-header search__result-header--suggested">
+              <div class="search__result-title search__result-title--suggested">
+                {{ section.settings.search_heading }}
+              </div>
+            </div>
+
+            <ul class="search__results-list search__results-list--suggested" data-recommended-searches>
+              {% for block in section.blocks %}
+                {% if block.type == 'search_term' and block.settings.term != blank %}
+                  <li
+                    role="option"
+                    tabindex="0"
+                    class="search__query"
+                    data-action="search-string"
+                    data-value="{{ block.settings.term | escape }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{ block.settings.term }}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="search__swiper-wrapper search__swiper-wrapper--featured">
+          <div class="search__swiper-header search__swiper-header--featured">
+            <div class="search__swiper-title search__swiper-title--featured">
+              {{ section.settings.products_heading }}
+            </div>
+          </div>
+
+          {% liquid
+            assign recommended_collection = section.settings.products_collection
+            if recommended_collection == blank
+              assign recommended_collection = collections['all']
+            endif
+          %}
+
+          <div class="search__featured-swiper" data-products-host>
+            <div class="search__product-grid search__product-grid--featured" data-products-grid>
+              {% if section.settings.show_products and recommended_collection != blank %}
+                {% for product in recommended_collection.products limit: section.settings.products_limit %}
+                  <article class="search__featured-slide" data-product-title="{{ product.title | downcase | escape }}">
+                    {% render 'card', product: product %}
+                  </article>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="search__swiper-scrollbar" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <p class="visually-hidden" data-search-status aria-live="polite"></p>
+</search-bar>
 
 <style>
-
-.search-products-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-}
-
-.search-product-card img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 8px;
-}
-
-
-.search-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(3px);
-  z-index: 9999;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.search-overlay.active {
-  display: flex;
-  justify-content: flex-end;
-  opacity: 1;
-}
-
-/* Floating white search box */
-.search-inner {
-  width: min(880px, 80vw);
-  background: var(--color-background);
-  padding: 72px 52px;
-  border-radius: 0;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-  font-family: var(--font-primary--family);
-  max-height: 100vh;
-  overflow-y: auto;
-}
-
-
-/* Search top bar */
-.search-bar {
-  display: grid;
-  grid-template-columns: 18px 1fr 28px;
-  gap: 12px;
-  align-items: center;
-  margin-bottom: 36px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.search-input-icon svg {
-  width: 18px;
-  height: 18px;
-  color: var(--color-foreground);
-}
-
-.search-input {
-  width: 100%;
-  font-size: 18px;
-  padding: 6px 0;
-  border: none;
-}
-
-.search-input:focus {
-  outline: none;
-}
-
-.search-close {
-  font-size: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-foreground);
-  line-height: 1;
-}
-
-/* Layout grid like AEVI */
-.search-content {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 60px;
-}
-
-.recommended-searches h3,
-.recommended-products h3 {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-.recommended-searches ul {
-  list-style: none;
-  padding: 0;
-}
-
-.recommended-searches li {
-  margin-bottom: 10px;
-}
-
-.recommended-searches a {
-  color: var(--color-link);
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.recommended-searches a:hover {
-  color: var(--color-link-hover);
-  text-decoration: underline;
-}
-
-.recommended-products-wrapper {
-  display: block;
-}
-.recommended-products-wrapper .bestsellers-product {
-  width: 100%
-}
-
-@media (max-width: 1024px) {
-  .search-inner {
-    width: 86vw;
-    padding: 56px 36px;
-  }
-}
-
-@media (max-width: 640px) {
-  .search-inner {
-    width: 88vw;
-    padding: 36px 20px;
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
-  .search-content {
-    grid-template-columns: 1fr;
-    gap: 32px;
+  body.search-overlay-open {
+    overflow: hidden;
   }
 
-  .search-products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
+  .search__page-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 34;
+    background: rgba(14, 20, 28, 0.34);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
   }
-}
 
+  .search__page-overlay.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  search-bar {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: var(--search-header-offset, 96px);
+    z-index: 40;
+    background: #f3f3f3;
+    color: #232b35;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    overflow-x: clip;
+  }
+
+  search-bar[aria-expanded='true'] {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  search-bar,
+  search-bar * {
+    box-sizing: border-box;
+  }
+
+  .search__wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .search__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 18px 34px 8px;
+  }
+
+  .close-button {
+    border: 0;
+    background: transparent;
+    font-size: 38px;
+    line-height: 1;
+    color: #5d6570;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .search__input-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(35, 43, 53, 0.4);
+    padding-bottom: 8px;
+  }
+
+  .search__icon {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    color: #5f6f82;
+  }
+
+  .search__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .search__form {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search__input {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    background: transparent;
+    width: 100%;
+    color: #4d5f74;
+    font-size: 48px;
+    line-height: 1;
+    font-family: var(--font-primary--family);
+    padding: 0;
+    min-width: 0;
+  }
+
+  .search__input::placeholder {
+    color: #5e7388;
+    opacity: 1;
+  }
+
+  .search__input:focus {
+    outline: none;
+  }
+
+  .search__clear-button {
+    border: 0;
+    background: transparent;
+    color: #5f6f82;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .search__clear-button[aria-hidden='false'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .search__dynamic-content {
+    max-height: calc(100vh - var(--search-header-offset, 96px) - 118px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 34px 26px;
+  }
+
+  .search__dynamic-content::-webkit-scrollbar {
+    display: none;
+  }
+
+  .search__results {
+    display: grid;
+    grid-template-columns: minmax(220px, 24vw) minmax(0, 1fr);
+    gap: 30px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .search__results-inner-container--other {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    min-width: 0;
+  }
+
+  .search__results-column {
+    min-width: 0;
+  }
+
+  .search__result-header,
+  .search__swiper-header {
+    margin-bottom: 10px;
+  }
+
+  .search__result-title,
+  .search__swiper-title {
+    font-size: 52px;
+    line-height: 0.94;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: #232b35;
+    margin: 0;
+  }
+
+  .search__results-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search__results-list--recent li,
+  .search__query {
+    color: #2f3b49;
+    font-size: 16px;
+    line-height: 1.2;
+    width: fit-content;
+  }
+
+  .search__query {
+    cursor: pointer;
+  }
+
+  .search__query:hover {
+    text-decoration: underline;
+  }
+
+  .search__swiper-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .search__featured-swiper {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    scroll-snap-type: x proximity;
+  }
+
+  .search__featured-swiper::-webkit-scrollbar {
+    height: 5px;
+  }
+
+  .search__featured-swiper::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.26);
+    border-radius: 999px;
+  }
+
+  .search__product-grid {
+    display: flex;
+    gap: 24px;
+    min-width: max-content;
+    padding-bottom: 10px;
+  }
+
+  .search__featured-slide {
+    width: clamp(250px, 19vw, 330px);
+    min-width: clamp(250px, 19vw, 330px);
+    scroll-snap-align: start;
+  }
+
+  .search__featured-slide .product-card {
+    width: 100%;
+    min-width: 0;
+    flex: none;
+    padding-bottom: 0;
+  }
+
+  .search__featured-slide .product-card__image {
+    margin-bottom: 0;
+  }
+
+  .search__swiper-scrollbar {
+    display: none;
+  }
+
+  @media screen and (max-width: 1680px) {
+    .search__input {
+      font-size: 40px;
+    }
+
+    .search__result-title,
+    .search__swiper-title {
+      font-size: 44px;
+    }
+
+    .search__results-list--recent li,
+    .search__query {
+      font-size: 16px;
+    }
+  }
+
+  @media screen and (max-width: 1280px) {
+    .search__input {
+      font-size: 34px;
+    }
+
+    .search__result-title,
+    .search__swiper-title {
+      font-size: 34px;
+    }
+
+    .search__results-list--recent li,
+    .search__query {
+      font-size: 15px;
+    }
+
+    .search__featured-slide {
+      width: clamp(230px, 27vw, 300px);
+      min-width: clamp(230px, 27vw, 300px);
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    search-bar {
+      top: 0 !important;
+      height: 100vh;
+      max-width: 100%;
+      z-index: 9999;
+      transform: translateY(-8px);
+    }
+
+    .search__header {
+      padding: 14px 14px 6px;
+    }
+
+    .search__dynamic-content {
+      max-height: calc(100vh - 112px);
+      padding: 0 14px 20px;
+    }
+
+    .search__results {
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .search__result-title,
+    .search__swiper-title {
+      font-size: 18px;
+      line-height: 1.08;
+    }
+
+    .search__results-list--recent li,
+    .search__query {
+      font-size: 14px;
+    }
+
+    .search__input {
+      font-size: 20px;
+    }
+
+    .search__featured-slide {
+      width: min(62vw, 260px);
+      min-width: min(62vw, 260px);
+    }
+
+    .close-button {
+      font-size: 32px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    .search__results {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const overlay = document.getElementById('search-overlay');
-  if (!overlay) return;
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchBar = document.getElementById('search-{{ section.id }}');
+    if (!searchBar || searchBar.dataset.initialized === 'true') return;
+    searchBar.dataset.initialized = 'true';
 
-  const searchButtons = document.querySelectorAll('.search-icon');
-  const closeBtn = overlay.querySelector('.search-close');
-  const searchInput = overlay.querySelector('#search-input');
-  const suggestionItems = overlay.querySelectorAll('#search-suggestions .suggestion-item');
-  const productsWrapper = overlay.querySelector('.recommended-products-wrapper');
-  const initialProductsMarkup = productsWrapper ? productsWrapper.innerHTML : '';
+    const openButtons = document.querySelectorAll('.search-icon, [data-action="open-search"]');
+    const closeButton = searchBar.querySelector('[data-action="close-search"]');
+    const input = searchBar.querySelector('#search-input-{{ section.id }}');
+    const pageOverlay = document.getElementById('search__page-overlay');
+    const clearButton = searchBar.querySelector('[data-action="clear-input"]');
+    const recentContainer = searchBar.querySelector('[data-recent-container]');
+    const recentList = searchBar.querySelector('[data-recent-searches]');
+    const suggestedTerms = Array.from(searchBar.querySelectorAll('[data-action="search-string"]'));
+    const productsGrid = searchBar.querySelector('[data-products-grid]');
+    const statusEl = searchBar.querySelector('[data-search-status]');
 
-  const openOverlay = () => {
-    overlay.classList.add('active');
-    if (searchInput) {
-      searchInput.focus();
-    }
-  };
+    const recentStorageKey = 'aevi_recent_searches';
+    const headerEl = document.getElementById('site-header');
+    const navbarEl = document.getElementById('navbar');
+    const isHomeTemplate = document.body.classList.contains('template-index');
 
-  const closeOverlay = () => {
-    overlay.classList.remove('active');
-  };
+    let closeTimer = null;
+    let debounceTimer = null;
 
-  searchButtons.forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      openOverlay();
-    });
-  });
+    const isOpen = () => searchBar.getAttribute('aria-expanded') === 'true';
 
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeOverlay);
-  }
+    const setStatus = (text) => {
+      if (statusEl) statusEl.textContent = text;
+    };
 
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) {
-      closeOverlay();
-    }
-  });
+    const refreshHeaderState = () => {
+      const shouldBeScrolled =
+        document.body.classList.contains('search-force-scrolled') ||
+        !isHomeTemplate ||
+        window.scrollY > 10;
+      if (headerEl) headerEl.classList.toggle('is-scrolled', shouldBeScrolled);
+      if (navbarEl) navbarEl.classList.toggle('scrolled', shouldBeScrolled);
+    };
 
-  if (!searchInput) return;
+    const getHeaderOffset = () => {
+      if (window.matchMedia('(max-width: 1024px)').matches) return 0;
+      if (navbarEl) {
+        const navbarRect = navbarEl.getBoundingClientRect();
+        return Math.max(0, Math.round(navbarRect.bottom));
+      }
+      if (!headerEl) return 96;
+      const headerRect = headerEl.getBoundingClientRect();
+      return Math.max(0, Math.round(headerRect.bottom));
+    };
 
-  searchInput.addEventListener('input', () => {
-    const query = searchInput.value.trim().toLowerCase();
+    const syncOffset = () => {
+      searchBar.style.setProperty('--search-header-offset', `${getHeaderOffset()}px`);
+    };
 
-    suggestionItems.forEach(item => {
-      const text = item.textContent.toLowerCase();
-      item.style.display = text.includes(query) ? 'block' : 'none';
-    });
+    const setOverlayVisibility = (show) => {
+      if (!pageOverlay) return;
 
-    if (!productsWrapper) return;
+      if (show) {
+        pageOverlay.hidden = false;
+        requestAnimationFrame(() => pageOverlay.classList.add('is-visible'));
+        return;
+      }
 
-    if (query.length < 2) {
-      productsWrapper.innerHTML = initialProductsMarkup;
-      return;
-    }
+      pageOverlay.classList.remove('is-visible');
+      window.setTimeout(() => {
+        if (!isOpen()) pageOverlay.hidden = true;
+      }, 220);
+    };
 
-    fetch(`/search/suggest.json?q=${encodeURIComponent(query)}&resources[type]=product&resources[limit]=6`)
-      .then(res => res.json())
-      .then(data => {
-        const products = data.resources.results.products;
+    const getRecentSearches = () => {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(recentStorageKey) || '[]');
+        return Array.isArray(parsed) ? parsed.filter(Boolean).slice(0, 6) : [];
+      } catch (error) {
+        return [];
+      }
+    };
 
-        if (!products.length) {
-          productsWrapper.innerHTML = '<p>No products found</p>';
-          return;
-        }
+    const saveRecentSearch = (value) => {
+      const term = (value || '').trim();
+      if (!term) return;
 
-        let html = '<div class="search-products-grid">';
-        products.forEach(p => {
-          html += `
-            <a href="${p.url}" class="search-product-card">
-              <img src="${p.image}" alt="${p.title}">
-              <p>${p.title}</p>
-              <span>${p.price}</span>
-            </a>
-          `;
+      const next = getRecentSearches().filter((item) => item.toLowerCase() !== term.toLowerCase());
+      next.unshift(term);
+      localStorage.setItem(recentStorageKey, JSON.stringify(next.slice(0, 6)));
+    };
+
+    const renderRecentSearches = () => {
+      if (!recentContainer || !recentList) return;
+
+      const terms = getRecentSearches();
+      recentList.innerHTML = '';
+      recentContainer.hidden = terms.length === 0;
+
+      terms.forEach((term) => {
+        const li = document.createElement('li');
+        li.className = 'search__query';
+        li.tabIndex = 0;
+        li.setAttribute('role', 'option');
+        li.textContent = term;
+
+        li.addEventListener('click', () => {
+          if (!input) return;
+          input.value = term;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
         });
-        html += '</div>';
 
-        productsWrapper.innerHTML = html;
-      })
-      .catch(() => {
-        productsWrapper.innerHTML = '<p>No products found</p>';
+        li.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            li.click();
+          }
+        });
+
+        recentList.appendChild(li);
       });
+    };
+
+    const filterProductCards = (query) => {
+      if (!productsGrid) return;
+
+      const cards = Array.from(productsGrid.querySelectorAll('.search__featured-slide'));
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const title = (card.dataset.productTitle || '').toLowerCase();
+        const shouldShow = query === '' || title.includes(query);
+        card.style.display = shouldShow ? '' : 'none';
+        if (shouldShow) visibleCount += 1;
+      });
+
+      if (cards.length === 0) {
+        setStatus('No recommended products configured');
+      } else {
+        setStatus(visibleCount > 0 ? `${visibleCount} products shown` : 'No products found');
+      }
+    };
+
+    const filterSuggestedTerms = (query) => {
+      suggestedTerms.forEach((item) => {
+        const value = (item.dataset.value || item.textContent || '').toLowerCase();
+        item.style.display = query === '' || value.includes(query) ? '' : 'none';
+      });
+    };
+
+    const openSearch = () => {
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+
+      if (isOpen()) {
+        input?.focus();
+        return;
+      }
+
+      document.body.classList.add('search-overlay-open', 'search-force-scrolled');
+      refreshHeaderState();
+
+      searchBar.setAttribute('aria-hidden', 'false');
+      searchBar.setAttribute('aria-expanded', 'true');
+      setOverlayVisibility(true);
+
+      syncOffset();
+      requestAnimationFrame(() => {
+        syncOffset();
+        renderRecentSearches();
+        input?.focus();
+      });
+    };
+
+    const closeSearch = () => {
+      if (!isOpen()) return;
+
+      searchBar.setAttribute('aria-expanded', 'false');
+      setOverlayVisibility(false);
+
+      closeTimer = window.setTimeout(() => {
+        if (isOpen()) return;
+
+        searchBar.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('search-overlay-open', 'search-force-scrolled');
+        refreshHeaderState();
+        syncOffset();
+      }, 220);
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        openSearch();
+      });
+    });
+
+    closeButton?.addEventListener('click', closeSearch);
+    pageOverlay?.addEventListener('click', closeSearch);
+
+    if (clearButton && input) {
+      clearButton.addEventListener('click', () => {
+        input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+    }
+
+    suggestedTerms.forEach((item) => {
+      item.addEventListener('click', () => {
+        if (!input) return;
+        input.value = item.dataset.value || item.textContent || '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.focus();
+      });
+
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          item.click();
+        }
+      });
+    });
+
+    if (input) {
+      input.addEventListener('input', () => {
+        const query = input.value.trim().toLowerCase();
+        clearButton?.setAttribute('aria-hidden', query ? 'false' : 'true');
+        filterSuggestedTerms(query);
+
+        if (debounceTimer) clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(() => {
+          filterProductCards(query);
+        }, 150);
+      });
+
+      input.addEventListener('change', () => saveRecentSearch(input.value));
+    }
+
+    const form = searchBar.querySelector('[data-search-form]');
+    if (form && input) {
+      form.addEventListener('submit', () => {
+        saveRecentSearch(input.value);
+      });
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOpen()) {
+        closeSearch();
+      }
+    });
+
+    window.addEventListener('resize', syncOffset);
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (isOpen()) syncOffset();
+      },
+      { passive: true }
+    );
+
+    filterProductCards('');
+    filterSuggestedTerms('');
+    syncOffset();
   });
-});
 </script>
 
 {% schema %}
@@ -295,14 +752,28 @@ document.addEventListener('DOMContentLoaded', () => {
   "name": "Search Overlay",
   "settings": [
     {
+      "type": "text",
+      "id": "recent_searches_heading",
+      "label": "Recent searches heading",
+      "default": "RECENT SEARCHES"
+    },
+    {
+      "type": "text",
+      "id": "search_heading",
+      "label": "Recommended searches heading",
+      "default": "RECOMMENDED SEARCHES"
+    },
+    {
       "type": "checkbox",
       "id": "show_products",
       "label": "Show recommended products",
       "default": true
     },
     {
-      "type": "header",
-      "content": "Recommended Products"
+      "type": "text",
+      "id": "products_heading",
+      "label": "Products heading",
+      "default": "RECOMMENDED PRODUCTS"
     },
     {
       "type": "collection",
@@ -310,43 +781,19 @@ document.addEventListener('DOMContentLoaded', () => {
       "label": "Collection to display"
     },
     {
-      "type": "text",
-      "id": "products_subheading",
-      "label": "Products subheading",
-      "default": "Bestsellers for you"
-    },
-    {
-      "type": "text",
-      "id": "products_description",
-      "label": "Products description",
-      "default": "Description here"
-    },
-    {
       "type": "range",
-      "id": "products_gap",
-      "label": "Product card spacing",
-      "min": 0,
-      "max": 100,
+      "id": "products_limit",
+      "label": "Products limit",
+      "min": 2,
+      "max": 12,
       "step": 1,
-      "default": 20
-    },
-    {
-      "type": "text",
-      "id": "search_heading",
-      "label": "Recommended Searches Heading",
-      "default": "RECOMMENDED SEARCHES"
-    },
-    {
-      "type": "text",
-      "id": "products_heading",
-      "label": "Recommended Products Heading",
-      "default": "RECOMMENDED PRODUCTS"
+      "default": 6
     }
   ],
   "blocks": [
     {
       "type": "search_term",
-      "name": "Recommended Search Term",
+      "name": "Recommended search term",
       "settings": [
         {
           "type": "text",
@@ -363,7 +810,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ]
 }
-
-
-
 {% endschema %}

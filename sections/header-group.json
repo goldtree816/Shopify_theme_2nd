@@ -11,6 +11,57 @@
   "type": "header",
   "name": "t:sections.header.name",
   "sections": {
+    "announcement_bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_1": {
+          "type": "announcement",
+          "settings": {
+            "text": "FREE SHIPPING ON ALL ORDERS",
+            "link_label": "SHOP NOW",
+            "link": "shopify://collections/bestsellers"
+          }
+        },
+        "announcement_2": {
+          "type": "announcement",
+          "settings": {
+            "text": "AWARD-WINNING BLEMISH TREATMENT",
+            "link_label": "GET YOURS",
+            "link": "shopify://collections/bestsellers"
+          }
+        },
+        "announcement_3": {
+          "type": "announcement",
+          "settings": {
+            "text": "SIGN UP TO OUR NEWSLETTER FOR 10% OFF",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "announcement_1",
+        "announcement_2",
+        "announcement_3"
+      ],
+      "settings": {
+        "enable": true,
+        "autoplay": true,
+        "interval": 4000,
+        "transition_ms": 600,
+        "pause_on_hover": true,
+        "height": 36,
+        "height_mobile": 32,
+        "text_size": 13,
+        "text_size_mobile": 12,
+        "background_color": "#c7d8ea",
+        "text_color": "#1d3d7a",
+        "link_color": "#1d3d7a",
+        "fallback_text": "FREE SHIPPING ON ALL ORDERS",
+        "fallback_link_label": "SHOP NOW",
+        "fallback_link": "shopify://collections/bestsellers"
+      }
+    },
     "header": {
       "type": "header",
       "blocks": {
@@ -27,11 +78,6 @@
         "menu_images_8B8AxB"
       ],
       "settings": {
-        "banner_text": "Free Shopping",
-        "banner_link_label": "SHOP NOW",
-        "banner_link": "shopify://collections/bestsellers",
-        "banner_bg_color": "",
-        "banner_link_color": "#ffffff",
         "left-navbar": "left-navbar",
         "right-navbar": "right-navbar",
         "nav_item_spacing": 20,
@@ -47,6 +93,7 @@
     }
   },
   "order": [
+    "announcement_bar",
     "header"
   ]
 }

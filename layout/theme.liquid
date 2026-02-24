@@ -1,433 +1,109 @@
 <!doctype html>
-{{ 'theme.css' | asset_url | stylesheet_tag }}
-
 <html lang="{{ request.locale.iso_code }}">
   <head>
+    {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {{ 'component-product-card.css' | asset_url | stylesheet_tag }}
+
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
 
     {% # Load and preload the critical CSS %}
     {{ 'aevi.css' | asset_url | stylesheet_tag: preload: true }}
+    {{ 'drawers.css' | asset_url | stylesheet_tag }}
+    {{ 'cart-drawer.css' | asset_url | stylesheet_tag }}
+    {{ 'section-sidebar_menu.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
 
     {{ content_for_header }}
   </head>
+  <body class="template-{{ template.name | handle }}{% if template.suffix != blank %} template-{{ template.name | handle }}-{{ template.suffix | handle }}{% endif %}">
+    {% sections 'header-group' %}
+    {% section 'search-overlay' %}
+    <div class="pageOverlay" aria-hidden="true"></div>
 
-<style>
-/* Drawer overlay hidden by default */
-.cart-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-  z-index: 9999;
-  display: none;
-  justify-content: flex-end;
-  font-family: var(--font-primary--family);
-}
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
 
-/* Drawer container */
-.cart-drawer {
-  padding:0 40px;
-  width:100%;
-  overflow-y:auto;
-  max-width: 450px;
-  height: 100%;
-  background: var(--color-background);
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.35s ease;
-}
+    {% sections 'footer-group' %}
+    {% render 'drawer' %}
 
-/* When drawer is open */
-.cart-overlay.active .cart-drawer {
-  transform: translateX(0);
-}
-
-/* HEADER */
-.cart-drawer-header {
-  margin-top:50px;
-  padding:auto;
-  border-bottom: 1px solid var(--color-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.cart-drawer-close {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-/* INNER */
-.cart-drawer-inner {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 24px 24px;
-}
-
-.cart-free-shipping { margin-bottom: 24px; font-size: 12px; }
-.cart-free-shipping-bar { height: 4px; border-radius: 999px; background: var(--color-border); overflow: hidden; margin-top: 8px; }
-.cart-free-shipping-fill { height: 100%; background: var(--color-accent); width: 0; }
-.cart-items { margin-bottom: 24px; }
-
-.cart-item {
-  display: grid;
-  grid-template-columns: 76px 1fr auto;
-  grid-template-rows: auto;
-  gap: 12px;
-}
+    {% unless template.name == 'cart' %}
+      {% render 'cart-drawer', mode: 'drawer' %}
+    {% endunless %}
 
 
-.cart-item-image img { width: 76px; height: 110px; object-fit: cover; }
-.cart-item-info-title { font-size: 13px; margin-bottom: 4px; }
-
-.cart-item-remove-btn {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  opacity: .6;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-.cart-item-qty {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-}
-
-.cart-item-qty button {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-background);
-  cursor: pointer;
-}
-
-.cart-item-qty input {
-  width: 34px;
-  text-align: center;
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
-  padding: 2px 4px;
-  font-size: 12px;
-}
-
-.cart-item-price { font-size: 13px; text-align: right; }
-
-.cart-upsell-title { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; margin: 8px 0 12px; }
-.cart-upsell-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-bottom: 24px; }
-.cart-upsell-card { border: 1px solid var(--color-border); padding: 8px; font-size: 11px; }
-.cart-upsell-card img { width: 100%; aspect-ratio: 3/5; object-fit: cover; margin-bottom: 4px; }
-.cart-upsell-card-price { font-size: 11px; opacity: .7; }
-
-.cart-footer { border-top: 1px solid var(--color-border); padding: 16px 24px 20px; font-size: 13px; }
-.cart-footer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.cart-checkout-button { width: 100%; padding: 12px 16px; border-radius: 999px; border: none; background: var(--color-button-bg); color: var(--color-button-text); cursor: pointer; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; }
-.cart-shipping-note { font-size: 11px; opacity: .7; margin-bottom: 10px; }
-
-.cart-coupon { margin-top: 10px; }
-.cart-coupon-row { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
-.cart-coupon-input { border-radius: 999px; border: 1px solid var(--color-border); padding: 8px 12px; font-size: 12px; }
-.cart-coupon-button { border-radius: 999px; border: 1px solid var(--color-border); padding: 8px 16px; background: transparent; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; cursor: pointer; }
-</style>
-
-<!-- DRAWER HTML START -->
-<div class="cart-overlay">
-  <div class="cart-drawer">
-
-    <div class="cart-drawer-header">
-      <span>{{ 'cart.title' | t }}</span>
-      <button type="button" class="cart-drawer-close">×</button>
-    </div>
-
-    <form action="{{ routes.cart_url }}" method="post">
-      <div class="cart-drawer-inner">
-
-        {% assign free_shipping_threshold = 9000 %}
-        {% assign cart_total = cart.total_price %}
-        {% assign shipping_progress = cart_total | times: 100 | divided_by: free_shipping_threshold %}
-        {% if shipping_progress > 100 %}
-          {% assign shipping_progress = 100 %}
-        {% endif %}
-        {% assign amount_to_free = free_shipping_threshold | minus: cart_total %}
-
-        <div class="cart-free-shipping">
-          {% if cart_total >= free_shipping_threshold %}
-            You have free shipping
-          {% else %}
-            {{ amount_to_free | money }} away from free shipping
-          {% endif %}
-          <div class="cart-free-shipping-bar">
-            <div class="cart-free-shipping-fill" style="width: {{ shipping_progress }}%;"></div>
-          </div>
-        </div>
-
-        <div class="cart-items">
-          {%- comment -%}
-            Initial server-rendered items (will be replaced by JS render for correct bindings)
-          {%- endcomment -%}
-          {% for item in cart.items %}
-            <div class="cart-item" data-line="{{ forloop.index }}">
-              <div class="cart-item-image">
-                {% render 'image', image: item.image, url: item.url %}
-              </div>
-              <div class="cart-item-info">
-                <div class="cart-item-info-title">{{ item.product.title }}</div>
-                <button type="button" class="cart-item-remove-btn" data-line="{{ forloop.index }}">
-                  {{ 'cart.remove' | t }}
-                </button>
-              </div>
-              <div class="cart-item-price">{{ item.final_line_price | money }}</div>
-              <div></div>
-              <div class="cart-item-qty">
-                <button type="button" class="cart-qty-btn" data-line="{{ forloop.index }}" data-qty="{{ item.quantity | minus: 1 }}">−</button>
-                <input type="number" class="cart-qty-input" data-line="{{ forloop.index }}" value="{{ item.quantity }}" min="0">
-                <button type="button" class="cart-qty-btn" data-line="{{ forloop.index }}" data-qty="{{ item.quantity | plus: 1 }}">+</button>
-              </div>
-              <div></div>
-            </div>
-          {% endfor %}
-        </div>
-
-        {% if cart.items_count > 0 %}
-          <div class="cart-upsell">
-            <div class="cart-upsell-title">You may also like</div>
-            <div class="cart-upsell-grid">
-              {% for product in collections.all.products limit: 2 %}
-                <a href="{{ product.url }}" class="cart-upsell-card">
-                  {% if product.featured_image %}
-                    <img src="{{ product.featured_image | img_url: '360x' }}">
-                  {% endif %}
-                  <div>{{ product.title }}</div>
-                  <div class="cart-upsell-card-price">{{ product.price | money }}</div>
-                </a>
-              {% endfor %}
-            </div>
-          </div>
-        {% endif %}
-
-      </div>
-
-      <div class="cart-footer">
-        <div class="cart-footer-row">
-          <span>{{ 'cart.subtotal' | t }}</span>
-          <span class="cart-subtotal-amount">{{ cart.total_price | money }}</span>
-        </div>
-
-        <div class="cart-footer-checkout">
-          <button type="submit" name="checkout" class="cart-checkout-button">
-            {{ 'cart.checkout' | t }} | {{ cart.total_price | money }}
-          </button>
-        </div>
-
-        <div class="cart-shipping-note">Shipping and taxes calculated at checkout</div>
-
-        <div class="cart-coupon">
-          <div class="cart-coupon-row">
-            <input type="text" class="cart-coupon-input" placeholder="Enter code">
-            <button type="button" class="cart-coupon-button">Apply</button>
-          </div>
-        </div>
-      </div>
-
-    </form>
-
+<!-- PRODUCT CARD DRAWER START -->
+<product-card-drawer
+  id="product-card__drawer"
+  class="Drawer--wrapper drawer-bottom"
+  aria-expanded="false"
+  aria-hidden="true"
+>
+  <div class="Drawer--Wrapper">
+    <button type="button" class="Drawer--Close" data-action="close-drawer" data-toggle-id="product-card__drawer" aria-label="Close">
+      &times;
+    </button>
+    <div class="Drawer--Content product-card__drawer--content" data-scrollable></div>
   </div>
-</div>
-<!-- DRAWER HTML END -->
+</product-card-drawer>
+<!-- PRODUCT CARD DRAWER END -->
 
+{{ 'drawers.js' | asset_url | script_tag }}
+{{ 'cart-drawer.js' | asset_url | script_tag }}
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const overlay = document.querySelector(".cart-overlay");
-  if (!overlay) return;
 
-  const drawer = overlay.querySelector(".cart-drawer");
-  const closeBtn = overlay.querySelector(".cart-drawer-close");
-  const openers = document.querySelectorAll(".open-cart-drawer");
+document.addEventListener("change", function(e) {
+  const select = e.target.closest("[data-product-card-variant-select]");
+  if (!select) return;
 
-  const moneyFormat = {{ shop.money_format | json }};
-  const FREE_SHIPPING = 9000;
+  const scope = select.closest(".product-card__purchase-options, .product-card__information-bottom-half");
+  if (!scope) return;
 
-  function formatMoney(cents){
-    const value = (cents / 100).toFixed(2);
-    // Very basic replacer for formats like "€{{amount}}"
-    return moneyFormat.replace("{{amount}}", value);
+  const btn = scope.querySelector(".quick-add-btn");
+  if (!btn) return;
+
+  const selectedOption = select.options[select.selectedIndex];
+  const variantId = select.value;
+  const isAvailable = selectedOption ? selectedOption.dataset.available !== "false" : true;
+  const addLabel = btn.dataset.addLabel || "ADD TO BAG";
+  const soldLabel = btn.dataset.soldLabel || "SOLD OUT";
+  const productCard = select.closest(".product-card");
+
+  btn.dataset.variant = variantId;
+  btn.disabled = !isAvailable;
+
+  const textNode = btn.querySelector(".ButtonText");
+  if (textNode) {
+    textNode.textContent = isAvailable ? addLabel : soldLabel;
   }
 
-  function openCartDrawer(){
-    overlay.style.display = "flex";
-    requestAnimationFrame(() => {
-      overlay.classList.add("active");
-    });
-  }
+  if (productCard && selectedOption) {
+    const priceNode = productCard.querySelector("[data-product-card-price]");
+    const compareWrap = productCard.querySelector("[data-product-card-compare-wrap]");
+    const compareNode = productCard.querySelector("[data-product-card-compare-price]");
 
-  function closeCartDrawer(){
-    overlay.classList.remove("active");
-    setTimeout(() => {
-      overlay.style.display = "none";
-    }, 300);
-  }
-
-  function attachCartItemEvents(){
-    const qtyButtons = overlay.querySelectorAll(".cart-qty-btn");
-    qtyButtons.forEach(btn => {
-      btn.addEventListener("click", function(e){
-        e.preventDefault();
-        const line = Number(this.dataset.line);
-        const qty  = Number(this.dataset.qty);
-        if (!line || qty < 0) return;
-
-        fetch("/cart/change.js", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ line: line, quantity: qty })
-        })
-        .then(res => res.json())
-        .then(cart => {
-          renderCart(cart);
-        })
-        .catch(err => console.error("Qty update error:", err));
-      });
-    });
-
-    const removeButtons = overlay.querySelectorAll(".cart-item-remove-btn");
-    removeButtons.forEach(btn => {
-      btn.addEventListener("click", function(e){
-        e.preventDefault();
-        const line = Number(this.dataset.line);
-        if (!line) return;
-
-        fetch("/cart/change.js", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ line: line, quantity: 0 })
-        })
-        .then(res => res.json())
-        .then(cart => {
-          renderCart(cart);
-        })
-        .catch(err => console.error("Remove error:", err));
-      });
-    });
-  }
-
-  function renderCart(cart){
-    const itemsContainer = overlay.querySelector(".cart-items");
-    if (!itemsContainer) return;
-
-    itemsContainer.innerHTML = "";
-
-    cart.items.forEach((item, index) => {
-      const line = index + 1;
-      const div = document.createElement("div");
-      div.className = "cart-item";
-      div.dataset.line = String(line);
-
-      div.innerHTML = `
-      <input type="hidden" name="updates[]" value="${item.quantity}">
-
-      <div class="cart-item-image">
-        <a href="${item.url}">
-          <img src="${item.image}" alt="${item.product_title}">
-        </a>
-      </div>
-
-      <div class="cart-item-info">
-        <div class="cart-item-info-title">${item.product_title}</div>
-        <button type="button" class="cart-item-remove-btn" data-line="${line}">
-          {{ 'cart.remove' | t }}
-        </button>
-
-        <div class="cart-item-qty">
-          <button type="button" class="cart-qty-btn" data-line="${line}" data-qty="${item.quantity - 1}">−</button>
-          <input type="number" class="cart-qty-input" data-line="${line}" value="${item.quantity}" min="0">
-          <button type="button" class="cart-qty-btn" data-line="${line}" data-qty="${item.quantity + 1}">+</button>
-        </div>
-      </div>
-
-      <div class="cart-item-price">${formatMoney(item.final_line_price)}</div>
-    `;
-
-
-
-      itemsContainer.appendChild(div);
-    });
-
-    // subtotal
-    const subtotalEl = overlay.querySelector(".cart-subtotal-amount");
-    if (subtotalEl){
-      subtotalEl.textContent = formatMoney(cart.total_price);
+    if (priceNode && selectedOption.dataset.price) {
+      priceNode.textContent = selectedOption.dataset.price;
     }
 
-    // update free shipping bar only (text from Liquid is fine)
-    const fillEl = overlay.querySelector(".cart-free-shipping-fill");
-    if (fillEl){
-      const progress = Math.min(100, cart.total_price / FREE_SHIPPING * 100);
-      fillEl.style.width = progress + "%";
+    if (compareWrap && compareNode) {
+      const compareRaw = Number(selectedOption.dataset.comparePriceRaw || 0);
+      const regularRaw = Number(selectedOption.dataset.priceRaw || 0);
+      const compareMoney = selectedOption.dataset.comparePrice || "";
+
+      if (compareRaw > regularRaw) {
+        compareNode.textContent = compareMoney;
+        compareWrap.classList.remove("product-card__price-compare--hidden");
+      } else {
+        compareNode.textContent = "";
+        compareWrap.classList.add("product-card__price-compare--hidden");
+      }
     }
-
-    attachCartItemEvents();
   }
-
-  function refreshCart(){
-    return fetch("/cart.js")
-      .then(res => res.json())
-      .then(cart => {
-        renderCart(cart);
-        return cart;
-      })
-      .catch(err => console.error("Cart fetch error:", err));
-  }
-
-  // Openers (navbar cart icon etc.)
-  openers.forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.preventDefault();
-      openCartDrawer();
-      refreshCart();
-    });
-  });
-
-  // Closer
-  if (closeBtn){
-    closeBtn.addEventListener("click", () => {
-      closeCartDrawer();
-    });
-  }
-
-  // Close when clicking on overlay background
-  overlay.addEventListener("click", e => {
-    if (e.target === overlay){
-      closeCartDrawer();
-    }
-  });
-
-  // React to quick-add event from product cards
-  document.addEventListener("cart:updated", () => {
-    openCartDrawer();
-    refreshCart();
-  });
-
-  // Initial sync so drawer is always accurate
-  refreshCart();
 });
-</script>
-
-<script>
 
 document.addEventListener("click", function(e) {
   const btn = e.target.closest(".quick-add-btn");
@@ -435,6 +111,8 @@ document.addEventListener("click", function(e) {
 
   e.preventDefault();
   e.stopPropagation();
+
+  if (btn.disabled) return;
 
   const id = btn.dataset.variant;
   if (!id) return;
@@ -455,14 +133,118 @@ document.addEventListener("click", function(e) {
 });
 
 </script>
-{% section 'search-overlay' %}
-  <body>
-    {% sections 'header-group' %}
 
-    {{ content_for_layout }}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const overlays = Array.from(document.querySelectorAll(".localizationOverlay"));
+  let activeSelectbox = null;
 
-    {% sections 'footer-group' %}
-    {% render 'drawer' %}
+  const getContent = (selectbox) => selectbox?.querySelector(".RevolutionSelectbox--Content");
+  const getButton = (selectbox) => selectbox?.querySelector(".RevolutionSelectbox--Button");
 
+  const setOverlayVisible = (visible) => {
+    overlays.forEach((overlay) => {
+      overlay.classList.toggle("is-visible", visible);
+      overlay.setAttribute("aria-hidden", visible ? "false" : "true");
+    });
+  };
+
+  const closeSelectbox = (selectbox) => {
+    const content = getContent(selectbox);
+    const button = getButton(selectbox);
+    if (!content || !button) return;
+    content.setAttribute("aria-hidden", "true");
+    content.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-expanded", "false");
+    setOverlayVisible(false);
+    activeSelectbox = null;
+  };
+
+  const openSelectbox = (selectbox) => {
+    if (!selectbox) return;
+    if (activeSelectbox && activeSelectbox !== selectbox) {
+      closeSelectbox(activeSelectbox);
+    }
+    const content = getContent(selectbox);
+    const button = getButton(selectbox);
+    if (!content || !button) return;
+    content.setAttribute("aria-hidden", "false");
+    content.setAttribute("aria-expanded", "true");
+    button.setAttribute("aria-expanded", "true");
+    if (content.classList.contains("PopoverContent")) {
+      setOverlayVisible(true);
+    }
+    activeSelectbox = selectbox;
+  };
+
+  const toggleSelectbox = (selectbox) => {
+    const content = getContent(selectbox);
+    if (!content) return;
+    const isOpen = content.getAttribute("aria-hidden") === "false";
+    if (isOpen) {
+      closeSelectbox(selectbox);
+    } else {
+      openSelectbox(selectbox);
+    }
+  };
+
+  document.addEventListener("click", (event) => {
+    const toggle = event.target.closest('[data-action="toggle-selectbox"]');
+    if (toggle) {
+      event.preventDefault();
+      toggleSelectbox(toggle.closest(".RevolutionSelectbox"));
+      return;
+    }
+
+    const item = event.target.closest('[data-action="selectbox-submit"]');
+    if (item) {
+      event.preventDefault();
+      const selectbox = item.closest(".RevolutionSelectbox");
+      const form = selectbox?.querySelector("form.shopify-localization-form");
+      const selectName = selectbox?.getAttribute("data-select");
+      const input = form?.querySelector(`[name="${selectName}"]`);
+      const value = item.getAttribute("data-value");
+      const display = item.getAttribute("data-name") || item.textContent?.trim();
+
+      if (selectbox) {
+        const title = selectbox.querySelector(".RevolutionSelectbox--Title");
+        if (title && display) title.textContent = display;
+        selectbox.querySelectorAll(".RevolutionSelectbox--Item[selected=\"selected\"]").forEach((node) => {
+          node.removeAttribute("selected");
+        });
+        item.setAttribute("selected", "selected");
+      }
+
+      if (input && value) {
+        input.value = value;
+        form.submit();
+      }
+      closeSelectbox(selectbox);
+      return;
+    }
+
+    if (activeSelectbox && !event.target.closest(".RevolutionSelectbox")) {
+      closeSelectbox(activeSelectbox);
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && activeSelectbox) {
+      closeSelectbox(activeSelectbox);
+    }
+  });
+
+  overlays.forEach((overlay) => {
+    overlay.addEventListener("click", () => {
+      if (activeSelectbox) closeSelectbox(activeSelectbox);
+    });
+  });
+});
+</script>
   </body>
 </html>
+
+
+
+
+

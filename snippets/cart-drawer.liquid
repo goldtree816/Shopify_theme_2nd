@@ -1,0 +1,214 @@
+{%- liquid
+  assign drawer_mode = mode | default: 'drawer'
+  assign is_page_mode = false
+  if drawer_mode == 'page'
+    assign is_page_mode = true
+  endif
+-%}
+
+<cart-drawer
+  id="cart-drawer"
+  class="colorGroup--primary cart-drawer"
+  aria-expanded="{% if is_page_mode %}true{% else %}false{% endif %}"
+  aria-hidden="{% if is_page_mode %}false{% else %}true{% endif %}"
+  data-mode="{{ drawer_mode }}"
+  data-settings='{
+    "productId": false,
+    "itemCount": {{ cart.item_count }},
+    "showRecommendations": true,
+    "recommendedLimit": 8
+  }'
+>
+  <div class="itemLoader">
+    <svg class="Svg Svg--loader" width="36" height="37" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.07706 16.8043C1.71423 20.4881 2.63996 24.1838 4.6965 27.2617C6.75305 30.3395 9.81317 32.6091 13.3555 33.6836C16.8978 34.7582 20.703 34.5712 24.1229 33.1546C27.5429 31.7381 30.3658 29.1795 32.1108 25.9149C33.8557 22.6503 34.4147 18.8817 33.6926 15.2511C32.9704 11.6206 31.0118 8.35272 28.1503 6.0044C25.2889 3.65607 21.7017 2.37256 18 2.37256" stroke="white" stroke-width="4"/>
+    </svg>
+  </div>
+
+  <div class="cart-drawer__wrapper">
+    <div class="cart-drawer__header">
+      <div class="cart-header__text-wrapper">
+        <h3 class="cart-drawer__title u-h6">{{ 'cart.title' | t | upcase }}</h3>
+        <button
+          class="Drawer--Close close-button"
+          data-action="close-drawer"
+          data-toggle-id="cart-drawer"
+          tabIndex="0"
+          aria-label="Close"
+        >
+          <svg
+            class="Svg Svg--window-close"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M4.11451 4.11343C4.26718 3.96219 4.51472 3.96219 4.6674 4.11343L10.0569 9.45231L15.3326 4.22626C15.4853 4.07502 15.7328 4.07502 15.8855 4.22626C16.0382 4.3775 16.0382 4.62271 15.8855 4.77395L10.6098 10L15.8855 15.226C16.0382 15.3773 16.0382 15.6225 15.8855 15.7737C15.7328 15.925 15.4853 15.925 15.3326 15.7737L10.0569 10.5477L4.6674 15.8866C4.51472 16.0378 4.26718 16.0378 4.11451 15.8866C3.96183 15.7353 3.96183 15.4901 4.11451 15.3389L9.50406 10L4.11451 4.66112C3.96183 4.50988 3.96183 4.26467 4.11451 4.11343Z"
+              fill="#231F20" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="cart-drawer__content cart-drawer__content--empty"
+      data-scrollable
+      data-cart-content-empty
+      {% unless cart.item_count == 0 %}hidden{% endunless %}
+    >
+      <div class="cart-drawer__cta animatedContent" data-animation="elementFadeIn">
+        <div class="cart-drawer__inner__cta">
+          <p class="u-p2">Your shopping cart is empty.</p>
+          <a
+            href="{{ routes.all_products_collection_url | default: routes.root_url }}"
+            class="Button Button--PrimaryOnLight Button--Normal sidecart__empty-btn"
+          >
+            <span class="ButtonText u-pb1">Back to shopping</span>
+          </a>
+        </div>
+      </div>
+      <div class="cart-drawer__recommendations swiper-button__trigger">
+        <h3 class="cart-drawer__recomm-title u-s2 animatedContent">You may also need</h3>
+      </div>
+    </div>
+
+    <form
+      action="{{ routes.cart_url }}"
+      method="post"
+      class="cart-drawer__form"
+      data-cart-form
+      {% if cart.item_count == 0 %}hidden{% endif %}
+    >
+      <div
+        class="cart-drawer__content cart-drawer__content--full"
+        data-scrollable
+        data-cart-content-full
+      >
+        <div class="cart-drawer__items" data-cart-items>
+          {% for item in cart.items %}
+            <div
+              class="cart-item"
+              id="cart-item__{{ item.variant.id }}"
+              data-id="{{ item.variant.id }}"
+              data-line="{{ forloop.index }}"
+            >
+              <div class="cart-item__image AspectRatio">
+                <a href="{{ item.url }}" class="cart-item__details">
+                  {% render 'image', image: item.image, url: item.url %}
+                </a>
+              </div>
+              <div class="cart-item__info">
+                <div class="cart-item__info-header">
+                  <div class="cart-item__header-wrapper">
+                    <div class="cart-item__details">
+                      <a href="{{ item.url }}" class="u-s4">{{ item.product.title }}</a>
+                    </div>
+                    <a
+                      href="{{ routes.cart_change_url }}?line={{ forloop.index }}&quantity=0"
+                      data-action="remove-item"
+                      data-line="{{ forloop.index }}"
+                      aria-label="{{ 'cart.remove' | t }}"
+                    >
+                      <svg
+                        class="Svg Svg--window-close"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M4.11451 4.11343C4.26718 3.96219 4.51472 3.96219 4.6674 4.11343L10.0569 9.45231L15.3326 4.22626C15.4853 4.07502 15.7328 4.07502 15.8855 4.22626C16.0382 4.3775 16.0382 4.62271 15.8855 4.77395L10.6098 10L15.8855 15.226C16.0382 15.3773 16.0382 15.6225 15.8855 15.7737C15.7328 15.925 15.4853 15.925 15.3326 15.7737L10.0569 10.5477L4.6674 15.8866C4.51472 16.0378 4.26718 16.0378 4.11451 15.8866C3.96183 15.7353 3.96183 15.4901 4.11451 15.3389L9.50406 10L4.11451 4.66112C3.96183 4.50988 3.96183 4.26467 4.11451 4.11343Z"
+                          fill="#231F20" />
+                      </svg>
+                    </a>
+                  </div>
+
+                  <div class="cart-item__option-wrapper">
+                    {% unless item.variant.title == 'Default Title' %}
+                      <span class="u-p3">{{ item.variant.title }}</span>
+                    {% endunless %}
+                    {% for property in item.properties %}
+                      {% if property.last != blank %}
+                        <span class="u-p3">{{ property.first }}: {{ property.last }}</span>
+                      {% endif %}
+                    {% endfor %}
+                    {% if item.selling_plan_allocation %}
+                      <span class="cart-item__subscription u-p3">
+                        {{ item.selling_plan_allocation.selling_plan.name }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="cart-item__footer">
+                  <div class="cart-item__footer-wrapper">
+                    <div class="cart-item__quantity-selector">
+                      <button
+                        class="cart-item__quantity-button"
+                        type="button"
+                        data-action="update-item-quantity"
+                        data-line="{{ forloop.index }}"
+                        data-quantity="{{ item.quantity | minus: 1 }}"
+                        aria-label="Decrease quantity"
+                      >
+                        -
+                      </button>
+                      <input
+                        class="cart-item__quantity"
+                        type="text"
+                        value="{{ item.quantity }}"
+                        readonly
+                        data-action="update-change-quantity"
+                        data-line="{{ forloop.index }}"
+                      >
+                      <button
+                        class="cart-item__quantity-button"
+                        type="button"
+                        data-action="update-item-quantity"
+                        data-line="{{ forloop.index }}"
+                        data-quantity="{{ item.quantity | plus: 1 }}"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div class="cart-item__price">
+                      {% if item.original_line_price > item.final_line_price %}
+                        <span class="cart-item__price--before">{{ item.original_line_price | money }}</span>
+                      {% endif %}
+                      <span class="cart-item__price--discounted">{{ item.final_line_price | money }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div class="cart-drawer__recommendations swiper-button__trigger">
+          <h3 class="cart-drawer__recomm-title u-s2 animatedContent">You may also need</h3>
+        </div>
+      </div>
+
+      <div class="cart-drawer__footer" data-cart-footer {% if cart.item_count == 0 %}hidden{% endif %}>
+        <div class="cart_drawer__footer-totals">
+          <div class="cart_drawer__footer-subtotal">
+            <span class="u-p2">{{ 'cart.subtotal' | t }}</span>
+            <span class="u-p2" data-cart-subtotal>{{ cart.total_price | money }}</span>
+          </div>
+          <p class="cart_drawer--note u-p3">Shipping and taxes calculated at checkout</p>
+        </div>
+        <button type="submit" name="checkout" class="Button Button--PrimaryOnLight Button--Normal cart-drawer__checkout">
+          <span class="ButtonText u-pb1">
+            {{ 'cart.checkout' | t }} &bull; <span data-cart-checkout-amount>{{ cart.total_price | money }}</span>
+          </span>
+        </button>
+        <div class="cart-drawer__payment-types"></div>
+      </div>
+    </form>
+  </div>
+</cart-drawer>

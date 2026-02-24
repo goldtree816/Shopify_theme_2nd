@@ -1,0 +1,377 @@
+<section class="announcement-bar-section" data-announcement-section{% unless section.settings.enable %} hidden{% endunless %}>
+    <div
+      class="announcement-bar announcementBar announcementBar--transparent"
+      data-announcement-slider
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-interval="{{ section.settings.interval }}"
+      data-transition="{{ section.settings.transition_ms }}"
+      data-pause-on-hover="{{ section.settings.pause_on_hover }}"
+      role="region"
+      aria-label="Store announcements"
+    >
+      <div class="announcement-bar__viewport">
+        <div class="announcement-bar__track">
+          {% assign rendered_count = 0 %}
+          {% for block in section.blocks %}
+            {% if block.settings.text != blank or block.settings.link_label != blank %}
+              {% assign rendered_count = rendered_count | plus: 1 %}
+              <div class="announcement-bar__item{% if rendered_count == 1 %} is-active{% endif %}" {{ block.shopify_attributes }}>
+                {% if block.settings.text != blank %}
+                  <span class="announcement-bar__text">{{ block.settings.text }}</span>
+                {% endif %}
+                {% if block.settings.link_label != blank %}
+                  {% if block.settings.link != blank %}
+                    <a class="announcement-bar__link" href="{{ block.settings.link }}">{{ block.settings.link_label }}</a>
+                  {% else %}
+                    <span class="announcement-bar__link">{{ block.settings.link_label }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          {% if rendered_count == 0 %}
+            <div class="announcement-bar__item is-active">
+              {% if section.settings.fallback_text != blank %}
+                <span class="announcement-bar__text">{{ section.settings.fallback_text }}</span>
+              {% endif %}
+              {% if section.settings.fallback_link_label != blank %}
+                {% if section.settings.fallback_link != blank %}
+                  <a class="announcement-bar__link" href="{{ section.settings.fallback_link }}">{{ section.settings.fallback_link_label }}</a>
+                {% else %}
+                  <span class="announcement-bar__link">{{ section.settings.fallback_link_label }}</span>
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    :root {
+      --announcement-bar-current-height: {% if section.settings.enable %}{{ section.settings.height | default: 36 }}px{% else %}0px{% endif %};
+      --ann-transparent: transparent;
+      --ann-transparentTextColor: #ffffff;
+      --ann-bottomLineColor: #ffffff;
+      --ann-textColor: {{ section.settings.text_color }};
+      --ann-bgColor: {{ section.settings.background_color }};
+    }
+
+    @media (max-width: 640px) {
+      :root {
+        --announcement-bar-current-height: {% if section.settings.enable %}{{ section.settings.height_mobile | default: 32 }}px{% else %}0px{% endif %};
+      }
+    }
+
+    #shopify-section-{{ section.id }} {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      z-index: 60;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar {
+      width: 100%;
+      min-height: var(--announcement-bar-current-height-local);
+      padding: 4px 16px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+      font-size: var(--announcement-bar-text-size-local);
+      font-weight: 600;
+      color: var(--ann-textColor);
+      background: var(--ann-bgColor);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      position: relative;
+      transition: all 0.3s ease-in-out;
+      --announcement-bar-height-local: {{ section.settings.height | default: 36 }}px;
+      --announcement-bar-height-mobile-local: {{ section.settings.height_mobile | default: 32 }}px;
+      --announcement-bar-current-height-local: var(--announcement-bar-height-local);
+      --announcement-bar-text-size-local: {{ section.settings.text_size | default: 13 }}px;
+      --announcement-bar-text-size-mobile-local: {{ section.settings.text_size_mobile | default: 12 }}px;
+      --announcement-bar-transition-local: {{ section.settings.transition_ms | default: 600 }}ms;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      width: 100%;
+      background-color: transparent;
+      opacity: 0.5;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    #shopify-section-{{ section.id }} .announcementBar--transparent {
+      background-color: var(--ann-transparent);
+      color: var(--ann-transparentTextColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcementBar--transparent .announcement-bar__link {
+      color: var(--ann-transparentTextColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcementBar--transparent::after {
+      background-color: var(--ann-bottomLineColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar:hover,
+    #shopify-section-{{ section.id }} .announcement__bar-bg-open,
+    #shopify-section-{{ section.id }} .announcement__bar-bg {
+      color: var(--ann-textColor);
+      background-color: var(--ann-bgColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcement__bar-bg-open .announcement-bar__link,
+    #shopify-section-{{ section.id }} .announcement__bar-bg .announcement-bar__link,
+    #shopify-section-{{ section.id }} .announcement-bar:hover .announcement-bar__link {
+      color: var(--ann-textColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcement__bar-bg-open::after,
+    #shopify-section-{{ section.id }} .announcement__bar-bg::after,
+    #shopify-section-{{ section.id }} .announcement-bar:hover::after {
+      background-color: var(--ann-bgColor);
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__viewport {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      min-height: var(--announcement-bar-current-height-local);
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__track {
+      position: relative;
+      min-height: var(--announcement-bar-current-height-local);
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__item {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: var(--announcement-bar-current-height-local);
+      line-height: 1.3;
+      opacity: 0;
+      transform: translateY(100%);
+      pointer-events: none;
+      transition:
+        transform var(--announcement-bar-transition-local) cubic-bezier(0.2, 0.7, 0, 1),
+        opacity var(--announcement-bar-transition-local) ease;
+      will-change: transform, opacity;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__item.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+      z-index: 2;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__item.is-leaving {
+      opacity: 0;
+      transform: translateY(-100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #shopify-section-{{ section.id }} .announcement-bar__link {
+      color: var(--ann-textColor);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      #shopify-section-{{ section.id }} .announcement-bar {
+        --announcement-bar-current-height-local: var(--announcement-bar-height-mobile-local);
+        --announcement-bar-text-size-local: var(--announcement-bar-text-size-mobile-local);
+      }
+    }
+  </style>
+
+  <script>
+    (() => {
+      const sectionEl = document.getElementById("shopify-section-{{ section.id }}");
+      if (!sectionEl) return;
+
+      const sliderEl = sectionEl.querySelector("[data-announcement-slider]");
+      if (!sliderEl) return;
+
+      const updateHeaderOffset = () => {
+        const isHidden = sectionEl.hasAttribute("hidden") || window.getComputedStyle(sectionEl).display === "none";
+        const sectionHeight = isHidden ? 0 : Math.max(0, Math.round(sectionEl.getBoundingClientRect().height));
+        document.documentElement.style.setProperty("--announcement-bar-current-height", `${sectionHeight}px`);
+      };
+
+      const initSlider = () => {
+        if (sliderEl.dataset.sliderReady === "true") return;
+        sliderEl.dataset.sliderReady = "true";
+
+        const track = sliderEl.querySelector(".announcement-bar__track");
+        if (!track) return;
+
+        const items = Array.from(track.querySelectorAll(".announcement-bar__item"));
+        if (!items.length) return;
+
+        const autoplay = sliderEl.dataset.autoplay === "true";
+        const pauseOnHover = sliderEl.dataset.pauseOnHover === "true";
+        const interval = Number(sliderEl.dataset.interval) || 4000;
+        const transition = Number(sliderEl.dataset.transition) || 600;
+        const safeInterval = Math.max(interval, transition + 350);
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        items.forEach((item, index) => {
+          item.classList.remove("is-active", "is-leaving");
+          if (index === 0) item.classList.add("is-active");
+        });
+
+        if (items.length <= 1 || !autoplay || prefersReducedMotion) return;
+
+        let currentIndex = 0;
+        let timer = null;
+
+        const stop = () => {
+          if (!timer) return;
+          clearInterval(timer);
+          timer = null;
+        };
+
+        const goTo = (nextIndex) => {
+          if (nextIndex === currentIndex) return;
+
+          const current = items[currentIndex];
+          const next = items[nextIndex];
+
+          current.classList.remove("is-active");
+          current.classList.add("is-leaving");
+          next.classList.remove("is-leaving");
+          next.classList.add("is-active");
+
+          items.forEach((item, index) => {
+            if (index !== currentIndex && index !== nextIndex) {
+              item.classList.remove("is-active", "is-leaving");
+            }
+          });
+
+          window.setTimeout(() => {
+            current.classList.remove("is-leaving");
+          }, transition + 40);
+
+          currentIndex = nextIndex;
+        };
+
+        const step = () => {
+          const nextIndex = (currentIndex + 1) % items.length;
+          goTo(nextIndex);
+        };
+
+        const start = () => {
+          if (timer) return;
+          timer = setInterval(step, safeInterval);
+        };
+
+        start();
+
+        if (pauseOnHover) {
+          sliderEl.addEventListener("mouseenter", stop);
+          sliderEl.addEventListener("mouseleave", start);
+          sliderEl.addEventListener("focusin", stop);
+          sliderEl.addEventListener("focusout", start);
+        }
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            stop();
+          } else {
+            start();
+          }
+        });
+      };
+
+      const init = () => {
+        updateHeaderOffset();
+        if (!sectionEl.hasAttribute("hidden")) {
+          initSlider();
+        }
+        window.addEventListener("resize", updateHeaderOffset, { passive: true });
+
+        if ("ResizeObserver" in window) {
+          const resizeObserver = new ResizeObserver(updateHeaderOffset);
+          resizeObserver.observe(sectionEl);
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init, { once: true });
+      } else {
+        init();
+      }
+    })();
+  </script>
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "section-announcement-bar",
+  "settings": [
+    { "type": "checkbox", "id": "enable", "label": "Enable announcement bar", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true },
+    { "type": "range", "id": "interval", "label": "Rotation interval (ms)", "min": 2000, "max": 8000, "step": 500, "default": 4000 },
+    { "type": "range", "id": "transition_ms", "label": "Transition duration (ms)", "min": 300, "max": 1200, "step": 50, "default": 600 },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause on hover", "default": true },
+    { "type": "range", "id": "height", "label": "Height", "min": 24, "max": 60, "step": 2, "default": 36 },
+    { "type": "range", "id": "height_mobile", "label": "Height (mobile)", "min": 24, "max": 56, "step": 2, "default": 32 },
+    { "type": "range", "id": "text_size", "label": "Text size", "min": 10, "max": 20, "step": 1, "default": 13 },
+    { "type": "range", "id": "text_size_mobile", "label": "Text size (mobile)", "min": 10, "max": 18, "step": 1, "default": 12 },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#c7d8ea" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1d3d7a" },
+    { "type": "color", "id": "link_color", "label": "Link color", "default": "#1d3d7a" },
+    { "type": "text", "id": "fallback_text", "label": "Fallback text", "default": "FREE SHIPPING ON ALL ORDERS" },
+    { "type": "text", "id": "fallback_link_label", "label": "Fallback link label", "default": "SHOP NOW" },
+    { "type": "url", "id": "fallback_link", "label": "Fallback link" }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement item",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Text", "default": "FREE SHIPPING ON ALL ORDERS" },
+        { "type": "text", "id": "link_label", "label": "Link label", "default": "SHOP NOW" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        { "type": "announcement" },
+        { "type": "announcement" },
+        { "type": "announcement" }
+      ]
+    }
+  ]
+}
+{% endschema %}

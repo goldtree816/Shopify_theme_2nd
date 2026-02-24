@@ -6,7 +6,12 @@
         <source src="{{ section.settings.video | file_url }}" type="video/mp4">
       </video>
     {% elsif section.settings.image != blank %}
-      <img class="about-hero-image" src="{{ section.settings.image | img_url: 'master' }}" alt="About Hero">
+      <img
+        class="about-hero-image"
+        src="{{ section.settings.image | img_url: 'master' }}"
+        alt="{{ section.settings.image.alt | default: section.settings.heading | default: shop.name | escape }}"
+        loading="eager"
+      >
     {% endif %}
 
   </div>
@@ -21,7 +26,6 @@
 <style>
 body{
   font-family: var(--font-primary--family);
-  padding-top:70px;
 }
 
 body:not(.template-index) .navbar {

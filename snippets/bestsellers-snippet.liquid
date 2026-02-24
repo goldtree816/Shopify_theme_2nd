@@ -42,6 +42,13 @@
   width: 90%;
   scroll-snap-type: x mandatory;
   overflow-y:hidden;
+  gap: var(--bestsellers-gap, 20px);
+}
+
+.bestsellers-product > product-card {
+  flex: 0 0 clamp(250px, 19vw, 330px);
+  min-width: clamp(250px, 19vw, 330px);
+  scroll-snap-align: start;
 }
 
 .bestsellers-product::-webkit-scrollbar {
@@ -65,6 +72,12 @@
   .bestsellers-product {
     width: 100%;
     padding: 16px 16px 0;
+    --bestsellers-gap: 16px;
+  }
+
+  .bestsellers-product > product-card {
+    flex: 0 0 calc((100% - (var(--bestsellers-gap, 16px) * 0.0875)) / 1.0875);
+    min-width: calc((100% - (var(--bestsellers-gap, 16px) * 0.0875)) / 1.0875);
   }
 }
 
@@ -85,7 +98,7 @@
   {% endif %}
 </div>
 
-<div class="bestsellers-product" style="gap: {{ gap_value }}px;">
+<div class="bestsellers-product" style="--bestsellers-gap: {{ gap_value }}px;">
   {% assign selected_collection = collection %}
   {% if selected_collection and selected_collection.products_count > 0 %}
     {% for product in selected_collection.products %}

@@ -15,6 +15,49 @@
   elsif request.page_type == 'password'
     assign og_url = request.origin
   endif
+
+  assign meta_description = page_description
+  if meta_description == blank
+    if request.page_type == 'product' and product
+      assign meta_description = product.description | strip_html | strip_newlines | truncate: 160
+    elsif request.page_type == 'collection' and collection
+      assign meta_description = collection.description | strip_html | strip_newlines | truncate: 160
+    elsif request.page_type == 'article' and article
+      assign meta_description = article.excerpt_or_content | strip_html | strip_newlines | truncate: 160
+    elsif request.page_type == 'blog' and blog
+      assign meta_description = blog.title | append: ' | ' | append: shop.name
+    elsif request.page_type == 'page' and page
+      assign meta_description = page.content | strip_html | strip_newlines | truncate: 160
+    endif
+  endif
+  if meta_description == blank
+    assign meta_description = shop.description | default: shop.name
+  endif
+
+  assign og_description = page_description | default: meta_description | default: shop.description | default: shop.name
+
+  assign og_image = page_image
+  if og_image == blank
+    assign og_image = shop.brand.logo
+  endif
+  if og_image == blank
+    assign og_image = settings.logo
+  endif
+
+  assign robots_meta = ''
+  if request.page_type == 'search'
+    assign robots_meta = 'noindex, follow'
+  elsif request.page_type == 'cart'
+    assign robots_meta = 'noindex, follow'
+  elsif request.page_type contains 'customers'
+    assign robots_meta = 'noindex, follow'
+  elsif request.page_type == 'password'
+    assign robots_meta = 'noindex, follow'
+  elsif request.page_type == '404'
+    assign robots_meta = 'noindex, follow'
+  elsif request.page_type == 'gift_card'
+    assign robots_meta = 'noindex, follow'
+  endif
 %}
 
 <meta
@@ -38,22 +81,26 @@
   content="{{ og_description | escape }}"
 >
 
-{%- if page_image -%}
+{%- if og_image -%}
   <meta
     property="og:image"
-    content="http:{{ page_image | image_url }}"
+    content="http:{{ og_image | image_url: width: 1200 }}"
   >
   <meta
     property="og:image:secure_url"
-    content="https:{{ page_image | image_url }}"
+    content="https:{{ og_image | image_url: width: 1200 }}"
   >
   <meta
     property="og:image:width"
-    content="{{ page_image.width }}"
+    content="{{ og_image.width }}"
   >
   <meta
     property="og:image:height"
-    content="{{ page_image.height }}"
+    content="{{ og_image.height }}"
+  >
+  <meta
+    property="og:image:alt"
+    content="{{ og_image.alt | default: og_title | escape }}"
   >
 {%- endif -%}
 
@@ -84,6 +131,12 @@
   name="twitter:description"
   content="{{ og_description | escape }}"
 >
+{%- if og_image -%}
+  <meta
+    name="twitter:image"
+    content="https:{{ og_image | image_url: width: 1200 }}"
+  >
+{%- endif -%}
 
 <title>
   {{ page_title }}
@@ -97,9 +150,18 @@
   href="{{ canonical_url }}"
 >
 
-{% if page_description %}
+{% if meta_description %}
   <meta
     name="description"
-    content="{{ page_description | escape }}"
+    content="{{ meta_description | escape }}"
   >
 {% endif %}
+
+{% unless robots_meta == '' %}
+  <meta
+    name="robots"
+    content="{{ robots_meta }}"
+  >
+{% endunless %}
+
+{% render 'structured-data' %}

@@ -1,0 +1,546 @@
+.aevi-collection,
+main-collection,
+main-collection-grid {
+  display: block;
+}
+
+body:not(.template-index) .navbar {
+  background-color: var(--color-background);
+  position: relative;
+  border-bottom: 1px solid var(--color-border);
+}
+
+body:not(.template-index) .top-banner {
+  background-color: var(--color-accent);
+  color: var(--color-accent-contrast);
+  position: relative;
+}
+
+body:not(.template-index) .navbar a {
+  color: var(--color-link);
+}
+
+.aevi-collection {
+  --aevi-collection-sticky-offset: 0px;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  position: relative;
+  z-index: 1;
+}
+
+.aevi-collection__shell {
+  padding: 32px 16px 48px;
+}
+
+.aevi-collection__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.aevi-collection__breadcrumbs a {
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
+.aevi-collection__header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 700px;
+  margin-bottom: 22px;
+}
+
+.aevi-collection__heading {
+  margin: 0;
+  font-size: clamp(1.9rem, 3vw, 2.625rem);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.aevi-collection__description {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--color-muted);
+}
+
+.aevi-collection__description p {
+  margin: 0;
+}
+
+.aevi-collection__filter-bar-wrap {
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-background);
+  margin-bottom: 24px;
+}
+
+.aevi-collection__filter-bar-wrap--sticky {
+  position: sticky;
+  top: var(--aevi-collection-sticky-offset);
+  z-index: 5;
+}
+
+.aevi-collection__filter-bar {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.aevi-collection__tabs {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  flex: 1;
+}
+
+.aevi-collection__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.aevi-collection__tab {
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  line-height: 1;
+  text-decoration: none;
+  padding: 16px 0 15px;
+  border-bottom: 1px solid transparent;
+}
+
+.aevi-collection__tab:hover,
+.aevi-collection__tab--active {
+  color: var(--color-foreground);
+  border-bottom-color: var(--color-foreground);
+}
+
+.aevi-collection__filter-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--color-foreground);
+  margin-left: auto;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 0 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.aevi-collection__filter-count {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.aevi-collection__drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.32);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 1100;
+}
+
+.aevi-collection__drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(90vw, 430px);
+  height: 100dvh;
+  background: var(--color-background);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  border-left: 1px solid var(--color-border);
+  z-index: 1101;
+  display: flex;
+  flex-direction: column;
+}
+
+.aevi-collection.is-filter-drawer-open .aevi-collection__drawer {
+  transform: translateX(0);
+}
+
+.aevi-collection.is-filter-drawer-open .aevi-collection__drawer-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+html.aevi-filter-open,
+html.aevi-filter-open body {
+  overflow: hidden;
+}
+
+.aevi-collection__drawer-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.aevi-collection__drawer-header {
+  padding: 24px 20px 14px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.aevi-collection__drawer-header h2 {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aevi-collection__drawer-close {
+  border: 0;
+  background: transparent;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.aevi-collection__drawer-body {
+  flex: 1;
+  overflow: auto;
+  padding: 0 20px;
+}
+
+.aevi-collection__filter-group {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.aevi-collection__filter-group summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 0;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aevi-collection__filter-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.aevi-collection__filter-group summary::after {
+  content: "+";
+  font-size: 16px;
+  line-height: 1;
+  color: var(--color-muted);
+}
+
+.aevi-collection__filter-group[open] summary::after {
+  content: "-";
+}
+
+.aevi-collection__filter-options {
+  padding: 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aevi-collection__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--color-foreground);
+  cursor: pointer;
+}
+
+.aevi-collection__check input {
+  margin-top: 3px;
+  width: 14px;
+  height: 14px;
+}
+
+.aevi-collection__check small {
+  color: var(--color-muted);
+  font-size: 12px;
+  margin-left: 3px;
+}
+
+.aevi-collection__check.is-disabled {
+  color: var(--color-muted);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.aevi-collection__price-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.aevi-collection__price-range label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.aevi-collection__price-range input {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 2px;
+  height: 36px;
+  padding: 0 10px;
+  color: var(--color-foreground);
+  font-size: 13px;
+  background: var(--color-background);
+}
+
+.aevi-collection__drawer-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 16px 20px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.aevi-collection__drawer-btn {
+  width: 100%;
+}
+
+.aevi-collection__grid-wrapper {
+  min-height: 320px;
+}
+
+.aevi-collection__main-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 8px;
+}
+
+.aevi-collection__product-card {
+  min-width: 0;
+}
+
+.aevi-collection__highlight-card {
+  position: relative;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.aevi-collection__highlight-card a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.aevi-collection__highlight-card img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.aevi-collection__highlight-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0));
+  color: #fff;
+}
+
+.aevi-collection__highlight-content h3 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  line-height: 1.1;
+  font-weight: 400;
+}
+
+.aevi-collection__highlight-content p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.aevi-collection__empty-state {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  gap: 10px;
+}
+
+.aevi-collection__empty-state h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.aevi-collection__empty-state p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.aevi-collection__pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.aevi-collection__pagination-link {
+  min-width: 34px;
+  height: 34px;
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0 10px;
+}
+
+.aevi-collection__pagination-link.is-active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
+}
+
+.aevi-collection-empty {
+  padding: 60px 20px;
+}
+
+.aevi-collection-empty__inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.aevi-collection-empty__title {
+  margin: 0 0 10px;
+  font-size: 34px;
+  font-weight: 400;
+}
+
+.aevi-collection-empty__text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.aevi-collection-directory__grid {
+  margin-top: 20px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.aevi-collection-directory__card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.aevi-collection-directory__card img,
+.aevi-collection-directory__placeholder {
+  width: 100%;
+  aspect-ratio: 0.8;
+  object-fit: cover;
+  display: block;
+  background: var(--color-surface);
+}
+
+.aevi-collection-directory__meta {
+  margin-top: 10px;
+}
+
+.aevi-collection-directory__meta h2 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.aevi-collection-directory__meta span {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+@media screen and (min-width: 768px) {
+  .aevi-collection__shell {
+    padding: 32px 24px 56px;
+  }
+
+  .aevi-collection__drawer {
+    width: min(70vw, 480px);
+  }
+
+  .aevi-collection-directory__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .aevi-collection__shell {
+    padding: 32px 32px 64px;
+  }
+
+  .aevi-collection__main-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+
+  .aevi-collection__filter-bar {
+    min-height: 52px;
+  }
+
+  .aevi-collection__drawer-header {
+    padding: 26px 26px 14px;
+  }
+
+  .aevi-collection__drawer-body {
+    padding: 0 26px;
+  }
+
+  .aevi-collection__drawer-footer {
+    padding: 18px 26px 24px;
+  }
+
+  .aevi-collection-directory__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .aevi-collection__main-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

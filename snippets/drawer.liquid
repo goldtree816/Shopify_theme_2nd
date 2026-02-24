@@ -1,111 +1,28 @@
-<div class="drawer-overlay" data-drawer-overlay></div>
-
-<div class="drawer" data-drawer>
-  <div class="drawer-inner">
-    <div class="drawer-header">
-      <span data-drawer-title></span>
-      <button data-drawer-close>Close</button>
+<div id="Drawer" class="Drawer--wrapper drawer-side" aria-expanded="false" aria-hidden="true">
+  <div class="Drawer--Wrapper">
+    <div class="Drawer--Header">
+      <h3 class="Drawer--Title u-h6" data-drawer-title></h3>
+      <button
+        type="button"
+        class="Drawer--Close"
+        data-action="close-drawer"
+        data-toggle-id="Drawer"
+        aria-label="Close"
+      >
+        <svg
+          class="Svg Svg--window-close"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.11451 4.11343C4.26718 3.96219 4.51472 3.96219 4.6674 4.11343L10.0569 9.45231L15.3326 4.22626C15.4853 4.07502 15.7328 4.07502 15.8855 4.22626C16.0382 4.3775 16.0382 4.62271 15.8855 4.77395L10.6098 10L15.8855 15.226C16.0382 15.3773 16.0382 15.6225 15.8855 15.7737C15.7328 15.925 15.4853 15.925 15.3326 15.7737L10.0569 10.5477L4.6674 15.8866C4.51472 16.0378 4.26718 16.0378 4.11451 15.8866C3.96183 15.7353 3.96183 15.4901 4.11451 15.3389L9.50406 10L4.11451 4.66112C3.96183 4.50988 3.96183 4.26467 4.11451 4.11343Z"
+            fill="#231F20" />
+        </svg>
+      </button>
     </div>
-
-    <div class="drawer-content" data-drawer-content>
-      <!-- injected dynamically -->
-    </div>
+    <div class="Drawer--Content" data-scrollable data-drawer-content></div>
   </div>
 </div>
-
-<style>
-.drawer-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  z-index: 9998;
-}
-
-.drawer {
-  position: fixed;
-  top: 0;
-  right: -420px;
-  width: 420px;
-  height: 100vh;
-  background: var(--color-background);
-  transition: right 0.3s ease;
-  z-index: 9999;
-}
-
-.drawer.open {
-  right: 0;
-}
-
-.drawer-overlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-
-.drawer-inner {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.drawer-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.drawer-content {
-  padding: 20px;
-  overflow-y: auto;
-}
-
-</style>
-
-<script>
-let activeDrawerClass = null;
-
-document.addEventListener('click', function (e) {
-  const openBtn = e.target.closest('[data-drawer-open]');
-  const closeBtn = e.target.closest('[data-drawer-close]');
-  const overlay = document.querySelector('[data-drawer-overlay]');
-  const drawer = document.querySelector('[data-drawer]');
-  const content = document.querySelector('[data-drawer-content]');
-  const title = document.querySelector('[data-drawer-title]');
-
-  if (openBtn) {
-    const source = document.querySelector(openBtn.dataset.drawerOpen);
-    const drawerTitle = openBtn.dataset.drawerTitle || '';
-    const drawerClass = openBtn.dataset.drawerClass;
-
-    if (source && content) {
-      if (activeDrawerClass) {
-        drawer.classList.remove(activeDrawerClass);
-        activeDrawerClass = null;
-      }
-
-      content.innerHTML = source.innerHTML;
-      title.textContent = drawerTitle;
-      if (drawerClass) {
-        drawer.classList.add(drawerClass);
-        activeDrawerClass = drawerClass;
-      }
-      drawer.classList.add('open');
-      overlay.classList.add('open');
-    }
-  }
-
-  if (closeBtn || e.target === overlay) {
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    content.innerHTML = '';
-    if (activeDrawerClass) {
-      drawer.classList.remove(activeDrawerClass);
-      activeDrawerClass = null;
-    }
-  }
-});
-
-</script>

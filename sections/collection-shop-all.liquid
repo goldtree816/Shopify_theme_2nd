@@ -1,411 +1,448 @@
-{% assign products_per_page = 12 %}
+{%- liquid
+  assign products_per_page = section.settings.products_per_page | default: 24
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
 
-<section class="shop-all">
+  assign active_filter_count = 0
+  for filter in collection.filters
+    case filter.type
+      when 'boolean', 'list'
+        assign active_filter_count = active_filter_count | plus: filter.active_values.size
+      when 'price_range'
+        if filter.min_value.value != blank or filter.max_value.value != blank
+          assign active_filter_count = active_filter_count | plus: 1
+        endif
+    endcase
+  endfor
 
-<div id="filter-drawer-content" hidden>
+  assign tabs_links = blank
+  if section.settings.tabs_menu != blank
+    assign tabs_links = linklists[section.settings.tabs_menu].links
+    if tabs_links == blank
+      assign tabs_links = section.settings.tabs_menu.links
+    endif
+  endif
+-%}
 
-  <form method="get" action="{{ collection.url }}" class="filter-form">
+{{ 'aevi-collection.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'aevi-collection.js' | asset_url }}" defer></script>
 
-    <!-- SORT -->
-    <div class="filter-block">
-      <h4>Sort by</h4>
+{% if collection == blank %}
+  <section class="aevi-collection-empty aevi-collection-directory">
+    <div class="aevi-collection-empty__inner">
+      <h1 class="aevi-collection-empty__title">Collections</h1>
+      {% if collections != blank and collections.size > 0 %}
+        {% paginate collections by products_per_page %}
+          <div class="aevi-collection-directory__grid">
+            {% for collection_item in collections %}
+              <a class="aevi-collection-directory__card" href="{{ collection_item.url }}">
+                {% if collection_item.image != blank %}
+                  <img
+                    src="{{ collection_item.image | image_url: width: 1400 }}"
+                    alt="{{ collection_item.image.alt | default: collection_item.title | escape }}"
+                    loading="lazy"
+                    width="{{ collection_item.image.width }}"
+                    height="{{ collection_item.image.height }}"
+                  >
+                {% elsif collection_item.products.first and collection_item.products.first.featured_image %}
+                  <img
+                    src="{{ collection_item.products.first.featured_image | image_url: width: 1400 }}"
+                    alt="{{ collection_item.title | escape }}"
+                    loading="lazy"
+                    width="{{ collection_item.products.first.featured_image.width }}"
+                    height="{{ collection_item.products.first.featured_image.height }}"
+                  >
+                {% else %}
+                  <div class="aevi-collection-directory__placeholder"></div>
+                {% endif %}
 
-      {% for option in collection.sort_options %}
-        <label>
-          <input
-            type="radio"
-            name="sort_by"
-            value="{{ option.value }}"
-            {% if option.value == collection.sort_by %}checked{% endif %}
-          >
-          {{ option.name }}
-        </label>
-      {% endfor %}
-    </div>
+                <div class="aevi-collection-directory__meta">
+                  <h2>{{ collection_item.title }}</h2>
+                  <span>{{ collection_item.all_products_count }} products</span>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
 
-    <!-- FILTERS -->
-    {% for filter in collection.filters %}
-      <div class="filter-block">
-        <h4>{{ filter.label }}</h4>
+          {% if paginate.pages > 1 %}
+            <nav class="aevi-collection__pagination" aria-label="Pagination">
+              {% if paginate.previous %}
+                <a class="aevi-collection__pagination-link" href="{{ paginate.previous.url }}">Prev</a>
+              {% endif %}
 
-        {% for value in filter.values %}
-          <label>
-            <input
-              type="checkbox"
-              name="{{ value.param_name }}"
-              value="{{ value.value }}"
-              {% if value.active %}checked{% endif %}
-            >
-            {{ value.label }}
-          </label>
-        {% endfor %}
-      </div>
-    {% endfor %}
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <a class="aevi-collection__pagination-link" href="{{ part.url }}">{{ part.title }}</a>
+                {% else %}
+                  <span class="aevi-collection__pagination-link{% if part.title == paginate.current_page %} is-active{% endif %}">
+                    {{ part.title }}
+                  </span>
+                {% endif %}
+              {% endfor %}
 
-    <div class="filter-actions">
-      <a href="{{ collection.url }}" class="clear-filters">Clear all</a>
-      <button type="submit" class="apply-filters">Apply</button>
-    </div>
-
-  </form>
-
-</div>
-
-
-  <!-- Breadcrumb -->
-  <div class="shop-all-breadcrumb">
-    <a href="/">Home</a> / <span>Shop All</span>
-  </div>
-
-  <!-- Heading -->
-  <div class="shop-all-header">
-    <h1>{{ collection.title }}</h1>
-    {% if collection.description != blank %}
-      <p>{{ collection.description }}</p>
-    {% endif %}
-  </div>
-
-
-  <nav class="shop-all-nav">
-    {% for link in linklists.shop-all.links %}
-      <a
-        href="{{ link.url }}"
-        class="{% if link.url == collection.url %}active{% endif %}"
-      >
-        {{ link.title }}
-      </a>
-    {% endfor %}
-
-    <button
-      class="filter-button"
-      data-drawer-open="#filter-drawer-content"
-      data-drawer-title="Filter">
-      Filter
-    </button>
-
-  </nav>
-
-  <!-- Products -->
-  <div class="shop-all-grid">
-    {% paginate collection.products by products_per_page %}
-      {% for product in collection.products %}
-        <div class="shop-all-item">
-          {% render 'card', product: product %}
-        </div>
-      {% endfor %}
-
-      {% if paginate.next %}
-        <div class="load-more">
-          <a href="{{ paginate.next.url }}">Next</a>
-        </div>
+              {% if paginate.next %}
+                <a class="aevi-collection__pagination-link" href="{{ paginate.next.url }}">Next</a>
+              {% endif %}
+            </nav>
+          {% endif %}
+        {% endpaginate %}
+      {% else %}
+        <p class="aevi-collection-empty__text">Assign this section to a collection template to render filters and product cards.</p>
       {% endif %}
-    {% endpaginate %}
-  </div>
+    </div>
+  </section>
+{% else %}
+  <main-collection
+    id="MainCollection-{{ section.id }}"
+    class="aevi-collection"
+    data-section-id="{{ section.id }}"
+    data-auto-apply-sort="{{ section.settings.auto_apply_sort }}"
+    data-sticky-filter-bar="{{ section.settings.enable_sticky_filter_bar }}"
+  >
+    <section class="aevi-collection__shell">
+      {% if section.settings.show_breadcrumb %}
+        <nav class="aevi-collection__breadcrumbs" aria-label="breadcrumbs">
+          <a href="{{ routes.root_url }}">HOME</a>
+          <span>/</span>
+          <span aria-current="page">{{ collection.title | upcase }}</span>
+        </nav>
+      {% endif %}
 
-</section>
+      <header class="aevi-collection__header">
+        <h1 class="aevi-collection__heading">{{ collection.title | upcase }}</h1>
+        {% if section.settings.show_description and collection.description != blank %}
+          <div class="aevi-collection__description rte">{{ collection.description }}</div>
+        {% endif %}
+      </header>
 
-<style>
+      <div class="aevi-collection__filter-bar-wrap{% if section.settings.enable_sticky_filter_bar %} aevi-collection__filter-bar-wrap--sticky{% endif %}">
+        <div class="aevi-collection__filter-bar">
+          {% if tabs_links != blank %}
+            <nav class="aevi-collection__tabs" aria-label="Collection categories">
+              {% for link in tabs_links %}
+                {% assign is_active = false %}
+                {% if link.current %}
+                  {% assign is_active = true %}
+                {% elsif link.url == collection.url %}
+                  {% assign is_active = true %}
+                {% endif %}
+                <a href="{{ link.url }}" class="aevi-collection__tab{% if is_active %} aevi-collection__tab--active{% endif %}">
+                  {{ link.title }}
+                </a>
+              {% endfor %}
+            </nav>
+          {% endif %}
 
-body{
-  font-family: var(--font-primary--family);
-  padding-top:70px;
-}
+          <button class="aevi-collection__filter-toggle" type="button" data-open-filter-drawer>
+            {{ section.settings.filter_label }}
+            <span class="aevi-collection__filter-count"{% if active_filter_count == 0 %} hidden{% endif %}>
+              ({{ active_filter_count }})
+            </span>
+          </button>
+        </div>
+      </div>
 
-body:not(.template-index) .navbar {
-  background-color: var(--color-background);
-  position: relative;
-  border-bottom: 1px solid var(--color-border);
-}
+      <div class="aevi-collection__drawer-overlay" data-collection-filter-overlay></div>
+      <aside class="aevi-collection__drawer" data-collection-filter-drawer aria-hidden="true">
+        <form
+          id="CollectionFiltersForm-{{ section.id }}"
+          class="aevi-collection__drawer-form"
+          method="get"
+          action="{{ collection.url }}"
+        >
+          <div class="aevi-collection__drawer-header">
+            <h2>{{ section.settings.filter_label }}</h2>
+            <button type="button" class="aevi-collection__drawer-close" data-close-filter-drawer>{{ section.settings.close_label }}</button>
+          </div>
 
-body:not(.template-index) .top-banner {
-  background-color: var(--color-accent);
-  color: var(--color-accent-contrast);
-  position: relative;
-}
+          <div class="aevi-collection__drawer-body">
+            <details class="aevi-collection__filter-group" open>
+              <summary>{{ section.settings.sort_label }}</summary>
+              <div class="aevi-collection__filter-options">
+                {% for option in collection.sort_options %}
+                  <label class="aevi-collection__check">
+                    <input
+                      type="radio"
+                      name="sort_by"
+                      value="{{ option.value }}"
+                      {% if option.value == current_sort %}checked{% endif %}
+                    >
+                    <span>{{ option.name }}</span>
+                  </label>
+                {% endfor %}
+              </div>
+            </details>
 
-body:not(.template-index) .navbar a{
-  color: var(--color-link);
-}
+            {% for filter in collection.filters %}
+              <details class="aevi-collection__filter-group" open>
+                <summary>{{ filter.label }}</summary>
+                <div class="aevi-collection__filter-options">
+                  {% if filter.type == 'price_range' %}
+                    <div class="aevi-collection__price-range">
+                      <label>
+                        <span>From</span>
+                        <input
+                          type="number"
+                          name="{{ filter.min_value.param_name }}"
+                          min="0"
+                          inputmode="numeric"
+                          placeholder="0"
+                          {% if filter.min_value.value %}
+                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                          {% endif %}
+                        >
+                      </label>
+                      <label>
+                        <span>To</span>
+                        <input
+                          type="number"
+                          name="{{ filter.max_value.param_name }}"
+                          min="0"
+                          inputmode="numeric"
+                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                          {% if filter.max_value.value %}
+                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                          {% endif %}
+                        >
+                      </label>
+                    </div>
+                  {% else %}
+                    {% for value in filter.values %}
+                      <label class="aevi-collection__check{% if value.count == 0 and value.active == false %} is-disabled{% endif %}">
+                        <input
+                          type="checkbox"
+                          name="{{ value.param_name }}"
+                          value="{{ value.value }}"
+                          {% if value.active %}checked{% endif %}
+                          {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                        >
+                        <span>{{ value.label }} <small>{{ value.count }}</small></span>
+                      </label>
+                    {% endfor %}
+                  {% endif %}
+                </div>
+              </details>
+            {% endfor %}
+          </div>
 
-.filter-form {
-  font-size: 13px;
-}
+          <div class="aevi-collection__drawer-footer">
+            <a class="Button Button--Secondary Button--Normal aevi-collection__drawer-btn" href="{{ collection.url }}">
+              <span class="ButtonText">{{ section.settings.clear_label }}</span>
+            </a>
+            <button class="Button Button--PrimaryOnLight Button--Normal aevi-collection__drawer-btn" type="submit">
+              <span class="ButtonText">{{ section.settings.apply_label }}</span>
+            </button>
+          </div>
+        </form>
+      </aside>
 
-.filter-block {
-  margin-bottom: 32px;
-}
+      {% paginate collection.products by products_per_page %}
+        <main-collection-grid>
+          <div class="aevi-collection__grid-wrapper" id="collection__grid-wrapper-{{ section.id }}">
+            {% if collection.products_count == 0 %}
+              <div class="aevi-collection__empty-state">
+                <h3>{{ section.settings.empty_state_title }}</h3>
+                <p>{{ section.settings.empty_state_text }}</p>
+              </div>
+            {% else %}
+              <div class="aevi-collection__main-grid" id="collection__main-grid-{{ section.id }}">
+                {% for product in collection.products %}
+                  {% for block in section.blocks %}
+                    {% if block.type == 'highlight_card' %}
+                      {% assign show_block = true %}
+                      {% if block.settings.collection_handle != blank and block.settings.collection_handle != collection.handle %}
+                        {% assign show_block = false %}
+                      {% endif %}
+                      {% if show_block and block.settings.position == forloop.index %}
+                        <article class="aevi-collection__highlight-card" {{ block.shopify_attributes }}>
+                          <a href="{{ block.settings.link | default: collection.url }}">
+                            {% if block.settings.image != blank %}
+                              <img
+                                src="{{ block.settings.image | image_url: width: 1600 }}"
+                                alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                                loading="lazy"
+                                width="{{ block.settings.image.width }}"
+                                height="{{ block.settings.image.height }}"
+                              >
+                            {% endif %}
+                            {% if block.settings.title != blank or block.settings.text != blank %}
+                              <div class="aevi-collection__highlight-content">
+                                {% if block.settings.title != blank %}
+                                  <h3>{{ block.settings.title }}</h3>
+                                {% endif %}
+                                {% if block.settings.text != blank %}
+                                  <p>{{ block.settings.text }}</p>
+                                {% endif %}
+                              </div>
+                            {% endif %}
+                          </a>
+                        </article>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
 
-.filter-block h4 {
-  font-size: 13px;
-  margin-bottom: 12px;
-}
+                  <div class="aevi-collection__product-card">
+                    {% render 'card', product: product %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </main-collection-grid>
 
-.filter-block label {
-  display: block;
-  margin-bottom: 8px;
-}
+        {% if paginate.pages > 1 %}
+          <nav class="aevi-collection__pagination" aria-label="Pagination">
+            {% if paginate.previous %}
+              <a class="aevi-collection__pagination-link" href="{{ paginate.previous.url }}">Prev</a>
+            {% endif %}
 
-.filter-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
-}
+            {% for part in paginate.parts %}
+              {% if part.is_link %}
+                <a class="aevi-collection__pagination-link" href="{{ part.url }}">{{ part.title }}</a>
+              {% else %}
+                <span class="aevi-collection__pagination-link{% if part.title == paginate.current_page %} is-active{% endif %}">
+                  {{ part.title }}
+                </span>
+              {% endif %}
+            {% endfor %}
 
-.apply-filters {
-  background: var(--color-button-bg);
-  color: var(--color-button-text);
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
-.clear-filters {
-  font-size: 13px;
-}
-
-
-.shop-all {
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 40px 24px;
-}
-
-.shop-all-breadcrumb {
-  font-size: 12px;
-  color: var(--color-muted);
-  margin-bottom: 24px;
-}
-
-.shop-all-header h1 {
-  font-size: 42px;
-  font-weight: 400;
-  margin-bottom: 12px;
-}
-
-.shop-all-header p {
-  max-width: 520px;
-  font-size: 14px;
-  color: var(--color-muted);
-}
-
-.shop-all-nav {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  margin: 40px 0;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 14px;
-}
-
-.shop-all-nav a {
-  font-size: 13px;
-  color: var(--color-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.shop-all-nav a.active {
-  color: var(--color-foreground);
-  border-bottom: 2px solid var(--color-foreground);
-  padding-bottom: 6px;
-}
-
-.filter-button {
-  margin-left: auto;
-  background: none;
-  border: none;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.shop-all-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 64px 48px;
-}
-
-.load-more {
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-top: 80px;
-}
-
-.load-more a {
-  font-size: 13px;
-  color: var(--color-muted);
-}
-
-
-@media (max-width: 900px) {
-  .shop-all {
-    padding: 32px 16px;
-  }
-
-  .shop-all-breadcrumb {
-    margin-bottom: 16px;
-  }
-
-  .shop-all-header h1 {
-    font-size: 30px;
-  }
-
-  .shop-all-header p {
-    font-size: 13px;
-  }
-
-  .shop-all-nav {
-    gap: 18px;
-    margin: 28px 0;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .shop-all-nav a,
-  .shop-all-nav .filter-button {
-    white-space: nowrap;
-  }
-
-  .shop-all-nav::-webkit-scrollbar {
-    display: none;
-  }
-
-  .shop-all-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px 20px;
-  }
-
-  .shop-all .product-card {
-    padding-bottom: 6px;
-  }
-
-  .shop-all .product-info {
-    gap: 16px;
-  }
-
-  .shop-all .product-card h3 {
-    font-size: 12px;
-  }
-
-  .shop-all .price {
-    font-size: 13px;
-  }
-
-  .shop-all .description {
-    font-size: 12px;
-  }
-
-  .shop-all .product-rating {
-    font-size: 12px;
-  }
-
-  .shop-all .product-image {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .shop-all .product-image img {
-    height: 320px;
-  }
-
-  .shop-all .product-image .add-button {
-    position: static;
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
-    margin: 12px 10px 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .shop-all {
-    padding: 28px 14px;
-  }
-
-  .shop-all-header h1 {
-    font-size: 26px;
-  }
-
-  .shop-all-nav {
-    margin: 24px 0;
-  }
-
-  .filter-button {
-    margin-left: 0;
-  }
-
-  .shop-all-grid {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .shop-all .product-card {
-    padding-bottom: 18px;
-  }
-
-  .shop-all .product-image {
-    padding: 24px 22px 32px;
-    background: #f5f5f5;
-  }
-
-  .shop-all .product-image img {
-    height: 520px;
-    object-fit: contain;
-    margin-bottom: 0;
-  }
-
-  .shop-all .product-image .add-button {
-    display: none;
-  }
-
-  .shop-all .product-info {
-    align-items: flex-start;
-    gap: 16px;
-    padding: 12px 10px 0;
-  }
-
-  .shop-all .product-card h3 {
-    letter-spacing: 0.06em;
-  }
-
-  .shop-all .description {
-    padding: 4px 10px 0;
-    color: var(--color-muted);
-  }
-
-  .shop-all .product-rating {
-    padding: 4px 10px 0;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: var(--color-foreground);
-  }
-
-  .shop-all .product-rating span {
-    letter-spacing: 0;
-    margin-left: 4px;
-    color: var(--color-muted);
-  }
-
-  .shop-all .product-card-cta {
-    display: block;
-    padding: 10px 10px 0;
-  }
-
-  .shop-all .product-card-cta .btn-primary {
-    width: 100%;
-    height: 38px;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-}
-
-</style>
+            {% if paginate.next %}
+              <a class="aevi-collection__pagination-link" href="{{ paginate.next.url }}">Next</a>
+            {% endif %}
+          </nav>
+        {% endif %}
+      {% endpaginate %}
+    </section>
+  </main-collection>
+{% endif %}
 
 {% schema %}
 {
   "name": "Collection Shop All",
-  "settings": []
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "link_list",
+      "id": "tabs_menu",
+      "label": "Collection tabs menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_filter_bar",
+      "label": "Enable sticky filter bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_apply_sort",
+      "label": "Auto apply sort selection",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "filter_label",
+      "label": "Filter label",
+      "default": "FILTER"
+    },
+    {
+      "type": "text",
+      "id": "sort_label",
+      "label": "Sort label",
+      "default": "SORT BY"
+    },
+    {
+      "type": "text",
+      "id": "apply_label",
+      "label": "Apply label",
+      "default": "Apply"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Clear label",
+      "default": "Clear all"
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Close label",
+      "default": "Close"
+    },
+    {
+      "type": "text",
+      "id": "empty_state_title",
+      "label": "Empty state title",
+      "default": "No products found"
+    },
+    {
+      "type": "text",
+      "id": "empty_state_text",
+      "label": "Empty state text",
+      "default": "Try adjusting your filters or browse a different collection."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight_card",
+      "name": "Highlight card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "collection_handle",
+          "label": "Only show on collection handle",
+          "info": "Leave blank to show on all collections."
+        },
+        {
+          "type": "range",
+          "id": "position",
+          "label": "Insert before product number",
+          "min": 1,
+          "max": 48,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
 }
 {% endschema %}
-

@@ -1,244 +1,429 @@
-<style>
-.product-card {
-  flex: 0 0 320px;
-  scroll-snap-align: start;
-  padding-bottom: 10px;
-  font-family: var(--font-primary--family);
-}
+{%- liquid
+  assign selected_variant = product.selected_or_first_available_variant
 
-.product-image {
-  position: relative;
-  overflow: hidden;
-}
+  assign show_badges = settings.show_product_card_badges
+  assign show_description = settings.show_product_card_description
+  assign show_price = settings.show_product_card_price
+  assign show_compare_price = settings.show_product_card_compare_price
+  assign show_quick_add = settings.show_product_card_quick_add
+  assign quick_add_label = settings.product_card_quick_add_label | default: 'ADD TO BAG'
+  assign choose_options_label = settings.product_card_choose_options_label | default: 'CHOOSE OPTIONS'
+  assign sold_out_label = settings.product_card_sold_out_label | default: 'SOLD OUT'
+  assign title_uppercase = settings.product_card_title_uppercase
 
-.product-image a {
-  display: block;
-}
+  assign display_price = selected_variant.price | default: product.price
+  assign display_compare_price = selected_variant.compare_at_price | default: product.compare_at_price_max
 
-.product-image img {
-  object-fit: cover;
-  height: 400px;
-  width: 100%;
-  margin-bottom: 10px;
-  display: block;
-}
+  assign is_on_sale = false
+  assign sale_amount = 0
+  if display_compare_price > display_price
+    assign is_on_sale = true
+    assign sale_amount = display_compare_price | minus: display_price
+  endif
 
-.product-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--color-accent-soft);
-  color: var(--color-link-hover);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 2px;
-}
+  assign is_new = false
+  assign custom_badge = blank
+  for tag in product.tags
+    assign tag_up = tag | upcase
+    if tag_up == 'NEW'
+      assign is_new = true
+    endif
 
-.product-image .add-button {
-  left: 50%;
-  position: absolute;
-  bottom: 10px;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
+    if custom_badge == blank
+      if tag_up contains 'BADGE:'
+        assign custom_badge = tag | split: ':' | last | strip
+      elsif tag_up contains 'BADGE_'
+        assign custom_badge = tag | remove: 'BADGE_' | remove: 'badge_' | strip
+      endif
+    endif
+  endfor
 
-.product-card:hover .product-image .add-button {
-  opacity: 1;
-  pointer-events: auto;
-  margin-bottom: 10px;
-}
+  assign hover_image = blank
+  if product.images.size > 1
+    assign hover_image = product.images[1]
+  endif
 
-.product-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 10px;
-  padding-right: 10px;
-  gap: 50px;
-}
+  assign image_ratio = 0.8
 
-.product-card h3 {
-  font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  max-height: 2.8em;
-  line-height: 1.4em;
-}
+  assign can_quick_add = false
+  if show_quick_add and selected_variant != blank and selected_variant.available and product.has_only_default_variant
+    assign can_quick_add = true
+  endif
 
-.price {
-  display: flex;
-  align-items: right;
-  justify-content: right;
-  font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-}
+  assign has_variant_selector = false
+  if show_quick_add and product.available and product.has_only_default_variant == false and product.variants.size > 0
+    assign has_variant_selector = true
+  endif
 
-.description {
-  align-items: right;
-  justify-content: right;
-  font-weight: 350;
-  font-size: 14px;
-  padding-left: 10px;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  max-height: 2.8em;
-  line-height: 1.4em;
-}
+  assign first_option_name = 'Option'
+  if product.options_with_values.size > 0
+    assign first_option_name = product.options_with_values.first.name
+  endif
 
-.product-rating {
-  padding-left: 10px;
-}
+  assign subtitle_text = blank
+  if product.metafields.custom.card_subtitle != blank
+    assign subtitle_text = product.metafields.custom.card_subtitle.value | default: product.metafields.custom.card_subtitle
+  elsif product.metafields.custom.subtitle != blank
+    assign subtitle_text = product.metafields.custom.subtitle.value | default: product.metafields.custom.subtitle
+  elsif product.metafields.descriptors.subtitle != blank
+    assign subtitle_text = product.metafields.descriptors.subtitle.value | default: product.metafields.descriptors.subtitle
+  elsif product.metafields.custom.short_description != blank
+    assign subtitle_text = product.metafields.custom.short_description.value | default: product.metafields.custom.short_description
+  elsif product.description != blank
+    assign subtitle_text = product.description | strip_html | strip | truncate: 80, ''
+  endif
 
-.product-rating span {
-  letter-spacing: 0;
-  margin-left: 4px;
-  color: var(--color-muted);
-}
+  assign show_rating = settings.show_product_card_rating
+  assign rating_source = settings.product_card_rating_source | default: 'auto'
+  assign show_rating_count = settings.show_product_card_rating_count
+  assign hide_empty_rating = settings.hide_empty_product_card_rating
 
-.product-card-cta {
-  padding: 10px 10px 0;
-  display: none;
-}
+  assign has_rating_data = false
+  assign use_judgeme_rating = false
+  assign rating_value = blank
+  assign rating_count = blank
+  assign rating_scale_max = 5
+  assign judge_badge = blank
 
-@media (max-width: 768px) {
-  .bestsellers-product .product-card {
-    flex: 0 0 100%;
-    padding-bottom: 18px;
-  }
+  if show_rating
+    if product.metafields.judgeme.badge != blank
+      assign judge_badge = product.metafields.judgeme.badge
+    endif
 
-  .bestsellers-product .product-image {
-    padding: 24px 22px 32px;
-    background: #f5f5f5;
-  }
+    if rating_source == 'judgeme'
+      if judge_badge != blank
+        assign has_rating_data = true
+        assign use_judgeme_rating = true
+      endif
+    elsif rating_source == 'auto'
+      if judge_badge != blank
+        assign has_rating_data = true
+        assign use_judgeme_rating = true
+      endif
+    endif
 
-  .bestsellers-product .product-image img {
-    height: 520px;
-    object-fit: contain;
-    margin-bottom: 0;
-  }
+    if has_rating_data == false
+      if rating_source == 'metafield' or rating_source == 'auto'
+        if product.metafields.reviews.rating != blank
+          if product.metafields.reviews.rating.value != blank
+            if product.metafields.reviews.rating.value.rating != blank
+              assign rating_value = product.metafields.reviews.rating.value.rating
+            else
+              assign rating_value = product.metafields.reviews.rating.value
+            endif
 
-  .bestsellers-product .product-image .add-button {
-    display: none;
-  }
+            if product.metafields.reviews.rating.value.scale_max != blank
+              assign rating_scale_max = product.metafields.reviews.rating.value.scale_max
+            endif
+          else
+            assign rating_value = product.metafields.reviews.rating
 
-  .bestsellers-product .product-info {
-    align-items: flex-start;
-    gap: 16px;
-    padding: 12px 10px 0;
-  }
+            if product.metafields.reviews.rating.scale_max != blank
+              assign rating_scale_max = product.metafields.reviews.rating.scale_max
+            endif
+          endif
+        endif
 
-  .bestsellers-product .product-card h3 {
-    letter-spacing: 0.06em;
-  }
+        if product.metafields.reviews.rating_count != blank
+          if product.metafields.reviews.rating_count.value != blank
+            assign rating_count = product.metafields.reviews.rating_count.value
+          else
+            assign rating_count = product.metafields.reviews.rating_count
+          endif
+        elsif product.metafields.reviews.count != blank
+          if product.metafields.reviews.count.value != blank
+            assign rating_count = product.metafields.reviews.count.value
+          else
+            assign rating_count = product.metafields.reviews.count
+          endif
+        endif
 
-  .bestsellers-product .description {
-    padding: 4px 10px 0;
-    color: var(--color-muted);
-  }
+        assign rating_value_number = rating_value | plus: 0
+        if rating_value_number > 0
+          assign has_rating_data = true
+        elsif hide_empty_rating == false
+          assign has_rating_data = true
+        endif
+      endif
+    endif
+  endif
+-%}
 
-  .bestsellers-product .product-rating {
-    padding: 4px 10px 0;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    color: var(--color-foreground);
-  }
-
-  .bestsellers-product .product-rating span {
-    letter-spacing: 0;
-    margin-left: 4px;
-    color: var(--color-muted);
-  }
-
-  .bestsellers-product .product-card-cta {
-    display: block;
-    padding: 10px 10px 0;
-  }
-
-  .bestsellers-product .product-card-cta .btn-primary {
-    width: 100%;
-    height: 38px;
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-}
-</style>
-
-<div class="product-card">
-  {% assign is_new = false %}
-  {% for tag in product.tags %}
-    {% assign tag_up = tag | upcase %}
-    {% if tag_up == 'NEW' %}
-      {% assign is_new = true %}
-    {% endif %}
-  {% endfor %}
-
-  <div class="product-image">
-    <a href="{{ product.url }}">
-      <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-    </a>
-
-    {% if is_new %}
-      <span class="product-badge">New</span>
-    {% endif %}
-
-    <div class="add-button">
+{%- capture product_card_cta -%}
+  {%- if show_quick_add -%}
+    {%- if product.available == false -%}
       <button
-        class="btn-primary quick-add-btn"
         type="button"
-        data-variant="{{ product.selected_or_first_available_variant.id }}"
+        class="Button Button--PrimaryOnLight Button--Normal product-card__atc-button product-card__atc-button--disabled"
+        disabled
       >
-        ADD TO BAG
+        <span class="ButtonText">{{ sold_out_label }}</span>
       </button>
-    </div>
-  </div>
+    {%- elsif can_quick_add -%}
+      <button
+        type="button"
+        class="Button Button--PrimaryOnLight Button--Normal product-card__atc-button quick-add-btn"
+        data-variant="{{ selected_variant.id }}"
+        data-add-label="{{ quick_add_label | escape }}"
+        data-sold-label="{{ sold_out_label | escape }}"
+      >
+        <span class="ButtonText">{{ quick_add_label }}</span>
+      </button>
+    {%- elsif has_variant_selector -%}
+      <div class="product-card__variant-options flex-vertical">
+        <div class="product-card__variant-row">
+          <span class="product-card__variant-label u-p2">{{ first_option_name }}:</span>
+          <div class="option-selector">
+            <div class="option-selector__wrapper">
+              <select
+                class="option-selector__button product-card__variant-select"
+                data-product-card-variant-select
+                aria-label="{{ first_option_name | escape }}"
+              >
+                {% for variant in product.variants %}
+                  <option
+                    value="{{ variant.id }}"
+                    data-available="{{ variant.available }}"
+                    data-price="{{ variant.price | money | escape }}"
+                    data-price-raw="{{ variant.price }}"
+                    data-compare-price="{{ variant.compare_at_price | money | escape }}"
+                    data-compare-price-raw="{{ variant.compare_at_price | default: 0 }}"
+                    {% if variant.id == selected_variant.id %}selected{% endif %}
+                  >
+                    {{ variant.title }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <div class="product-info">
-    <h3>{{ product.title }}</h3>
-    <div class="price">
-      <p>{{ product.price | money }}</p>
-    </div>
-  </div>
+      <button
+        type="button"
+        class="Button Button--PrimaryOnLight Button--Normal product-card__atc-button quick-add-btn"
+        data-variant="{{ selected_variant.id }}"
+        data-add-label="{{ quick_add_label | escape }}"
+        data-sold-label="{{ sold_out_label | escape }}"
+        {% unless selected_variant.available %}disabled{% endunless %}
+      >
+        <span class="ButtonText">
+          {% if selected_variant.available %}
+            {{ quick_add_label }}
+          {% else %}
+            {{ sold_out_label }}
+          {% endif %}
+        </span>
+      </button>
+    {%- else -%}
+      <a
+        href="{{ product.url }}"
+        class="Button Button--PrimaryOnLight Button--Normal product-card__open-modal"
+      >
+        <span class="ButtonText">{{ choose_options_label }}</span>
+      </a>
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
 
-  <div class="description">
-    <p>{{ product.description | strip_html }}</p>
-  </div>
-
-  {% assign rating_value = product.metafields.reviews.rating | default: 0 %}
-  {% assign rating_count = product.metafields.reviews.count | default: 0 %}
-  {% assign rating_int = rating_value | round %}
-  <div class="product-rating">
-    {% for i in (1..5) %}
-      {% if i <= rating_int %}&#9733;{% else %}&#9734;{% endif %}
-    {% endfor %}
-    {% if rating_count != 0 %}
-      <span>({{ rating_count }})</span>
-    {% endif %}
-  </div>
-
-  <div class="product-card-cta">
+{%- capture product_card_mobile_cta -%}
+  {%- if show_quick_add and product.available and product.has_only_default_variant -%}
     <button
-      class="btn-primary quick-add-btn"
       type="button"
-      data-variant="{{ product.selected_or_first_available_variant.id }}"
+      tabindex="0"
+      data-action="toggle-drawer"
+      data-toggle-id="product-card__drawer"
+      class="Button Button--PrimaryOnLight Button--Normal product-card__open-modal"
     >
-      ADD TO BAG
+      <span class="ButtonText u-pb1">{{ quick_add_label }}</span>
     </button>
+  {%- endif -%}
+{%- endcapture -%}
+
+<product-card id="product-card__{{ product.id }}"{% unless product.has_only_default_variant %} data-has-variants{% endunless %}>
+  <div
+    class="product-card{% unless title_uppercase %} product-card--title-normal{% endunless %}"
+    data-productid="{{ product.id }}"
+    style="
+      --pc-image-height: {{ settings.product_card_image_height | default: 400 }}px;
+      --pc-image-fit: {{ settings.product_card_image_fit | default: 'cover' }};
+      --pc-title-size: {{ settings.product_card_title_size | default: 14 }}px;
+      --pc-price-size: {{ settings.product_card_price_size | default: 14 }}px;
+      --pc-subtitle-size: {{ settings.product_card_description_size | default: 14 }}px;
+      --pc-title-lines: {{ settings.product_card_title_lines | default: 2 }};
+      --pc-subtitle-lines: {{ settings.product_card_description_lines | default: 1 }};
+    "
+  >
+    <a class="product-card__link-wrapper flex-vertical" href="{{ product.url }}" tabindex="-1" aria-label="{{ product.title | escape }}">
+      <div class="product-card__image-wrapper AspectRatio AspectRatio--portrait" style="--aspect-ratio: {{ image_ratio }};">
+        {% if hover_image != blank %}
+          <img
+            class="product-card__image product-card__image--hover"
+            src="{{ hover_image | image_url: width: 1200 }}"
+            srcset="
+              {{ hover_image | image_url: width: 500 }} 500w,
+              {{ hover_image | image_url: width: 1000 }} 1000w,
+              {{ hover_image | image_url: width: 1200 }} 1200w,
+              {{ hover_image | image_url: width: 1500 }} 1500w,
+              {{ hover_image | image_url: width: 2000 }} 2000w
+            "
+            sizes="(max-width: 768px) 100w, (max-width: 1024px) 50w, 25w"
+            loading="lazy"
+            width="{{ hover_image.width }}"
+            height="{{ hover_image.height }}"
+            alt="{{ hover_image.alt | default: product.title | escape }}"
+          >
+        {% endif %}
+
+        {% if product.featured_image != blank %}
+          <img
+            class="product-card__image"
+            src="{{ product.featured_image | image_url: width: 1200 }}"
+            srcset="
+              {{ product.featured_image | image_url: width: 500 }} 500w,
+              {{ product.featured_image | image_url: width: 1000 }} 1000w,
+              {{ product.featured_image | image_url: width: 1200 }} 1200w,
+              {{ product.featured_image | image_url: width: 1500 }} 1500w,
+              {{ product.featured_image | image_url: width: 2000 }} 2000w
+            "
+            sizes="(max-width: 768px) 100w, (max-width: 1024px) 50w, 25w"
+            loading="lazy"
+            width="{{ product.featured_image.width }}"
+            height="{{ product.featured_image.height }}"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          >
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'product-card__image product-card__image--placeholder' }}
+        {% endif %}
+
+        {% if show_quick_add %}
+          <div class="product-card__purchase-options">
+            {{ product_card_cta }}
+          </div>
+        {% endif %}
+
+        {% if show_badges %}
+          <div class="product-card__label-container">
+            <div class="product__labels-holder">
+              {% unless product.available %}
+                <div class="product__label product__label--sold-out u-p2">
+                  {{ sold_out_label }}
+                </div>
+              {% endunless %}
+
+              {% if is_on_sale %}
+                <div class="product__label product__label--sale u-p2">
+                  SAVE {{ sale_amount | money_without_trailing_zeros }}
+                </div>
+              {% endif %}
+
+              {% if is_new %}
+                <div class="product__label product__label--custom u-p2">
+                  NEW
+                </div>
+              {% endif %}
+
+              {% if custom_badge != blank %}
+                <div class="product__label product__label--custom u-p2">
+                  {{ custom_badge | upcase }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="product-card__information flex-vertical textLeft">
+      <div class="product-card__information-top-half flex-vertical">
+        <div class="product-card__details">
+          <div class="product-card__title-subtitle flex-vertical">
+            <div class="product-card__title u-t2">
+              {{ product.title }}
+            </div>
+
+            {% if show_description and subtitle_text != blank %}
+              <div class="product-card__subtitle rte u-p2">
+                {{ subtitle_text | strip_html | escape }}
+              </div>
+            {% endif %}
+          </div>
+
+          {% if show_price %}
+            <div class="product-card__information-price">
+              <div class="product-card__price">
+                <dl class="flex-vertical">
+                  {% if show_compare_price %}
+                    <div class="product-card__price-compare u-p2{% unless is_on_sale %} product-card__price-compare--hidden{% endunless %}" data-product-card-compare-wrap>
+                      <dt>
+                        <span class="VisuallyHidden VisuallyHidden--inline">Compare at price</span>
+                      </dt>
+                      <dd class="product-card__compare-at-price-to-update u-p2" data-product-card-compare-price>
+                        {% if is_on_sale %}
+                          {{ display_compare_price | money }}
+                        {% endif %}
+                      </dd>
+                    </div>
+                  {% endif %}
+
+                  <div class="product-card__price-regular">
+                    <dt>
+                      <span class="VisuallyHidden VisuallyHidden--inline">Regular price</span>
+                    </dt>
+                    <dd>
+                      <span class="product-card__price-item u-t2" data-product-card-price>
+                        {{ display_price | money }}
+                      </span>
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if show_rating and has_rating_data %}
+          <div class="product-card__reviews mt-m">
+            {% if use_judgeme_rating and judge_badge != blank %}
+              <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}">
+                {{ judge_badge }}
+              </div>
+            {% else %}
+              {% assign rating_value_number = rating_value | plus: 0 | round: 1 %}
+              {% assign rating_count_number = rating_count | plus: 0 %}
+              {% assign rounded_stars = rating_value_number | round %}
+
+              <div class="product-card__reviews-stars" aria-label="Rating {{ rating_value_number }} out of {{ rating_scale_max }}">
+                {% for i in (1..5) %}
+                  <svg
+                    class="Svg Svg--star{% if i > rounded_stars %} Svg--star-empty{% endif %}"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path d="M10 1.5L12.56 6.68L18.28 7.51L14.14 11.55L15.12 17.25L10 14.55L4.88 17.25L5.86 11.55L1.72 7.51L7.44 6.68L10 1.5Z" fill="currentColor"></path>
+                  </svg>
+                {% endfor %}
+              </div>
+
+              {% if show_rating_count and rating_count_number > 0 %}
+                <p class="product-card__reviews-rating u-p4">
+                  ({{ rating_count_number }})
+                </p>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+        {% if product_card_mobile_cta != blank %}
+          <div class="product-card__information-bottom-half not_desktop">
+            {{ product_card_mobile_cta }}
+          </div>
+        {% endif %}
+      </div>
+    </a>
   </div>
-</div>
+</product-card>

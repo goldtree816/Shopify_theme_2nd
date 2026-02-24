@@ -1,0 +1,83 @@
+{% assign show_languages = localization.available_languages.size %}
+{% assign show_countries = localization.available_countries.size %}
+{% assign title_class = title_class | default: 'u-p2' %}
+{% assign item_class = item_class | default: 'u-p2' %}
+{% assign placeholder_class = placeholder_class | default: 'u-s2' %}
+{% assign content_class = content_class | default: '' %}
+{% assign wrapper_class = wrapper_class | default: '' %}
+{% assign form_id_final = form_id | default: 'MarketLocalization--header' %}
+{% assign language_form_id_final = language_form_id | default: 'LanguageLocalization--header' %}
+
+{% if show_countries > 1 or show_languages > 1 %}
+  <localization-selectors class="{% if show_countries and show_languages %}localization-both{% endif %} {{ wrapper_class }}">
+    {% if show_countries > 1 %}
+      <div class="RevolutionSelectbox RevolutionSelectbox--Selectors colorGroup--primary" data-select="country_code">
+        {% form 'localization', id: form_id_final, class: 'shopify-localization-form' %}
+          <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}">
+          <input type="hidden" name="return_to" value="{{ request.path }}">
+        {% endform %}
+        <button class="RevolutionSelectbox--Button" aria-expanded="false" data-action="toggle-selectbox" aria-label="Country code">
+          <span class="RevolutionSelectbox--Title {{ title_class }} RevolutionSelectbox--CurrencyDropdown textCapitalize">
+            {{ localization.country.iso_code | default: 'AT' }} / {{ cart.currency.iso_code | default: 'EUR' }}
+          </span>
+          <svg class="Svg Svg--arrow-down ml-xs" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9.77813 14.4C9.80718 14.4293 9.84174 14.4525 9.87982 14.4684C9.9179 14.4843 9.95875 14.4924 10 14.4924C10.0413 14.4924 10.0821 14.4843 10.1202 14.4684C10.1583 14.4525 10.1928 14.4293 10.2219 14.4L17.5656 7.05625C17.6238 6.9977 17.6565 6.9185 17.6565 6.83594C17.6565 6.75338 17.6238 6.67418 17.5656 6.61562C17.5366 6.58633 17.502 6.56309 17.4639 6.54722C17.4259 6.53136 17.385 6.52319 17.3438 6.52319C17.3025 6.52319 17.2617 6.53136 17.2236 6.54722C17.1855 6.56309 17.1509 6.58633 17.1219 6.61562L10 13.75L2.87813 6.61562C2.84908 6.58633 2.81451 6.56309 2.77643 6.54722C2.73835 6.53136 2.69751 6.52319 2.65625 6.52319C2.615 6.52319 2.57415 6.53136 2.53607 6.54722C2.49799 6.56309 2.46343 6.58633 2.43438 6.61562C2.37618 6.67418 2.34351 6.75338 2.34351 6.83594C2.34351 6.9185 2.37618 6.9977 2.43438 7.05625L9.77813 14.4Z"
+              fill="currentColor" />
+          </svg>
+        </button>
+        <div class="RevolutionSelectbox--Content RevolutionSelectbox--animation {{ content_class }}" aria-hidden="true">
+          <div class="RevolutionSelectbox--InnerContent" data-scrollable>
+            {% for country in localization.available_countries %}
+              <div class="RevolutionSelectbox--Item {{ item_class }} RevolutionSelectbox--CurrencyDropdown"
+                tabindex="0"
+                data-value="{{ country.iso_code }}"
+                data-name="{{ country.name }} / {{ country.currency.iso_code }}"
+                data-action="selectbox-submit"
+                {% if country.iso_code == localization.country.iso_code %}selected="selected"{% endif %}
+              >
+                <span class="RevolutionSelectbox--Placeholder {{ placeholder_class }}">{{ country.name }} / {{ country.currency.iso_code }}</span>
+                <span class="RevolutionSelectbox--ItemText {{ item_class }}">{{ country.name }} / {{ country.currency.iso_code }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if show_languages > 1 %}
+      <div class="RevolutionSelectbox RevolutionSelectbox--Selectors colorGroup--primary" data-select="language_code">
+        {% form 'localization', id: language_form_id_final, class: 'shopify-localization-form' %}
+          <input type="hidden" name="language_code" value="{{ localization.language.iso_code }}">
+          <input type="hidden" name="return_to" value="{{ request.path }}">
+        {% endform %}
+        <button class="RevolutionSelectbox--Button" aria-expanded="false" data-action="toggle-selectbox" aria-label="Language">
+          <span class="RevolutionSelectbox--Title {{ title_class }} textCapitalize">
+            {{ localization.language.endonym_name | default: localization.language.iso_code }}
+          </span>
+          <svg class="Svg Svg--arrow-down ml-xs" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M9.77813 14.4C9.80718 14.4293 9.84174 14.4525 9.87982 14.4684C9.9179 14.4843 9.95875 14.4924 10 14.4924C10.0413 14.4924 10.0821 14.4843 10.1202 14.4684C10.1583 14.4525 10.1928 14.4293 10.2219 14.4L17.5656 7.05625C17.6238 6.9977 17.6565 6.9185 17.6565 6.83594C17.6565 6.75338 17.6238 6.67418 17.5656 6.61562C17.5366 6.58633 17.502 6.56309 17.4639 6.54722C17.4259 6.53136 17.385 6.52319 17.3438 6.52319C17.3025 6.52319 17.2617 6.53136 17.2236 6.54722C17.1855 6.56309 17.1509 6.58633 17.1219 6.61562L10 13.75L2.87813 6.61562C2.84908 6.58633 2.81451 6.56309 2.77643 6.54722C2.73835 6.53136 2.69751 6.52319 2.65625 6.52319C2.615 6.52319 2.57415 6.53136 2.53607 6.54722C2.49799 6.56309 2.46343 6.58633 2.43438 6.61562C2.37618 6.67418 2.34351 6.75338 2.34351 6.83594C2.34351 6.9185 2.37618 6.9977 2.43438 7.05625L9.77813 14.4Z"
+              fill="currentColor" />
+          </svg>
+        </button>
+        <div class="RevolutionSelectbox--Content RevolutionSelectbox--animation {{ content_class }}" aria-hidden="true">
+          <div class="RevolutionSelectbox--InnerContent" data-scrollable>
+            {% for language in localization.available_languages %}
+              <div class="RevolutionSelectbox--Item {{ item_class }}"
+                tabindex="0"
+                data-value="{{ language.iso_code }}"
+                data-name="{{ language.endonym_name }}"
+                data-action="selectbox-submit"
+                {% if language.iso_code == localization.language.iso_code %}selected="selected"{% endif %}
+              >
+                <span class="RevolutionSelectbox--Placeholder {{ placeholder_class }}">{{ language.endonym_name }}</span>
+                <span class="RevolutionSelectbox--ItemText {{ item_class }}">{{ language.endonym_name }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </localization-selectors>
+{% endif %}

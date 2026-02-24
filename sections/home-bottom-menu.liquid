@@ -4,12 +4,18 @@
   grid-template-columns: 1fr 1fr 1.5fr;
   gap: 8px;
   padding: 100px 0;
-  width: 100vw;
+  width: 100%;
 }
 
 .bottom-menu .item {
   position: relative;
   overflow: hidden;
+}
+
+.bottom-menu a.item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .bottom-menu img {
@@ -75,14 +81,41 @@
 
 <section class="bottom-menu">
   {% for block in section.blocks %}
-    <div class="item">
-      {% if block.settings.image != blank %}
-        <img src="{{ block.settings.image | image_url: width: 1500 }}" alt="{{ block.settings.text }}">
+    {% assign menu_collection = block.settings.collection %}
+    {% assign item_label = block.settings.text %}
+
+    {% if menu_collection != blank %}
+      {% if item_label == blank %}
+        {% assign item_label = menu_collection.title %}
       {% endif %}
-      {% if block.settings.text != blank %}
-        <p>{{ block.settings.text }}</p>
+
+      {% assign collection_image = menu_collection.image %}
+      {% if collection_image == blank and menu_collection.products_count > 0 %}
+        {% assign first_product = menu_collection.products.first %}
+        {% if first_product != blank and first_product.featured_image != blank %}
+          {% assign collection_image = first_product.featured_image %}
+        {% endif %}
       {% endif %}
-    </div>
+
+      <a href="{{ menu_collection.url }}" class="item" {{ block.shopify_attributes }}>
+        {% if collection_image != blank %}
+          <img
+            src="{{ collection_image | image_url: width: 1500 }}"
+            alt="{{ collection_image.alt | default: item_label | escape }}"
+            width="{{ collection_image.width }}"
+            height="{{ collection_image.height }}"
+            loading="lazy"
+          >
+        {% endif %}
+        {% if item_label != blank %}
+          <p>{{ item_label }}</p>
+        {% endif %}
+      </a>
+    {% elsif request.design_mode %}
+      <div class="item" {{ block.shopify_attributes }}>
+        <p>{{ 'Select a collection' }}</p>
+      </div>
+    {% endif %}
   {% endfor %}
 </section>
 
@@ -96,15 +129,15 @@
       "name": "Menu Item",
       "settings": [
         {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Menu Image"
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
         },
         {
           "type": "text",
           "id": "text",
-          "label": "Menu Text",
-          "default": "Menu Label"
+          "label": "Label override",
+          "info": "Optional. Defaults to the selected collection title."
         }
       ]
     }

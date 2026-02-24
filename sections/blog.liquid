@@ -2,7 +2,6 @@
 
 body{
   font-family: var(--font-primary--family);
-  padding-top:70px;
 }
 
 .journal-container{a
@@ -226,7 +225,11 @@ body{
   <!-- Left: Featured -->
   <div class="card-featured">
     <a href="{{ first.url }}">
-      <img src="{{ first.image | image_url: width:2000 }}">
+      <img
+        src="{{ first.image | image_url: width:2000 }}"
+        alt="{{ first.image.alt | default: first.title | escape }}"
+        loading="eager"
+      >
     </a>
     <div class="card-meta">{% for t in first.tags %}{{ t }} {% endfor %}</div>
     <a href="{{ first.url }}" class="card-title">{{ first.title }}</a>
@@ -237,7 +240,11 @@ body{
   <div class="side-stack">
 
       <div class="card-horizontal">
-        <img src="{{ second.image | image_url: width:900 }}">
+        <img
+          src="{{ second.image | image_url: width:900 }}"
+          alt="{{ second.image.alt | default: second.title | escape }}"
+          loading="lazy"
+        >
         <div>
           <div class="card-meta">{% for t in second.tags %}{{ t }} {% endfor %}</div>
           <a href="{{ second.url }}" class="card-title">{{ second.title }}</a>
@@ -245,7 +252,11 @@ body{
       </div>
 
       <div class="card-horizontal">
-        <img src="{{ third.image | image_url: width:900 }}">
+        <img
+          src="{{ third.image | image_url: width:900 }}"
+          alt="{{ third.image.alt | default: third.title | escape }}"
+          loading="lazy"
+        >
         <div>
           <div class="card-meta">{% for t in third.tags %}{{ t }} {% endfor %}</div>
           <a href="{{ third.url }}" class="card-title">{{ third.title }}</a>
@@ -264,7 +275,11 @@ body{
 <div class="lower-grid">
 {% for article in sorted_articles offset:3 %}
   <div class="card-horizontal">
-    <img src="{{ article.image | image_url: width:900 }}">
+    <img
+      src="{{ article.image | image_url: width:900 }}"
+      alt="{{ article.image.alt | default: article.title | escape }}"
+      loading="lazy"
+    >
     <div>
       <div class="card-meta">{% for t in article.tags %}{{ t }} {% endfor %}</div>
       <a href="{{ article.url }}" class="card-title">{{ article.title }}</a>

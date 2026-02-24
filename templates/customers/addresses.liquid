@@ -22,7 +22,9 @@
         <button
           type="button"
           class="aevi-add-address-btn"
-          data-drawer-open="#add-address"
+          data-action="open-drawer"
+          data-toggle-id="Drawer"
+          data-drawer-source="#add-address"
           data-drawer-title="Add address"
         >
           + ADD ADDRESS
@@ -54,7 +56,9 @@
               <!-- EDIT -->
               <button
                 type="button"
-                data-drawer-open="#edit-address-{{ address.id }}"
+                data-action="open-drawer"
+                data-toggle-id="Drawer"
+                data-drawer-source="#edit-address-{{ address.id }}"
                 data-drawer-title="Edit address"
               >
                 Edit

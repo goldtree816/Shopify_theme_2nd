@@ -7,85 +7,38 @@ body {
   font-family: var(--font-primary--family);
 }
 
-/* ================= TOP BANNER ================= */
-.top-banner {
-  position: relative;
-  width: 100vw;
-  text-align: center;
-  font-size: var(--banner-text-size);
-  font-weight: 600;
-  color: var(--banner-text-color);
-  min-height: var(--banner-height);
-  padding: 4px 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  background-color: {{ section.settings.banner_bg_color }};
-  transition: height 0.25s ease, padding 0.25s ease, opacity 0.25s ease;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  --banner-height: {{ section.settings.banner_height | default: 36 }}px;
-  --banner-height-mobile: {{ section.settings.banner_height_mobile | default: 32 }}px;
-  --banner-text-size: {{ section.settings.banner_text_size | default: 13 }}px;
-  --banner-text-size-mobile: {{ section.settings.banner_text_size_mobile | default: 12 }}px;
-  --banner-text-color: {{ section.settings.banner_text_color | default: '#ffffff' }};
-  --banner-transition: {{ section.settings.banner_transition_ms | default: 600 }}ms;
-}
-
-header:hover .top-banner {
-  background-color: {{ section.settings.banner_hover_bg_color | default: '#a3bfdb' }};
-  color: {{ section.settings.banner_hover_text_color | default: '#1d3d7a' }};
-  border-bottom: 1px solid var(--color-border);
-}
-
-header:hover .top-banner a {
-  color: {{ section.settings.banner_hover_link_color | default: '#1d3d7a' }};
-}
-
-.top-banner__viewport {
+#site-header {
+  left: 0;
+  right: 0;
   width: 100%;
-  overflow: hidden;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: fixed;
+  top: var(--announcement-bar-current-height, 0px);
+  --header-bg-color: #ffffff;
+  --header-text-color: #231f20;
+  --header-trtxt-color: #ffffff;
+  --header-tx-color: transparent;
 }
 
-.top-banner__track {
-  display: flex;
-  flex-direction: column;
-  transform: translateY(0);
-  transition: transform var(--banner-transition) cubic-bezier(0.2, 0.7, 0, 1);
-  will-change: transform;
+:root {
+  --site-header-offset: 96px;
 }
 
-.top-banner__item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: var(--banner-height);
-  line-height: 1.3;
-  padding: 2px 0;
-}
-
-.top-banner__text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.top-banner__link {
-  color: {{ section.settings.banner_link_color }};
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  white-space: nowrap;
+body:not(.template-index) {
+  padding-top: var(--site-header-offset);
 }
 
 /* ================= NAVBAR ================= */
 .navbar {
   width: 100%;
-  background-color: transparent;
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
   padding: {{ section.settings.navbar_height }}px 40px;
   position: relative;
   z-index: 1000;
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
 }
 
 .navbar-inner {
@@ -95,21 +48,14 @@ header:hover .top-banner a {
   align-items: center;
   justify-content: space-between;
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Hover / scroll background */
-header:hover .navbar:hover,
+/* Scroll background */
 .navbar.scrolled {
-  background-color: var(--color-background);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.navbar.scrolled a {
-  color: var(--color-link);
-}
-
-.navbar:hover a {
-  color: var(--color-link);
+  background-color: var(--header-bg-color);
+  box-shadow: none;
 }
 
 /* ================= NAV GROUPS ================= */
@@ -119,6 +65,7 @@ header:hover .navbar:hover,
   align-items: center;
   gap: {{ section.settings.nav_item_spacing }}px;
   font-size: {{ section.settings.nav_font_size }}px;
+  box-sizing: border-box;
 }
 
 /* Center logo */
@@ -129,6 +76,7 @@ header:hover .navbar:hover,
   --logo-width: {{ section.settings.logo_width | default: 140 }}px;
   --logo-width-mobile: {{ section.settings.logo_width_mobile | default: 110 }}px;
   --logo-height: {{ section.settings.logo_height | default: 44 }}px;
+  box-sizing: border-box;
 }
 
 .nav-center a {
@@ -186,13 +134,6 @@ header:hover .navbar:hover,
   }
 }
 
-@media (max-width: 640px) {
-  .top-banner {
-    min-height: var(--banner-height-mobile);
-    font-size: var(--banner-text-size-mobile);
-  }
-}
-
 .navbar.scrolled .nav-center a,
 .navbar:hover .nav-center a {
   color: var(--color-foreground);
@@ -200,7 +141,7 @@ header:hover .navbar:hover,
 
 /* Links */
 .navbar a {
-  color: white;
+  color: inherit;
   text-decoration: none;
   transition: color 0.25s ease;
 }
@@ -211,8 +152,16 @@ header:hover .navbar:hover,
 
 /* Icons */
 .nav-right svg {
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
+}
+
+.navbar svg {
+  color: inherit;
+}
+
+.navbar svg path {
+  fill: currentColor;
 }
 
 .nav-toggle {
@@ -244,6 +193,48 @@ header:hover .navbar:hover,
   transition: transform 0.2s ease;
 }
 
+.navbar .nav-toggle {
+  color: var(--header-text-color);
+}
+
+/* Transparent header state (homepage top) */
+#site-header.header--transparent .navbar {
+  background-color: var(--header-tx-color);
+  box-shadow: none;
+  color: var(--header-trtxt-color);
+}
+
+#site-header.header--transparent .nav-toggle {
+  color: var(--header-trtxt-color);
+}
+
+#site-header.header--transparent .nav-toggle-bars span {
+  background: currentColor;
+}
+
+@media (min-width: 1025px) {
+  #site-header.header--transparent:hover .navbar {
+    background-color: var(--header-bg-color);
+    box-shadow: none;
+    color: var(--header-text-color);
+  }
+
+  #site-header.header--transparent:hover .nav-toggle {
+    color: var(--header-text-color);
+  }
+
+}
+
+/* Arrow icons use fill */
+.navbar .Svg--arrow-down path,
+.navbar .RevolutionSelectbox--Button svg path {
+  fill: currentColor;
+}
+
+.navbar.scrolled .nav-toggle-bars span {
+  background: currentColor;
+}
+
 .nav-toggle-bars span:nth-child(1) {
   top: 0;
 }
@@ -256,10 +247,73 @@ header:hover .navbar:hover,
   bottom: 0;
 }
 
+.header--hamburger {
+  display: flex;
+  flex-direction: column;
+  height: 1.0625rem;
+  width: 1rem;
+  padding: 0.25rem 0.125rem;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.header--hamburger .bar {
+  width: 100%;
+  height: 1px;
+  border-radius: 2rem;
+  transition: opacity 0.1s ease, 0.25s ease-in-out;
+  display: block;
+  cursor: pointer;
+  background: currentColor;
+}
+
+.header--hamburger.is-active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.header--hamburger.is-active .bar:nth-child(1) {
+  transform: translateY(0.25rem) rotate(45deg);
+}
+
+.header--hamburger.is-active .bar:nth-child(3) {
+  transform: translateY(-0.25rem) rotate(-45deg);
+}
+
 .nav-left-links {
   display: flex;
   align-items: center;
   gap: {{ section.settings.nav_item_spacing }}px;
+}
+
+.nav-left-links a,
+.nav-right .nav-link--text,
+.nav-right .RevolutionSelectbox--Title {
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.nav-left-links a,
+.nav-right .nav-link--text {
+  position: relative;
+}
+
+.nav-left-links a::before,
+.nav-right .nav-link--text::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  left: 0;
+  bottom: -1px;
+  background: currentColor;
+  transition: width 0.45s cubic-bezier(.23,1,.32,1);
+}
+
+.nav-left-links a:hover::before,
+.nav-right .nav-link--text:hover::before {
+  width: 100%;
 }
 
 /* ================= DROPDOWN ================= */
@@ -270,7 +324,7 @@ header:hover .navbar:hover,
 .dropdown-menu {
   position: fixed;
   left: 0;
-  width: 100vw;
+  width: 100%;
   padding: 30px 120px;
   background: var(--color-background);
   opacity: 0;
@@ -321,16 +375,6 @@ header:hover .navbar:hover,
   object-fit: cover;
 }
 
-/* ================= SCROLL BEHAVIOR ================= */
-/* ONLY banner collapses – navbar height stays same */
-#site-header.is-scrolled .top-banner {
-  height: 0;
-  min-height: 0;
-  padding: 0;
-  opacity: 0;
-  border: none;
-}
-
 /* ================= MOBILE MENU ================= */
 .mobile-menu-panel {
   min-height: 100vh;
@@ -373,10 +417,6 @@ header:hover .navbar:hover,
 
 .mobile-menu-icons a {
   color: var(--color-link);
-}
-
-.mobile-menu-banner {
-  width: 100%;
 }
 
 .mobile-menu-views {
@@ -568,58 +608,23 @@ header:hover .navbar:hover,
     padding: 0;
   }
 }
+
+@media (min-width: 1025px) {
+  .nav-left,
+  .nav-right {
+    gap: 2rem;
+  }
+
+  .nav-left-links {
+    gap: 2rem;
+  }
+}
 </style>
 
-<header id="site-header" class="fixed top-0 left-0 w-full z-50">
-
-  {% assign banner_blocks = section.blocks | where: 'type', 'banner_item' %}
-  {% if section.settings.banner_enable %}
-    <!-- TOP BANNER -->
-    <div
-      class="top-banner"
-      data-autoplay="{{ section.settings.banner_autoplay }}"
-      data-interval="{{ section.settings.banner_interval }}"
-      data-transition="{{ section.settings.banner_transition_ms }}"
-      data-pause-on-hover="{{ section.settings.banner_pause_on_hover }}"
-    >
-      <div class="top-banner__viewport">
-        <div class="top-banner__track">
-          {% if banner_blocks.size > 0 %}
-            {% for block in banner_blocks %}
-              <div class="top-banner__item" {{ block.shopify_attributes }}>
-                {% if block.settings.text != blank %}
-                  <span class="top-banner__text">{{ block.settings.text }}</span>
-                {% endif %}
-                {% if block.settings.link_label != blank %}
-                  {% if block.settings.link != blank %}
-                    <a class="top-banner__link" href="{{ block.settings.link }}">
-                      {{ block.settings.link_label }}
-                    </a>
-                  {% else %}
-                    <span class="top-banner__link">{{ block.settings.link_label }}</span>
-                  {% endif %}
-                {% endif %}
-              </div>
-            {% endfor %}
-          {% else %}
-            <div class="top-banner__item">
-              {% if section.settings.banner_text != blank %}
-                <span class="top-banner__text">{{ section.settings.banner_text }}</span>
-              {% endif %}
-              {% if section.settings.banner_link_label != blank %}
-                {% if section.settings.banner_link != blank %}
-                  <a class="top-banner__link" href="{{ section.settings.banner_link }}">
-                    {{ section.settings.banner_link_label }}
-                  </a>
-                {% else %}
-                  <span class="top-banner__link">{{ section.settings.banner_link_label }}</span>
-                {% endif %}
-              {% endif %}
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+<header id="site-header" class="fixed left-0 w-full z-50" style="top: var(--announcement-bar-current-height, 0px);">
+  {% assign is_cart_template = false %}
+  {% if template.name == 'cart' %}
+    {% assign is_cart_template = true %}
   {% endif %}
 
   {% capture header_logo %}
@@ -646,17 +651,15 @@ header:hover .navbar:hover,
       <!-- LEFT -->
       <nav class="nav-left">
         <button
-          class="nav-toggle"
+          class="nav-toggle header--hamburger"
           type="button"
           aria-label="Open menu"
-          data-drawer-open="#mobile-menu"
-          data-drawer-class="mobile-menu-drawer"
+          data-action="toggle-drawer"
+          data-toggle-id="mobile-menu"
         >
-          <span class="nav-toggle-bars" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-          </span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
         </button>
 
         <div class="nav-left-links">
@@ -682,10 +685,18 @@ header:hover .navbar:hover,
                       {% for block in section.blocks %}
                         {% if block.settings.menu_title == link.title %}
                           {% if block.settings.image_1 %}
-                            <img src="{{ block.settings.image_1 | image_url }}">
+                            <img
+                              src="{{ block.settings.image_1 | image_url }}"
+                              alt="{{ block.settings.image_1.alt | default: block.settings.menu_title | default: link.title | default: shop.name | escape }}"
+                              loading="lazy"
+                            >
                           {% endif %}
                           {% if block.settings.image_2 %}
-                            <img src="{{ block.settings.image_2 | image_url }}">
+                            <img
+                              src="{{ block.settings.image_2 | image_url }}"
+                              alt="{{ block.settings.image_2.alt | default: block.settings.menu_title | default: link.title | default: shop.name | escape }}"
+                              loading="lazy"
+                            >
                           {% endif %}
                         {% endif %}
                       {% endfor %}
@@ -705,14 +716,34 @@ header:hover .navbar:hover,
 
       <!-- RIGHT -->
       <nav class="nav-right">
+        {% render 'localization-selectors',
+          form_id: 'MarketLocalization--header-desktop',
+          language_form_id: 'LanguageLocalization--header-desktop',
+          title_class: 'u-p2',
+          item_class: 'u-p2',
+          placeholder_class: 'u-s2',
+          wrapper_class: 'localization--desktop'
+        %}
         {% for link in linklists[section.settings.right-navbar].links %}
           {% case link.title %}
             {% when "CART" %}
-              <a href="#" class="nav-link nav-link--icon nav-link--cart open-cart-drawer">{% render 'icon-shopping-bag' %}</a>
+              {% if is_cart_template %}
+                <a href="{{ routes.cart_url }}" class="nav-link nav-link--icon nav-link--cart" aria-label="Cart">{% render 'icon-shopping-bag' %}</a>
+              {% else %}
+                <a
+                  href="{{ routes.cart_url }}"
+                  class="nav-link nav-link--icon nav-link--cart"
+                  aria-label="Cart"
+                  data-action="toggle-drawer"
+                  data-toggle-id="cart-drawer"
+                >
+                  {% render 'icon-shopping-bag' %}
+                </a>
+              {% endif %}
             {% when "SEARCH" %}
-              <a href="/search" class="nav-link nav-link--icon nav-link--search search-icon">{% render 'icon-search' %}</a>
+              <a href="{{ routes.search_url }}" class="nav-link nav-link--icon nav-link--search search-icon">{% render 'icon-search' %}</a>
             {% when "PROFILE" %}
-              <a href="/account" class="nav-link nav-link--icon nav-link--account">{% render 'icon-profile' %}</a>
+              <a href="{{ routes.account_url }}" class="nav-link nav-link--icon nav-link--account">{% render 'icon-profile' %}</a>
             {% else %}
               <a href="{{ link.url }}" class="nav-link nav-link--text">{{ link.title }}</a>
           {% endcase %}
@@ -722,243 +753,215 @@ header:hover .navbar:hover,
     </div>
   </div>
 
-  <div id="mobile-menu" class="mobile-menu" hidden>
-    <div class="mobile-menu-panel" data-active-submenu="root">
-      {% if section.settings.banner_enable %}
-        {% assign menu_banner_block = banner_blocks[0] %}
-        <div class="top-banner mobile-menu-banner">
-          <div class="top-banner__item">
-            {% if menu_banner_block != blank %}
-              {% if menu_banner_block.settings.text != blank %}
-                <span class="top-banner__text">{{ menu_banner_block.settings.text }}</span>
-              {% endif %}
-              {% if menu_banner_block.settings.link_label != blank %}
-                {% if menu_banner_block.settings.link != blank %}
-                  <a class="top-banner__link" href="{{ menu_banner_block.settings.link }}">
-                    {{ menu_banner_block.settings.link_label }}
-                  </a>
-                {% else %}
-                  <span class="top-banner__link">{{ menu_banner_block.settings.link_label }}</span>
-                {% endif %}
-              {% endif %}
-            {% else %}
-              {% if section.settings.banner_text != blank %}
-                <span class="top-banner__text">{{ section.settings.banner_text }}</span>
-              {% endif %}
-              {% if section.settings.banner_link_label != blank %}
-                {% if section.settings.banner_link != blank %}
-                  <a class="top-banner__link" href="{{ section.settings.banner_link }}">
-                    {{ section.settings.banner_link_label }}
-                  </a>
-                {% else %}
-                  <span class="top-banner__link">{{ section.settings.banner_link_label }}</span>
-                {% endif %}
-              {% endif %}
-            {% endif %}
-          </div>
-        </div>
-      {% endif %}
-
-      <div class="mobile-menu-top">
-        <button class="mobile-menu-close" type="button" aria-label="Close menu" data-drawer-close>x</button>
-        <div class="mobile-menu-logo">
-          {{ header_logo }}
-        </div>
-        <div class="mobile-menu-icons">
-          <a href="/search" class="search-icon" aria-label="Search">{% render 'icon-search' %}</a>
-          <a href="#" class="open-cart-drawer" aria-label="Cart">{% render 'icon-shopping-bag' %}</a>
-        </div>
-      </div>
-
-      <div class="mobile-menu-views">
-        <div class="mobile-menu-view mobile-menu-view--root is-active" data-submenu-panel="root">
-          <nav class="mobile-menu-nav" aria-label="Mobile">
-            <ul class="mobile-menu-list">
-              {% for link in linklists[section.settings.left-navbar].links %}
-                {% assign link_title_up = link.title | upcase %}
-                {% assign link_handle = link.title | handleize %}
-                <li class="mobile-menu-item">
-                  {% if link.links != blank %}
-                    <button
-                      class="mobile-menu-link mobile-menu-link--trigger"
-                      type="button"
-                      data-submenu-open="{{ link_handle }}"
-                      aria-label="{{ link.title }}"
-                    >
-                      <span class="mobile-menu-label{% if link_title_up == 'NEW IN' %} is-new{% endif %}">
-                        {{ link.title }}
-                      </span>
-                      <span class="mobile-menu-chevron" aria-hidden="true">&gt;</span>
-                    </button>
-                  {% else %}
-                    <a href="{{ link.url }}" class="mobile-menu-link">
-                      <span class="mobile-menu-label{% if link_title_up == 'NEW IN' %} is-new{% endif %}">
-                        {{ link.title }}
-                      </span>
-                    </a>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
-        </div>
-
+  <main-menu-dropdown
+    class="drawer colorGroup--primary not_desktop"
+    aria-expanded="false"
+    aria-hidden="true"
+    id="mobile-menu"
+  >
+    <div class="drawer__content Drawer--Content">
+      <div
+        id="mobile-menu__grid--main"
+        class="mobile-menu__grid mobile-menu__grid--level-one"
+        aria-expanded="false"
+        aria-hidden="true"
+        data-scrollable
+      >
         {% for link in linklists[section.settings.left-navbar].links %}
+          {% assign link_title_up = link.title | upcase %}
+          {% assign link_handle = link.title | handleize %}
+          {% assign has_children = false %}
           {% if link.links != blank %}
-            {% assign link_handle = link.title | handleize %}
-            <div class="mobile-menu-view mobile-menu-view--submenu" data-submenu-panel="{{ link_handle }}">
-              <div class="mobile-submenu-header">
-                <button class="mobile-submenu-back" type="button" data-submenu-back>
-                  <span class="mobile-submenu-arrow" aria-hidden="true">&lt;</span>
-                  Back
-                </button>
-                <span class="mobile-submenu-title">{{ link.title }}</span>
-              </div>
-              <ul class="mobile-submenu-list">
-                {% for child in link.links %}
-                  {% if child.links != blank %}
-                    {% for sub in child.links %}
-                      <li class="mobile-submenu-item">
-                        <a href="{{ sub.url }}">{{ sub.title }}</a>
-                      </li>
-                    {% endfor %}
-                  {% else %}
-                    <li class="mobile-submenu-item">
-                      <a href="{{ child.url }}">{{ child.title }}</a>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </div>
+            {% assign has_children = true %}
           {% endif %}
+          <a
+            href="{{ link.url }}"
+            class="mobile-menu__link mobile-menu__link--level-one rte u-p2 pb-m pt-m{% if link_title_up == 'NEW IN' %} mobile-menu__link--highlight{% endif %}"
+            {% if has_children %}
+              aria-controls="mobile-menu__grid--{{ link_handle }}"
+              data-action="open-submenu"
+            {% endif %}
+          >
+            <span>{{ link.title }}</span>
+            {% if has_children %}
+              <svg class="Svg Svg--arrow-right" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.66656 16.078C6.66571 15.9304 6.72368 15.7884 6.82767 15.6836L12.5443 9.96693L6.82767 4.25026C6.63891 4.02984 6.6516 3.70126 6.8568 3.49606C7.06201 3.29085 7.39058 3.27816 7.611 3.46692L14.1166 9.96693L7.611 16.4725C7.45156 16.6288 7.21403 16.6744 7.00801 16.5884C6.80198 16.5023 6.66748 16.3013 6.66656 16.078Z" fill="#231F20"/>
+              </svg>
+            {% endif %}
+          </a>
         {% endfor %}
       </div>
 
-      <div class="mobile-menu-footer">
-        <span class="mobile-menu-locale">
-          {{ localization.country.iso_code | default: 'AT' }} / {{ cart.currency.iso_code | default: 'EUR' }}
-        </span>
-        <a href="/account">Account</a>
+      {% for link in linklists[section.settings.left-navbar].links %}
+        {% assign link_handle = link.title | handleize %}
+        {% if link.links != blank %}
+          <div
+            id="mobile-menu__grid--{{ link_handle }}"
+            class="mobile-menu__grid mobile-menu__grid--level-two"
+            aria-expanded="false"
+            aria-hidden="true"
+            data-scrollable
+          >
+            <a
+              href="{{ link.url }}"
+              class="mobile-menu__back-button rte u-p3 pt-m pb-m"
+              aria-controls="mobile-menu__grid--main"
+              data-action="close-submenu"
+            >
+              <svg class="Svg Svg--arrow-left" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.2687 2.43437C13.2397 2.40508 13.2051 2.38184 13.167 2.36597C13.129 2.35011 13.0881 2.34194 13.0469 2.34194C13.0056 2.34194 12.9648 2.35011 12.9267 2.36597C12.8886 2.38184 12.854 2.40508 12.825 2.43437L5.48123 9.77813C5.45194 9.80718 5.42869 9.84174 5.41283 9.87982C5.39696 9.9179 5.38879 9.95875 5.38879 10C5.38879 10.0413 5.39696 10.0821 5.41283 10.1202C5.42869 10.1583 5.45194 10.1928 5.48123 10.2219L12.8125 17.5656C12.8415 17.5949 12.8761 17.6182 12.9142 17.634C12.9523 17.6499 12.9931 17.6581 13.0344 17.6581C13.0756 17.6581 13.1165 17.6499 13.1545 17.634C13.1926 17.6182 13.2272 17.5949 13.2562 17.5656C13.2855 17.5366 13.3088 17.502 13.3246 17.4639C13.3405 17.4258 13.3487 17.385 13.3487 17.3438C13.3487 17.3025 13.3405 17.2617 13.3246 17.2236C13.3088 17.1855 13.2855 17.1509 13.2562 17.1219L6.14373 10L13.2687 2.87813C13.298 2.84907 13.3213 2.81451 13.3371 2.77643C13.353 2.73835 13.3612 2.6975 13.3612 2.65625C13.3612 2.615 13.353 2.57415 13.3371 2.53607C13.3213 2.49799 13.298 2.46343 13.2687 2.43437Z" fill="#231F20"/>
+              </svg>
+              <span>BACK</span>
+              {{ link.title }}
+            </a>
+
+            {% for child in link.links %}
+              {% assign child_handle = child.title | handleize %}
+              {% if child.links != blank %}
+                <a
+                  href="{{ child.url }}"
+                  class="mobile-menu__link mobile-menu__link--level-two rte u-p2 pb-m pt-m{% if forloop.first %} mt-l{% endif %}"
+                  aria-controls="mobile-menu__grid--{{ link_handle }}-{{ child_handle }}"
+                  data-action="open-submenu"
+                >
+                  <span>{{ child.title }}</span>
+                  <svg class="Svg Svg--arrow-right" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.66656 16.078C6.66571 15.9304 6.72368 15.7884 6.82767 15.6836L12.5443 9.96693L6.82767 4.25026C6.63891 4.02984 6.6516 3.70126 6.8568 3.49606C7.06201 3.29085 7.39058 3.27816 7.611 3.46692L14.1166 9.96693L7.611 16.4725C7.45156 16.6288 7.21403 16.6744 7.00801 16.5884C6.80198 16.5023 6.66748 16.3013 6.66656 16.078Z" fill="#231F20"/>
+                  </svg>
+                </a>
+              {% else %}
+                <a
+                  href="{{ child.url }}"
+                  class="mobile-menu__link mobile-menu__link--level-two rte u-p2 pb-m pt-m{% if forloop.first %} mt-l{% endif %}"
+                >
+                  <span>{{ child.title }}</span>
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% for child in link.links %}
+            {% if child.links != blank %}
+              {% assign child_handle = child.title | handleize %}
+              <div
+                id="mobile-menu__grid--{{ link_handle }}-{{ child_handle }}"
+                class="mobile-menu__grid mobile-menu__grid--level-three"
+                aria-expanded="false"
+                aria-hidden="true"
+                data-scrollable
+              >
+                <a
+                  href="{{ child.url }}"
+                  class="mobile-menu__back-button rte u-p3 pt-m pb-m"
+                  aria-controls="mobile-menu__grid--{{ link_handle }}"
+                  data-action="close-submenu"
+                >
+                  <svg class="Svg Svg--arrow-left" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.2687 2.43437C13.2397 2.40508 13.2051 2.38184 13.167 2.36597C13.129 2.35011 13.0881 2.34194 13.0469 2.34194C13.0056 2.34194 12.9648 2.35011 12.9267 2.36597C12.8886 2.38184 12.854 2.40508 12.825 2.43437L5.48123 9.77813C5.45194 9.80718 5.42869 9.84174 5.41283 9.87982C5.39696 9.9179 5.38879 9.95875 5.38879 10C5.38879 10.0413 5.39696 10.0821 5.41283 10.1202C5.42869 10.1583 5.45194 10.1928 5.48123 10.2219L12.8125 17.5656C12.8415 17.5949 12.8761 17.6182 12.9142 17.634C12.9523 17.6499 12.9931 17.6581 13.0344 17.6581C13.0756 17.6581 13.1165 17.6499 13.1545 17.634C13.1926 17.6182 13.2272 17.5949 13.2562 17.5656C13.2855 17.5366 13.3088 17.502 13.3246 17.4639C13.3405 17.4258 13.3487 17.385 13.3487 17.3438C13.3487 17.3025 13.3405 17.2617 13.3246 17.2236C13.3088 17.1855 13.2855 17.1509 13.2562 17.1219L6.14373 10L13.2687 2.87813C13.298 2.84907 13.3213 2.81451 13.3371 2.77643C13.353 2.73835 13.3612 2.6975 13.3612 2.65625C13.3612 2.615 13.353 2.57415 13.3371 2.53607C13.3213 2.49799 13.298 2.46343 13.2687 2.43437Z" fill="#231F20"/>
+                  </svg>
+                  <span>BACK</span>
+                  {{ child.title }}
+                </a>
+                {% for grandchild in child.links %}
+                  <a
+                    href="{{ grandchild.url }}"
+                    class="mobile-menu__link mobile-menu__link--level-three rte u-p2 pb-m pt-m{% if forloop.first %} mt-l{% endif %}"
+                  >
+                    <span>{{ grandchild.title }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="localizationOverlay" aria-hidden="true"></div>
+    <div class="drawer__footer Drawer--Footer">
+      <div class="drawer__footer-inner">
+        <div class="mobile-menu__action-bar">
+          <div class="mobile-menu__selectors not_desktop">
+            {% render 'localization-selectors',
+              form_id: 'MarketLocalization--header-mobile',
+              language_form_id: 'LanguageLocalization--header-mobile',
+              title_class: 'u-p3',
+              item_class: 'u-p2',
+              placeholder_class: 'u-t2',
+              content_class: 'PopoverContent',
+              wrapper_class: 'localization--mobile'
+            %}
+          </div>
+          <div class="mobile-menu__action-items">
+            <a href="{{ routes.account_url }}" class="u-p3">Account</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </main-menu-dropdown>
 </header>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const banner = document.querySelector(".top-banner");
-  if (banner) {
-    const track = banner.querySelector(".top-banner__track");
-    if (track) {
-      const items = Array.from(track.children);
-      const count = items.length;
-      const autoplay = banner.dataset.autoplay === "true";
-      const pauseOnHover = banner.dataset.pauseOnHover === "true";
-      const interval = Number(banner.dataset.interval) || 4000;
-      const transition = Number(banner.dataset.transition) || 600;
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      if (count > 1 && autoplay && !prefersReducedMotion) {
-        const firstClone = items[0].cloneNode(true);
-        firstClone.setAttribute("aria-hidden", "true");
-        track.appendChild(firstClone);
-
-        let index = 0;
-        let timer = null;
-        let itemHeight = banner.clientHeight;
-
-        const updateHeight = () => {
-          itemHeight = banner.clientHeight;
-          track.style.transform = `translateY(-${index * itemHeight}px)`;
-        };
-
-        const moveTo = (i) => {
-          track.style.transition = `transform ${transition}ms cubic-bezier(0.2, 0.7, 0, 1)`;
-          track.style.transform = `translateY(-${i * itemHeight}px)`;
-        };
-
-        const next = () => {
-          index += 1;
-          moveTo(index);
-        };
-
-        track.addEventListener("transitionend", () => {
-          if (index === count) {
-            track.style.transition = "none";
-            index = 0;
-            track.style.transform = "translateY(0)";
-            void track.offsetHeight;
-          }
-        });
-
-        const stop = () => {
-          if (timer) {
-            clearInterval(timer);
-            timer = null;
-          }
-        };
-
-        const start = () => {
-          if (timer) return;
-          timer = setInterval(next, interval);
-        };
-
-        updateHeight();
-        window.addEventListener("resize", updateHeight);
-        start();
-
-        if (pauseOnHover) {
-          banner.addEventListener("mouseenter", stop);
-          banner.addEventListener("mouseleave", start);
-          banner.addEventListener("focusin", stop);
-          banner.addEventListener("focusout", start);
-        }
-      }
-    }
-  }
-
+  const body = document.body;
   const header = document.getElementById("site-header");
   const navbar = document.getElementById("navbar");
+  if (!header || !navbar) return;
+
+  const isHomeTemplate = body.classList.contains("template-index") || window.location.pathname === "/";
+
+  function updateHeaderOffset() {
+    const headerTop = parseFloat(window.getComputedStyle(header).top || "0") || 0;
+    const offset = Math.max(0, Math.round(header.offsetHeight + headerTop));
+    document.documentElement.style.setProperty("--site-header-offset", `${offset}px`);
+    document.documentElement.style.setProperty("--header-dynamic-height", `${Math.round(header.offsetHeight)}px`);
+    const announcement = document.querySelector(".announcement-bar");
+    const announcementHeight = announcement ? Math.round(announcement.offsetHeight) : 0;
+    document.documentElement.style.setProperty("--announcement-dynamic-height", `${announcementHeight}px`);
+  }
 
   function onScroll() {
-    if (window.scrollY > 10) {
+    const forceScrolled = body.classList.contains("search-force-scrolled");
+    const shouldBeScrolled = forceScrolled || !isHomeTemplate || window.scrollY > 10;
+    const shouldBeTransparent = isHomeTemplate && !forceScrolled && window.scrollY <= 10;
+    const announcementBar = document.querySelector(".announcement-bar");
+
+    if (shouldBeScrolled) {
       header.classList.add("is-scrolled");
       navbar.classList.add("scrolled");
     } else {
       header.classList.remove("is-scrolled");
       navbar.classList.remove("scrolled");
     }
+
+    header.classList.toggle("header--transparent", shouldBeTransparent);
+
+    if (announcementBar) {
+      announcementBar.classList.toggle("announcementBar--transparent", shouldBeTransparent);
+      announcementBar.classList.toggle("announcement__bar-bg", !shouldBeTransparent);
+    }
+
+    updateHeaderOffset();
   }
 
-  window.addEventListener("scroll", onScroll);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  window.addEventListener("load", onScroll);
   onScroll();
 
-  const setActiveSubmenu = (panel, key) => {
-    const views = panel.querySelectorAll("[data-submenu-panel]");
-    views.forEach((view) => {
-      view.classList.toggle("is-active", view.dataset.submenuPanel === key);
+  const announcementBar = document.querySelector(".announcement-bar");
+  if (announcementBar) {
+    header.addEventListener("mouseenter", () => {
+      if (header.classList.contains("header--transparent")) {
+        announcementBar.classList.add("announcement__bar-bg-open");
+      }
     });
-    panel.dataset.activeSubmenu = key;
-  };
 
-  document.addEventListener("click", (event) => {
-    const openTrigger = event.target.closest("[data-submenu-open]");
-    if (openTrigger) {
-      const panel = openTrigger.closest(".mobile-menu-panel");
-      if (!panel) return;
-      const targetKey = openTrigger.dataset.submenuOpen;
-      if (!targetKey) return;
-      setActiveSubmenu(panel, targetKey);
-      return;
-    }
+    header.addEventListener("mouseleave", () => {
+      announcementBar.classList.remove("announcement__bar-bg-open");
+    });
+  }
 
-    const backTrigger = event.target.closest("[data-submenu-back]");
-    if (backTrigger) {
-      const panel = backTrigger.closest(".mobile-menu-panel");
-      if (!panel) return;
-      setActiveSubmenu(panel, "root");
-    }
-  });
 });
 </script>
 
@@ -966,24 +969,6 @@ document.addEventListener("DOMContentLoaded", () => {
 {
   "name": "Header",
   "settings": [
-    { "type": "checkbox", "id": "banner_enable", "label": "Enable top banner", "default": true },
-    { "type": "text", "id": "banner_text", "label": "Banner text", "default": "FREE SHIPPING" },
-    { "type": "text", "id": "banner_link_label", "label": "Banner link label", "default": "SHOP NOW" },
-    { "type": "url", "id": "banner_link", "label": "Banner link" },
-    { "type": "color", "id": "banner_bg_color", "label": "Banner background", "default": "#2A3C2D" },
-    { "type": "color", "id": "banner_text_color", "label": "Banner text color", "default": "#FFFFFF" },
-    { "type": "color", "id": "banner_link_color", "label": "Banner link color", "default": "#FFFFFF" },
-    { "type": "color", "id": "banner_hover_bg_color", "label": "Banner hover background", "default": "#A3BFDB" },
-    { "type": "color", "id": "banner_hover_text_color", "label": "Banner hover text color", "default": "#1D3D7A" },
-    { "type": "color", "id": "banner_hover_link_color", "label": "Banner hover link color", "default": "#1D3D7A" },
-    { "type": "range", "id": "banner_height", "label": "Banner height", "min": 24, "max": 60, "step": 2, "default": 36 },
-    { "type": "range", "id": "banner_height_mobile", "label": "Banner height (mobile)", "min": 24, "max": 56, "step": 2, "default": 32 },
-    { "type": "range", "id": "banner_text_size", "label": "Banner text size", "min": 10, "max": 20, "step": 1, "default": 13 },
-    { "type": "range", "id": "banner_text_size_mobile", "label": "Banner text size (mobile)", "min": 10, "max": 18, "step": 1, "default": 12 },
-    { "type": "checkbox", "id": "banner_autoplay", "label": "Banner autoplay", "default": true },
-    { "type": "range", "id": "banner_interval", "label": "Banner rotation interval (ms)", "min": 2000, "max": 8000, "step": 500, "default": 4000 },
-    { "type": "range", "id": "banner_transition_ms", "label": "Banner transition duration (ms)", "min": 300, "max": 1200, "step": 50, "default": 600 },
-    { "type": "checkbox", "id": "banner_pause_on_hover", "label": "Pause rotation on hover", "default": true },
     { "type": "link_list", "id": "left-navbar", "label": "Left menu" },
     { "type": "link_list", "id": "right-navbar", "label": "Right menu" },
     { "type": "range", "id": "nav_item_spacing", "label": "Item spacing", "min": 0, "max": 50, "step": 1, "default": 20 },
@@ -997,15 +982,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { "type": "range", "id": "navbar_height", "label": "Navbar padding", "min": 5, "max": 30, "step": 1, "default": 15 }
   ],
   "blocks": [
-    {
-      "type": "banner_item",
-      "name": "Banner item",
-      "settings": [
-        { "type": "text", "id": "text", "label": "Text", "default": "Free shipping on orders over $100" },
-        { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop now" },
-        { "type": "url", "id": "link", "label": "Link" }
-      ]
-    },
     {
       "type": "menu_images",
       "name": "Menu Images",

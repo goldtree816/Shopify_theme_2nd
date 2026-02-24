@@ -2,7 +2,11 @@
   <div class="aevi-container">
     <div class="aevi-image">
       {% if feature_image != blank %}
-        <img src="{{ feature_image | img_url: 'master' }}" alt="Feature Image">
+        <img
+          src="{{ feature_image | img_url: 'master' }}"
+          alt="{{ feature_image.alt | default: heading | default: shop.name | escape }}"
+          loading="lazy"
+        >
       {% endif %}
     </div>
 

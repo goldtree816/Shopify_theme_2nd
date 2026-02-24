@@ -33,6 +33,185 @@
     ]
   },
   {
+    "name": "Product Cards",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_badges",
+        "label": "Show badges (new/sale/out of stock)",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_description",
+        "label": "Show description",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_price",
+        "label": "Show price",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_compare_price",
+        "label": "Show compare-at price when on sale",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_quick_add",
+        "label": "Show quick add button",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "product_card_quick_add_label",
+        "label": "Quick add label",
+        "default": "ADD TO BAG"
+      },
+      {
+        "type": "text",
+        "id": "product_card_choose_options_label",
+        "label": "Choose options label",
+        "default": "CHOOSE OPTIONS"
+      },
+      {
+        "type": "text",
+        "id": "product_card_sold_out_label",
+        "label": "Sold out label",
+        "default": "SOLD OUT"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_card_title_uppercase",
+        "label": "Uppercase product title",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Ratings"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_rating",
+        "label": "Show star ratings on product cards",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "product_card_rating_source",
+        "label": "Rating source",
+        "default": "auto",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Auto (Judge.me then metafields)"
+          },
+          {
+            "value": "judgeme",
+            "label": "Judge.me only"
+          },
+          {
+            "value": "metafield",
+            "label": "Metafields only"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "show_product_card_rating_count",
+        "label": "Show rating count",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_empty_product_card_rating",
+        "label": "Hide ratings when no rating data exists",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "product_card_image_fit",
+        "label": "Image fit",
+        "default": "cover",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Cover"
+          },
+          {
+            "value": "contain",
+            "label": "Contain"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "product_card_image_height",
+        "label": "Image height",
+        "min": 260,
+        "max": 640,
+        "step": 10,
+        "default": 400
+      },
+      {
+        "type": "range",
+        "id": "product_card_title_lines",
+        "label": "Title lines",
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "default": 2
+      },
+      {
+        "type": "range",
+        "id": "product_card_description_lines",
+        "label": "Description lines",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "default": 1
+      },
+      {
+        "type": "range",
+        "id": "product_card_title_size",
+        "label": "Title size",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "product_card_price_size",
+        "label": "Price size",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "product_card_description_size",
+        "label": "Description size",
+        "min": 12,
+        "max": 22,
+        "step": 1,
+        "default": 14
+      }
+    ]
+  },
+  {
     "name": "Colors",
     "settings": [
       {
